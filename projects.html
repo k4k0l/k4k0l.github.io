@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--
+   _              _           _
+  | | ____ _  ___| | ___ _ __( )___   ___ ___  _ __ _ __   ___ _ __
+  | |/ / _` |/ __| |/ / | '__|/ __|  / __/ _ \| '__| '_ \ / _ \ '__|
+  |   < (_| | (__|   <| | |   \__ \ | (_| (_) | |  | | | |  __/ |
+  |_|\_\__,_|\___|_|\_\_|_|   |___/  \___\___/|_|  |_| |_|\___|_|
+
+  Hello, view-source friend. Yes, the page looks like 1996 on purpose.
+  Underneath: semantic HTML5, responsive, dark mode, RSS, sitemap, JSON-LD,
+  a service worker, and a command palette (press "/"). The retro is the joke;
+  the engineering is the punchline.   kto ma znaleźć, ten znajdzie.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects · kakol.pro</title>
+<meta name="description" content="Projects across work and home that share one pattern: build a system, not a one-off, and leave behind durable artifacts and memory.">
+<link rel="canonical" href="https://kakol.pro/projects.html">
+<meta name="author" content="Michał Kąkol">
+<meta name="theme-color" content="#fbfbf4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e11" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="kakol.pro">
+<meta property="og:title" content="Projects · kakol.pro">
+<meta property="og:description" content="Projects across work and home that share one pattern: build a system, not a one-off, and leave behind durable artifacts and memory.">
+<meta property="og:url" content="https://kakol.pro/projects.html">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="kakol.pro — field notes" href="/feed.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@context": "https://schema.org", "@type": "WebSite", "name": "Michał Kąkol", "url": "https://kakol.pro", "inLanguage": "en", "author": {"@type": "Person", "name": "Michał Kąkol"}}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">skip to content</a>
+<div class="wrap">
+  <header class="masthead">
+    <h1><a href="/" style="text-decoration:none;color:inherit">Michał Kąkol</a></h1>
+    <p class="tagline">building systems for when things get too complex to hold in your head</p>
+    <p class="sub">a home page · est. MMXXVI · best viewed with curiosity (and, allegedly, Netscape at 800&times;600)</p>
+  </header>
+  <nav class="main" aria-label="Sections">
+      <a href="/">Home</a>
+      <a href="/projects.html" aria-current="page">Projects</a>
+      <a href="/notes.html">Field Notes</a>
+      <a href="/research.html">Research</a>
+      <a href="/cv.html">CV</a>
+      <a href="/contact.html">Contact</a>
+  </nav>
+  <div class="toolbar">
+    <span>visitors: <span id="hitcounter" class="counter" aria-label="hit counter">000000</span></span>
+    <button id="lights" class="btn" type="button" title="toggle the lights">💡 lights</button>
+    <button id="sound" class="btn" type="button" title="play the site theme">♪ theme</button>
+    <button id="palbtn" class="btn" type="button" title="press / anywhere">⌘ jump</button>
+    <label class="small">find: <input id="site-search" type="search" placeholder="search the site" aria-label="Search the site"></label>
+  </div>
+  <ul id="search-results" aria-live="polite"></ul>
+  <hr class="fancy">
+  <main id="main">
+<h1>Projects</h1>
+<p>If you line these up, the subject matter looks scattered — an internal knowledge layer, a news-threading pipeline, a science-fiction novel, an arcade game, a robot that does not quite work. The connective tissue is the method, not the domain. In every case I am trying to build a <em>system</em> rather than a one-off: something with durable, agent-readable context, that leaves artifacts and memory behind so the next pass — by me, by a collaborator, or by an agent — starts further along than the last. AI is the executor; I am the architect and the reviewer. The repetition of that pattern across unrelated fields is, I think, the actual signal here.</p>
+
+<h2>An internal AI-augmented knowledge system</h2>
+<p>An exocortex for working inside a complex stack. The premise: an organization's knowledge is usually scattered, stale, and locked in a few experts' heads, and most of that can be compressed into context an agent can read — analyses, handoffs, operational recipes, mirrors of source-of-truth systems, and reusable agent skills. A mandatory verification gate sits in front of anything that becomes shared canon, because the failure mode of a memory system is confidently remembering something false. Honest caveat: it is partly aspirational and largely single-operator, with a bus factor close to one and no clean adoption metric. In at least one logged session the retrieval layer went entirely unqueried — presence is not the same as behavior change, and I try not to pretend otherwise.</p>
+
+<h2>A production LLM content-threading pipeline</h2>
+<p>Co-built and operated at a large Polish media company: a pipeline that reads roughly fifteen hundred news articles a day, extracts entities, embeds them, scores candidates, and lets an LLM arbiter decide whether each article joins an existing narrative thread, starts a new one, or is skipped — with a nightly pass that merges duplicates and archives stale threads. My day-to-day is operator work: diagnosing health, auditing thread quality, tuning prompts, cleaning up entity garbage, and keeping cost and latency honest. It is the most direct descendant of my old research thread on content quality and credibility — the same question, now answered by machines I have to keep skeptical.</p>
+
+<h2>Rana / The Wound</h2>
+<p>A finished, print-ready hard-SF novel, around forty-eight thousand words. It was AI-native authoring done the way I do everything else: not "press generate," but rounds of adversarial critique and consistency tooling that catch the contradictions a human drafter stops seeing after the tenth read. The book is the artifact; the workflow that survived it is the part I keep.</p>
+
+<h2>Furki</h2>
+<p>A networked arcade game with an authoritative server and a playable PvP MVP. The opponents run on behavior trees with LLM bots layered on top, and most of the assets are AI-generated. It started as an excuse to understand multiplayer state and authority properly, and turned into a working thing I can hand someone a controller for.</p>
+
+<h2>GizmoZero</h2>
+<p>A robotics prototype I am building with my kids — a single-board computer, some sensors, and an LLM in the loop. It is honestly unfinished; the bottleneck is soldering, not software, which is a useful reminder that the physical world does not care how good your prompt is. We keep coming back to it anyway.</p>
+
+<h2>Smaller systems</h2>
+<p>A cluster of personal tools that share the same spine. A multi-session agent that carries context between sittings instead of starting cold each time. A health-and-habits PWA for tracking the analog parts of life. And a kids' homework pipeline that takes a photo, runs OCR, and produces source-checked flashcards. None of these is impressive on its own; together they are the strongest evidence that the build pattern is real and not just a story I tell about work.</p>
+
+<h2>This website</h2>
+<p>A meta-project, and the one you are reading. The surface is deliberately retro — field notes, plain type, no growth-hacking — while the underneath is modern: content generated and assembled through the same workspace-and-review loop as everything above. The medium is the message. If the method works, a homepage is the cheapest place to prove it.</p>
+
+  </main>
+  <hr class="fancy">
+  <footer>
+    <p class="uc"><span class="bar"></span> this corner of the web is under eternal construction <span class="bar"></span></p>
+    <div class="cssmarquee" aria-hidden="true"><span>&#9733; welcome to my home page &#9733; thanks for stopping by &#9733; the prompt is a sentence, the workspace is a memory &#9733; kto ma znalez&#769;c&#769;, ten znajdzie &#9733;</span></div>
+    <p class="webring">&#9668; <a href="/notes.html">a random field note</a> &middot; you are on <strong>kakol.pro</strong> &middot; <a href="/feed.xml">subscribe</a> &#9658;</p>
+    <p class="guestbook"><a href="https://github.com/k4k0l/k4k0l.github.io/issues/new?title=hello%20from%20a%20visitor&amp;body=(this%20is%20the%20guestbook.%20a%2090s%20guestbook%2C%20backed%20by%20GitHub%20Issues.)">&#9998; sign the guestbook</a></p>
+    <div class="badges">
+      <a class="badge b-html" href="https://validator.w3.org/nu/?doc=https://kakol.pro/projects.html">VALID&nbsp;HTML5</a><a class="badge b-notepad" href="#">HAND-WRITTEN</a><a class="badge b-lynx" href="#">LYNX&nbsp;FRIENDLY</a><a class="badge b-noai" href="#">NO&nbsp;AI&nbsp;SLOP*</a><a class="badge b-rss" href="/feed.xml">RSS&nbsp;2.0</a>
+    </div>
+    <p class="small" id="konami-note" hidden>&#9650;&#9650;&#9660;&#9660;&#9664;&#9658;&#9664;&#9658;BA — 1996 mode engaged.</p>
+    <p class="nav-foot small"><a href="/">home</a> · <a href="/projects.html">projects</a> · <a href="/notes.html">notes</a> · <a href="/research.html">research</a> · <a href="/cv.html">cv</a> · <a href="/contact.html">contact</a> · <a href="https://github.com/k4k0l">github</a></p>
+    <p class="small">&copy; MMXXV–MMXXVI Michał Kąkol · last updated 2026-06-19 · *no-AI-slop is a joke; this site was written with AI as the executor and a human as the architect. that is rather the point.</p>
+  </footer>
+</div>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

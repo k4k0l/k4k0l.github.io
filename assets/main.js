@@ -1,0 +1,123 @@
+/* kakol.pro — the modern layer hiding under the retro surface.
+   Everything here is progressive enhancement: the site is fully readable with JS off. */
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---- theme toggle (lights). Respects prefers-color-scheme by default ---- */
+  try {
+    var saved = localStorage.getItem("kp-theme");
+    if (saved) document.documentElement.setAttribute("data-theme", saved);
+  } catch (e) {}
+  function toggleTheme() {
+    var cur = document.documentElement.getAttribute("data-theme");
+    var sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = cur ? (cur === "dark" ? "light" : "dark") : (sysDark ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("kp-theme", next); } catch (e) {}
+  }
+
+  /* ---- retro hit counter, computed client-side (no server, no tracker) ---- */
+  function paintCounter() {
+    var el = $("#hitcounter"); if (!el) return;
+    var base = 13370, n;
+    try {
+      n = parseInt(localStorage.getItem("kp-hits") || "0", 10) || 0;
+      if (!sessionStorage.getItem("kp-counted")) { n += 1; localStorage.setItem("kp-hits", String(n)); sessionStorage.setItem("kp-counted", "1"); }
+    } catch (e) { n = 1; }
+    var total = base + n;
+    el.textContent = ("000000" + total).slice(-6);
+  }
+
+  /* ---- site index for palette + search (written by _build.py) ---- */
+  var INDEX = [];
+  function loadIndex() {
+    return fetch("/assets/index.json").then(function (r) { return r.json(); })
+      .then(function (j) { INDEX = j || []; }).catch(function () { INDEX = []; });
+  }
+  function score(q, t) { t = t.toLowerCase(); q = q.toLowerCase(); if (!q) return 1;
+    if (t.indexOf(q) >= 0) return 2; var i = 0, j = 0; while (i < q.length && j < t.length) { if (q[i] === t[j]) i++; j++; } return i === q.length ? 0.5 : 0; }
+
+  /* ---- command palette ( / or Cmd/Ctrl-K ) ---- */
+  function buildPalette() {
+    var p = document.createElement("div"); p.id = "palette"; p.setAttribute("role", "dialog"); p.setAttribute("aria-label", "Command palette");
+    p.innerHTML = '<div class="box"><input type="text" placeholder="jump to… (type a page or note)" aria-label="Search pages"><ul role="listbox"></ul><div class="hint">↑↓ to move · ↵ to open · Esc to close — (yes, this 1996 page has a command palette)</div></div>';
+    document.body.appendChild(p);
+    var input = $("input", p), list = $("ul", p), sel = 0, items = [];
+    function render() {
+      var q = input.value.trim();
+      items = INDEX.map(function (e) { return { e: e, s: Math.max(score(q, e.title), score(q, e.kind || "")) }; })
+        .filter(function (x) { return x.s > 0; }).sort(function (a, b) { return b.s - a.s; }).slice(0, 8).map(function (x) { return x.e; });
+      list.innerHTML = items.map(function (e, i) { return '<li role="option" data-url="' + e.url + '" aria-selected="' + (i === sel) + '">' + (e.kind === "note" ? "✎ " : "» ") + e.title + "</li>"; }).join("");
+      sel = Math.min(sel, Math.max(0, items.length - 1));
+      $$("li", list).forEach(function (li, i) { li.setAttribute("aria-selected", i === sel); li.onclick = function () { go(i); }; });
+    }
+    function go(i) { if (items[i]) location.href = items[i].url; }
+    function open() { p.classList.add("open"); input.value = ""; sel = 0; render(); input.focus(); }
+    function close() { p.classList.remove("open"); }
+    input.addEventListener("input", function () { sel = 0; render(); });
+    input.addEventListener("keydown", function (ev) {
+      if (ev.key === "ArrowDown") { sel = Math.min(sel + 1, items.length - 1); render(); ev.preventDefault(); }
+      else if (ev.key === "ArrowUp") { sel = Math.max(sel - 1, 0); render(); ev.preventDefault(); }
+      else if (ev.key === "Enter") { go(sel); }
+      else if (ev.key === "Escape") { close(); }
+    });
+    p.addEventListener("click", function (ev) { if (ev.target === p) close(); });
+    document.addEventListener("keydown", function (ev) {
+      var typing = /^(input|textarea)$/i.test(document.activeElement && document.activeElement.tagName || "");
+      if ((ev.key === "/" && !typing) || ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === "k")) { ev.preventDefault(); open(); }
+    });
+    return { open: open };
+  }
+
+  /* ---- inline site search box (footer-of-masthead) ---- */
+  function wireSearch() {
+    var box = $("#site-search"), out = $("#search-results"); if (!box || !out) return;
+    box.addEventListener("input", function () {
+      var q = box.value.trim(); if (!q) { out.innerHTML = ""; return; }
+      var hits = INDEX.map(function (e) { return { e: e, s: score(q, e.title) }; }).filter(function (x) { return x.s > 0; })
+        .sort(function (a, b) { return b.s - a.s; }).slice(0, 6);
+      out.innerHTML = hits.map(function (x) { return '<li><a href="' + x.e.url + '">' + (x.e.kind === "note" ? "✎ " : "") + x.e.title + "</a></li>"; }).join("");
+    });
+  }
+
+  /* ---- Konami code -> "1996 mode" (CRT scanlines) ---- */
+  (function () {
+    var seq = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65], pos = 0;
+    document.addEventListener("keydown", function (ev) {
+      pos = (ev.keyCode === seq[pos]) ? pos + 1 : 0;
+      if (pos === seq.length) { document.body.classList.toggle("crt"); pos = 0;
+        var m = $("#konami-note"); if (m) m.hidden = !document.body.classList.contains("crt"); }
+    });
+  })();
+
+  /* ---- chiptune theme (Web Audio, click-to-play, never autoplay) ---- */
+  function playTheme(btn) {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      var ac = new AC(), now = ac.currentTime;
+      var notes = [392, 523, 659, 784, 659, 523, 587, 494]; // a little arpeggio
+      notes.forEach(function (f, i) {
+        var o = ac.createOscillator(), g = ac.createGain(); o.type = "square"; o.frequency.value = f;
+        var t = now + i * 0.16; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.12, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.15); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.16);
+      });
+    } catch (e) {}
+  }
+
+  /* ---- wire up ---- */
+  document.addEventListener("DOMContentLoaded", function () {
+    paintCounter();
+    var lights = $("#lights"); if (lights) lights.addEventListener("click", toggleTheme);
+    var snd = $("#sound"); if (snd) snd.addEventListener("click", function () { playTheme(snd); });
+    var pal = buildPalette();
+    var palBtn = $("#palbtn"); if (palBtn) palBtn.addEventListener("click", pal.open);
+    loadIndex().then(function () { wireSearch(); });
+  });
+
+  /* ---- service worker (offline) ---- */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () { navigator.serviceWorker.register("/sw.js").catch(function () {}); });
+  }
+})();

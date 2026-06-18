@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<!--
+   _              _           _
+  | | ____ _  ___| | ___ _ __( )___   ___ ___  _ __ _ __   ___ _ __
+  | |/ / _` |/ __| |/ / | '__|/ __|  / __/ _ \| '__| '_ \ / _ \ '__|
+  |   < (_| | (__|   <| | |   \__ \ | (_| (_) | |  | | | |  __/ |
+  |_|\_\__,_|\___|_|\_\_|_|   |___/  \___\___/|_|  |_| |_|\___|_|
+
+  Hello, view-source friend. Yes, the page looks like 1996 on purpose.
+  Underneath: semantic HTML5, responsive, dark mode, RSS, sitemap, JSON-LD,
+  a service worker, and a command palette (press "/"). The retro is the joke;
+  the engineering is the punchline.   kto ma znaleźć, ten znajdzie.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wstyd korzystania z AI · kakol.pro</title>
+<meta name="description" content="Wstyd używania AI w pracy twórczej i inżynierskiej jest źle zaadresowany. Wartość nie leży w tym, że model coś napisał, tylko w architekturze pętli, weryfikacji i pamięci.">
+<link rel="canonical" href="https://kakol.pro/notes/wstyd-korzystania-z-ai.html">
+<meta name="author" content="Michał Kąkol">
+<meta name="theme-color" content="#fbfbf4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e11" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="kakol.pro">
+<meta property="og:title" content="Wstyd korzystania z AI · kakol.pro">
+<meta property="og:description" content="Wstyd używania AI w pracy twórczej i inżynierskiej jest źle zaadresowany. Wartość nie leży w tym, że model coś napisał, tylko w architekturze pętli, weryfikacji i pamięci.">
+<meta property="og:url" content="https://kakol.pro/notes/wstyd-korzystania-z-ai.html">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="kakol.pro — field notes" href="/feed.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@context": "https://schema.org", "@type": "WebSite", "name": "Michał Kąkol", "url": "https://kakol.pro", "inLanguage": "en", "author": {"@type": "Person", "name": "Michał Kąkol"}}, {"@type": "Article", "headline": "Wstyd korzystania z AI", "description": "Wstyd używania AI w pracy twórczej i inżynierskiej jest źle zaadresowany. Wartość nie leży w tym, że model coś napisał, tylko w architekturze pętli, weryfikacji i pamięci.", "datePublished": "2026-05-29", "url": "https://kakol.pro/notes/wstyd-korzystania-z-ai.html", "author": {"@type": "Person", "name": "Michał Kąkol"}, "publisher": {"@type": "Person", "name": "Michał Kąkol"}}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">skip to content</a>
+<div class="wrap">
+  <header class="masthead">
+    <h1><a href="/" style="text-decoration:none;color:inherit">Michał Kąkol</a></h1>
+    <p class="tagline">building systems for when things get too complex to hold in your head</p>
+    <p class="sub">a home page · est. MMXXVI · best viewed with curiosity (and, allegedly, Netscape at 800&times;600)</p>
+  </header>
+  <nav class="main" aria-label="Sections">
+      <a href="/">Home</a>
+      <a href="/projects.html">Projects</a>
+      <a href="/notes.html">Field Notes</a>
+      <a href="/research.html">Research</a>
+      <a href="/cv.html">CV</a>
+      <a href="/contact.html">Contact</a>
+  </nav>
+  <div class="toolbar">
+    <span>visitors: <span id="hitcounter" class="counter" aria-label="hit counter">000000</span></span>
+    <button id="lights" class="btn" type="button" title="toggle the lights">💡 lights</button>
+    <button id="sound" class="btn" type="button" title="play the site theme">♪ theme</button>
+    <button id="palbtn" class="btn" type="button" title="press / anywhere">⌘ jump</button>
+    <label class="small">find: <input id="site-search" type="search" placeholder="search the site" aria-label="Search the site"></label>
+  </div>
+  <ul id="search-results" aria-live="polite"></ul>
+  <hr class="fancy">
+  <main id="main">
+<h1>Wstyd korzystania z AI</h1>
+<p class="byline">2026-05-29 &middot; field note &middot; <span class="tag">#AI</span> <span class="tag">#rzemiosło</span> <span class="tag">#weryfikacja</span> <span class="tag">#notatki</span> <span class="tag">#workflow</span></p>
+<p>Zdarza mi się słyszeć — i czasem czuć sam — coś w rodzaju zażenowania. Że tekst napisał model. Że kod podpowiedział agent. Że to trochę jakby ściągać. Ten wstyd jest szczery, ale jest źle zaadresowany. Bierze się z cichego założenia, że wartość pracy leży w samym akcie wystukania znaków — w tym, że to <em>ja</em> wymyśliłem każde zdanie i każdą linijkę. A leży gdzie indziej.</p>
+
+<p>Najciekawszą jednostką nie jest prompt. Jest pętla, w którą prompt jest wpięty: skąd model bierze kontekst, kto sprawdza jego wynik, co z tego sprawdzenia zostaje na potem. Model jest wykonawcą. Architektem i recenzentem jestem ja — i to jest robota, której nie da się oddać, bo to ona decyduje, czy z generatora tekstu wyjdzie coś, czemu można zaufać.</p>
+
+<h2>Generowanie jest tanie, weryfikacja nie</h2>
+
+<p>Mam w pamięci pewien wynik. Eksperyment podany jako pewniak, <code>p = 5e-6</code> — liczba, która wygląda jak wyrok. Dopiero gdy ktoś go podważył, zszedłem do surowych zliczeń i znalazłem trzy nałożone na siebie błędy: wykres liczył co innego niż zbiór danych, suma kumulatywna napompowała mianownik jakieś sześciokrotnie, a ciągła metryka domagała się poprawki typu Welcha. Po korekcie <code>p = 0.59</code>. Czyli nic. Zwykły null udający odkrycie.</p>
+
+<p>Wyciągam z tego jedno: dobra robota nie polega na tym, żeby nigdy się nie mylić. Polega na tym, żeby pomyłka stała się widoczna, zanim ktokolwiek na niej coś zbuduje. Zaufanie nie jest uczuciem — jest systemem ujawniania błędów. I dokładnie ten sam system odpowiada na pytanie o AI. Jeśli model wypluje akapit albo funkcję, a ja go nie przepuszczę przez próbę, to nie jestem autorem — jestem przekaźnikiem. Jeśli przepuszczę, to <em>generowanie</em> przestaje być sednem. Sednem staje się brama, którą musi przejść każda propozycja, zanim stanie się moja.</p>
+
+<blockquote>Model pisze szybko i pewnie. Pewność jest tania. Płaci się dopiero za jej sprawdzenie.</blockquote>
+
+<h2>Pamięć ważniejsza niż błyskotliwość</h2>
+
+<p>Druga część tej samej myśli: pojedynczy świetny prompt jest ulotny. To, co zostaje, to kontekst — analizy, notatki przekazania, operacyjne przepisy, lustra rozproszonych źródeł, wielokrotnego użytku „umiejętności" agenta. Buduję sobie taki zewnętrzny mózg, czytelny dla agenta, którego zadaniem jest obniżyć obciążenie poznawcze, gdy stos robi się zbyt skomplikowany, by zmieścić go w głowie. Jest w tym sporo ambicji wyprzedzającej rzeczywistość — w dużej mierze obsługuję go sam, a w jednej z zalogowanych sesji warstwa wyszukiwania w ogóle nie została odpytana. Obecność narzędzia to nie to samo co zmiana zachowania. Ale kierunek jest właściwy: wartość kumuluje się w pamięci, nie w błyskotliwości pojedynczego strzału.</p>
+
+<p>Ten sam wzorzec wraca wszędzie. Skończona książka pisana w pętli z rundami adwersaryjnej krytyki i narzędziem pilnującym spójności. Gra z botami na drzewach decyzyjnych. Pipeline z pracami domowymi dzieciaków: zdjęcie, OCR, fiszki sprawdzone ze źródłem. Za każdym razem AI jest wykonawcą, a moja robota to projekt pętli i kontroli. Powtarzalność tego schematu w zupełnie różnych domenach jest sama w sobie sygnałem.</p>
+
+<h2>Komu właściwie należy się ten wstyd</h2>
+
+<p>Więc kiedy ktoś pyta z przekąsem, „a to nie napisał ci tego model?", odpowiedź brzmi: tak, draft napisał model — tak samo jak kalkulator liczy całki, a kompilator tłumaczy mój kod na coś, czego nie umiem czytać. Wstyd byłby na miejscu, gdybym podał jego wynik dalej bez sprawdzenia. To jest jedyna wersja „ściągania", która tu istnieje: wzięcie cudzej pewności i podpisanie jej własnym nazwiskiem.</p>
+
+<p>Reszta to po prostu narzędzie — szybkie, gadatliwe i czasem przekonująco błędne. Maker we mnie odżył dzięki niemu, nie przeczę. Ale to nie znaczy, że przestałem być rzemieślnikiem. Znaczy, że rzemiosło przeniosło się o jeden poziom wyżej: z wytwarzania tekstu na projektowanie systemu, który decyduje, jaki tekst zasługuje, żeby zostać.</p>
+
+<hr>
+<p class="small">&#9664; <a href="/notes.html">back to all field notes</a></p>
+  </main>
+  <hr class="fancy">
+  <footer>
+    <p class="uc"><span class="bar"></span> this corner of the web is under eternal construction <span class="bar"></span></p>
+    <div class="cssmarquee" aria-hidden="true"><span>&#9733; welcome to my home page &#9733; thanks for stopping by &#9733; the prompt is a sentence, the workspace is a memory &#9733; kto ma znalez&#769;c&#769;, ten znajdzie &#9733;</span></div>
+    <p class="webring">&#9668; <a href="/notes.html">a random field note</a> &middot; you are on <strong>kakol.pro</strong> &middot; <a href="/feed.xml">subscribe</a> &#9658;</p>
+    <p class="guestbook"><a href="https://github.com/k4k0l/k4k0l.github.io/issues/new?title=hello%20from%20a%20visitor&amp;body=(this%20is%20the%20guestbook.%20a%2090s%20guestbook%2C%20backed%20by%20GitHub%20Issues.)">&#9998; sign the guestbook</a></p>
+    <div class="badges">
+      <a class="badge b-html" href="https://validator.w3.org/nu/?doc=https://kakol.pro/notes/wstyd-korzystania-z-ai.html">VALID&nbsp;HTML5</a><a class="badge b-notepad" href="#">HAND-WRITTEN</a><a class="badge b-lynx" href="#">LYNX&nbsp;FRIENDLY</a><a class="badge b-noai" href="#">NO&nbsp;AI&nbsp;SLOP*</a><a class="badge b-rss" href="/feed.xml">RSS&nbsp;2.0</a>
+    </div>
+    <p class="small" id="konami-note" hidden>&#9650;&#9650;&#9660;&#9660;&#9664;&#9658;&#9664;&#9658;BA — 1996 mode engaged.</p>
+    <p class="nav-foot small"><a href="/">home</a> · <a href="/projects.html">projects</a> · <a href="/notes.html">notes</a> · <a href="/research.html">research</a> · <a href="/cv.html">cv</a> · <a href="/contact.html">contact</a> · <a href="https://github.com/k4k0l">github</a></p>
+    <p class="small">&copy; MMXXV–MMXXVI Michał Kąkol · last updated 2026-06-19 · *no-AI-slop is a joke; this site was written with AI as the executor and a human as the architect. that is rather the point.</p>
+  </footer>
+</div>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+/* kakol.pro — retro academic homepage on the surface, modern underneath.
+   Surface: Times New Roman, white page, blue underlined links, horizontal rules, 88x31 badges.
+   Underneath: CSS custom properties, prefers-color-scheme dark + manual toggle, responsive,
+   reduced-motion, print styles, focus-visible a11y. No frameworks. */
+
+:root{
+  --bg:#fbfbf4; --paper:#ffffff; --ink:#16140f; --dim:#5b5648;
+  --link:#0000ee; --visited:#551a8b; --rule:#9a8f78; --hair:#d9d0bd;
+  --accent:#7a1f1f; --accent2:#17407a; --mark:#fde04a; --faint:#f1eee2;
+  --mono:"Courier New",Courier,monospace; --serif:"Times New Roman",Times,Georgia,serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0c0e11; --paper:#11141a; --ink:#cfd6df; --dim:#8b95a3;
+  --link:#79c0ff; --visited:#d2a8ff; --rule:#39414d; --hair:#262c34;
+  --accent:#e0a96d; --accent2:#7aa7e0; --mark:#5a4a00; --faint:#171b22; }}
+:root[data-theme="dark"]{
+  --bg:#0c0e11; --paper:#11141a; --ink:#cfd6df; --dim:#8b95a3;
+  --link:#79c0ff; --visited:#d2a8ff; --rule:#39414d; --hair:#262c34;
+  --accent:#e0a96d; --accent2:#7aa7e0; --mark:#5a4a00; --faint:#171b22;
+}
+
+*{box-sizing:border-box}
+html{ -webkit-text-size-adjust:100%; }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--serif); font-size:18px; line-height:1.5;
+}
+.wrap{ max-width:760px; margin:0 auto; padding:18px 20px 60px; background:var(--paper);
+  border-left:1px solid var(--hair); border-right:1px solid var(--hair); min-height:100vh; }
+a{ color:var(--link); }
+a:visited{ color:var(--visited); }
+a:hover{ background:var(--mark); color:#000; }
+:focus-visible{ outline:2px solid var(--accent2); outline-offset:2px; }
+
+/* skip link (a11y, hidden until focused) */
+.skip{ position:absolute; left:-999px; top:auto; }
+.skip:focus{ left:8px; top:8px; background:#fff; color:#000; padding:4px 8px; z-index:50; }
+
+/* masthead */
+.masthead{ text-align:center; padding:6px 0 2px; }
+.masthead h1{ font-size:40px; margin:.1em 0 .05em; letter-spacing:.01em; }
+.masthead .tagline{ font-style:italic; color:var(--dim); margin:0 0 .3em; }
+.masthead .sub{ font-size:14px; color:var(--dim); font-family:var(--mono); }
+
+/* navigation — bracketed retro links */
+nav.main{ text-align:center; font-family:var(--mono); font-size:14px; line-height:2; }
+nav.main a{ white-space:nowrap; text-decoration:none; }
+nav.main a::before{ content:"[ "; color:var(--dim); }
+nav.main a::after{ content:" ]"; color:var(--dim); }
+nav.main a[aria-current="page"]{ background:var(--accent); color:#fff; }
+
+hr{ border:0; border-top:1px solid var(--rule); margin:14px 0; }
+hr.fancy{ border:0; height:8px; background:
+  repeating-linear-gradient(90deg,var(--rule) 0 6px,transparent 6px 12px); opacity:.6; }
+
+main h1{ font-size:30px; margin:.2em 0 .4em; }
+main h2{ font-size:22px; margin:1.1em 0 .3em; border-bottom:1px dotted var(--hair); padding-bottom:2px; }
+main h3{ font-size:18px; margin:1em 0 .2em; color:var(--accent); }
+p{ margin:.55em 0; }
+blockquote{ margin:1em 0; padding:.2em 0 .2em 14px; border-left:3px solid var(--accent);
+  font-style:italic; color:var(--dim); }
+code{ font-family:var(--mono); font-size:.92em; background:var(--faint); padding:0 3px; border:1px solid var(--hair); }
+ul,ol{ padding-left:1.4em; }
+li{ margin:.25em 0; }
+small,.small{ font-size:13px; color:var(--dim); }
+mark,.hl{ background:var(--mark); color:#000; padding:0 2px; }
+
+/* list of notes */
+ul.notes{ list-style:none; padding:0; }
+ul.notes li{ margin:.5em 0; padding-left:1.2em; text-indent:-1.2em; }
+ul.notes .date{ font-family:var(--mono); font-size:13px; color:var(--dim); }
+ul.notes .tag{ font-size:12px; color:var(--accent); }
+
+/* article meta */
+.byline{ font-family:var(--mono); font-size:13px; color:var(--dim); margin:-.2em 0 1em; }
+
+/* retro toolbar (counter / lights / sound / search) */
+.toolbar{ display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:13px; margin:6px 0; }
+.counter{ display:inline-block; background:#0a0a0a; color:#39ff14; padding:2px 6px; border:2px inset #444;
+  font-family:var(--mono); letter-spacing:3px; font-weight:bold; }
+.btn{ font-family:var(--mono); font-size:12px; cursor:pointer; background:var(--faint); color:var(--ink);
+  border:2px outset var(--hair); padding:1px 7px; }
+.btn:active{ border-style:inset; }
+#site-search{ font-family:var(--mono); font-size:13px; padding:2px 5px; border:2px inset var(--hair);
+  background:var(--paper); color:var(--ink); width:160px; }
+
+/* search results dropdown */
+#search-results{ list-style:none; margin:6px auto; padding:0; max-width:420px; font-family:var(--mono); font-size:13px; }
+#search-results li{ margin:0; }
+#search-results a{ display:block; padding:2px 6px; }
+#search-results:empty{ display:none; }
+
+/* 88x31 badges */
+.badges{ text-align:center; line-height:2.4; }
+.badge{ display:inline-block; width:88px; height:31px; line-height:31px; font-family:var(--mono);
+  font-size:9px; text-align:center; color:#fff; margin:2px; text-decoration:none; vertical-align:middle;
+  border:1px solid #000; overflow:hidden; }
+.badge:hover{ background-image:none; }
+.b-html{ background:linear-gradient(135deg,#1a1a6a,#3a3aaa); }
+.b-notepad{ background:linear-gradient(135deg,#444,#777); }
+.b-lynx{ background:linear-gradient(135deg,#063,#0a6); }
+.b-noai{ background:linear-gradient(135deg,#6a1a1a,#aa3a3a); }
+.b-rss{ background:linear-gradient(135deg,#b7410e,#e08a3c); }
+
+/* webring */
+.webring{ text-align:center; font-family:var(--mono); font-size:13px; color:var(--dim); }
+.webring a{ text-decoration:none; }
+
+/* under construction */
+.uc{ text-align:center; font-family:var(--mono); font-size:13px; color:var(--accent); }
+.uc .bar{ display:inline-block; background:repeating-linear-gradient(45deg,#e0a800 0 10px,#222 10px 20px);
+  height:10px; width:120px; vertical-align:middle; border:1px solid #000; }
+
+/* marquee fallback for the <marquee> easter egg + reduced motion */
+.cssmarquee{ overflow:hidden; white-space:nowrap; font-family:var(--mono); font-size:14px; color:var(--accent); }
+.cssmarquee > span{ display:inline-block; padding-left:100%; animation:mq 22s linear infinite; }
+@keyframes mq{ to{ transform:translateX(-100%); } }
+@media (prefers-reduced-motion: reduce){ .cssmarquee > span{ animation:none; padding-left:0; } }
+
+/* footer */
+footer{ margin-top:18px; font-family:var(--mono); font-size:12px; color:var(--dim); text-align:center; }
+footer a{ color:var(--dim); }
+.guestbook{ text-align:center; margin:8px 0; }
+
+/* command palette (modern, hidden until invoked) */
+#palette{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:100;
+  align-items:flex-start; justify-content:center; }
+#palette.open{ display:flex; }
+#palette .box{ background:var(--paper); color:var(--ink); margin-top:12vh; width:min(520px,92vw);
+  border:1px solid var(--rule); box-shadow:0 12px 40px rgba(0,0,0,.4); font-family:var(--mono); }
+#palette input{ width:100%; border:0; border-bottom:1px solid var(--hair); padding:12px 14px; font-size:15px;
+  background:transparent; color:var(--ink); font-family:var(--mono); }
+#palette input:focus{ outline:none; }
+#palette ul{ list-style:none; margin:0; padding:6px; max-height:50vh; overflow:auto; }
+#palette li{ padding:7px 10px; cursor:pointer; border-radius:3px; }
+#palette li[aria-selected="true"]{ background:var(--accent); color:#fff; }
+#palette .hint{ padding:6px 12px; font-size:11px; color:var(--dim); border-top:1px solid var(--hair); }
+
+/* konami "1996 mode" */
+body.crt::after{ content:""; position:fixed; inset:0; pointer-events:none; z-index:90;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 1px,transparent 1px 3px); mix-blend-mode:multiply; }
+body.crt .wrap{ filter:saturate(1.2) contrast(1.05); }
+
+/* responsive — works despite the "800x600" joke */
+@media (max-width:680px){
+  body{ font-size:17px; }
+  .wrap{ border:0; padding:14px 14px 48px; }
+  .masthead h1{ font-size:32px; }
+  nav.main{ font-size:13px; }
+  #site-search{ width:120px; }
+}
+
+/* print */
+@media print{
+  :root{ --bg:#fff; --paper:#fff; --ink:#000; }
+  .toolbar,nav.main,#palette,.webring,.uc,.badges,.guestbook,footer .nav-foot{ display:none; }
+  .wrap{ border:0; max-width:100%; }
+  a{ color:#000; text-decoration:underline; }
+}

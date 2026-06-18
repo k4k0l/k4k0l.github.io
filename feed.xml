@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>kakol.pro — field notes</title>
+  <link>https://kakol.pro</link>
+  <description>Field notes by Michał Kąkol — systems, experiments, AI, and the return of the home page.</description>
+  <language>en</language>
+  <lastBuildDate>Fri, 19 Jun 2026 12:00:00 +0000</lastBuildDate>
+  <atom:link xmlns:atom="http://www.w3.org/2005/Atom" href="https://kakol.pro/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>The interesting unit is not the prompt. It is the workspace.</title>
+      <link>https://kakol.pro/notes/workspace-not-prompt.html</link>
+      <guid isPermaLink="true">https://kakol.pro/notes/workspace-not-prompt.html</guid>
+      <pubDate>Fri, 19 Jun 2026 12:00:00 +0000</pubDate>
+      <description>Why durable, agent-readable context — not clever prompting — is what turns an LLM from a party trick into an organizational tool. A field note, with caveats.</description>
+    </item>
+    <item>
+      <title>Experimentation as an error-surfacing system</title>
+      <link>https://kakol.pro/notes/experimentation-error-surfacing.html</link>
+      <guid isPermaLink="true">https://kakol.pro/notes/experimentation-error-surfacing.html</guid>
+      <pubDate>Mon, 15 Jun 2026 12:00:00 +0000</pubDate>
+      <description>A field note on the p=5e-6 result that audited down to a null p=0.59, clustered variance, the flip-user paradox, and why trust is an error-surfacing system.</description>
+    </item>
+    <item>
+      <title>Powrót stron domowych</title>
+      <link>https://kakol.pro/notes/powrot-stron-domowych.html</link>
+      <guid isPermaLink="true">https://kakol.pro/notes/powrot-stron-domowych.html</guid>
+      <pubDate>Fri, 12 Jun 2026 12:00:00 +0000</pubDate>
+      <description>Dlaczego w 2026 zbudowałem prymitywną stronę domową zamiast siedzieć na social media. Kto ma znaleźć, ten znajdzie — i o własności nad swoim miejscem w sieci.</description>
+    </item>
+    <item>
+      <title>Czy nadal jestem Data Scientistem?</title>
+      <link>https://kakol.pro/notes/czy-nadal-jestem-data-scientist.html</link>
+      <guid isPermaLink="true">https://kakol.pro/notes/czy-nadal-jestem-data-scientist.html</guid>
+      <pubDate>Sat, 06 Jun 2026 12:00:00 +0000</pubDate>
+      <description>Notatka o tożsamości zawodowej — od Data Scientista, przez team leada i managera, do AI-native buildera. I o tym, czym naprawdę się zajmuję.</description>
+    </item>
+    <item>
+      <title>Wstyd korzystania z AI</title>
+      <link>https://kakol.pro/notes/wstyd-korzystania-z-ai.html</link>
+      <guid isPermaLink="true">https://kakol.pro/notes/wstyd-korzystania-z-ai.html</guid>
+      <pubDate>Fri, 29 May 2026 12:00:00 +0000</pubDate>
+      <description>Wstyd używania AI w pracy twórczej i inżynierskiej jest źle zaadresowany. Wartość nie leży w tym, że model coś napisał, tylko w architekturze pętli, weryfikacji i pamięci.</description>
+    </item>
+</channel></rss>

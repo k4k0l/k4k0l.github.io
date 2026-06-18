@@ -1,0 +1,120 @@
+[
+  {
+    "slug": "workspace-not-prompt",
+    "title": "The interesting unit is not the prompt. It is the workspace.",
+    "lang": "en",
+    "date": "2026-06-19",
+    "description": "Why durable, agent-readable context — not clever prompting — is what turns an LLM from a party trick into an organizational tool. A field note, with caveats.",
+    "tags": [
+      "llm",
+      "knowledge-systems",
+      "agents",
+      "field-notes",
+      "tooling"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "experimentation-error-surfacing",
+    "title": "Experimentation as an error-surfacing system",
+    "lang": "en",
+    "date": "2026-06-15",
+    "description": "A field note on the p=5e-6 result that audited down to a null p=0.59, clustered variance, the flip-user paradox, and why trust is an error-surfacing system.",
+    "tags": [
+      "experimentation",
+      "a/b testing",
+      "data science",
+      "statistics",
+      "field notes"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "powrot-stron-domowych",
+    "title": "Powrót stron domowych",
+    "lang": "pl",
+    "date": "2026-06-12",
+    "description": "Dlaczego w 2026 zbudowałem prymitywną stronę domową zamiast siedzieć na social media. Kto ma znaleźć, ten znajdzie — i o własności nad swoim miejscem w sieci.",
+    "tags": [
+      "strona domowa",
+      "własność",
+      "indieweb",
+      "notatki",
+      "sprawczość"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "czy-nadal-jestem-data-scientist",
+    "title": "Czy nadal jestem Data Scientistem?",
+    "lang": "pl",
+    "date": "2026-06-06",
+    "description": "Notatka o tożsamości zawodowej — od Data Scientista, przez team leada i managera, do AI-native buildera. I o tym, czym naprawdę się zajmuję.",
+    "tags": [
+      "tożsamość zawodowa",
+      "data science",
+      "manager vs maker",
+      "AI-native",
+      "career"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "wstyd-korzystania-z-ai",
+    "title": "Wstyd korzystania z AI",
+    "lang": "pl",
+    "date": "2026-05-29",
+    "description": "Wstyd używania AI w pracy twórczej i inżynierskiej jest źle zaadresowany. Wartość nie leży w tym, że model coś napisał, tylko w architekturze pętli, weryfikacji i pamięci.",
+    "tags": [
+      "AI",
+      "rzemiosło",
+      "weryfikacja",
+      "notatki",
+      "workflow"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "projects",
+    "title": "Projects",
+    "lang": "en",
+    "date": "2026-06-19",
+    "description": "Projects across work and home that share one pattern: build a system, not a one-off, and leave behind durable artifacts and memory.",
+    "tags": [
+      "projects",
+      "ai-systems",
+      "writing",
+      "tooling"
+    ],
+    "kind": "page"
+  },
+  {
+    "slug": "research",
+    "title": "Research Roots",
+    "lang": "en",
+    "date": "2026-06-19",
+    "description": "Where I started: web-content credibility and crowdsourced quality assessment at PJAIT, the thread to LLM-as-arbiter systems, and a short reading log.",
+    "tags": [
+      "research",
+      "credibility",
+      "reading-log",
+      "experimentation",
+      "history"
+    ],
+    "kind": "page"
+  },
+  {
+    "slug": "home",
+    "title": "Michał Kąkol",
+    "lang": "en",
+    "date": "2026-06-19",
+    "description": "Hands-on data science manager and AI systems builder. I help people make progress when systems get too complex to hold in their heads.",
+    "tags": [
+      "data science",
+      "experimentation",
+      "AI systems",
+      "knowledge work"
+    ],
+    "kind": "home"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "name": "Michał Kąkol — kakol.pro",
+  "short_name": "kakol.pro",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#fbfbf4",
+  "theme_color": "#fbfbf4",
+  "description": "Home page of Michał Kąkol.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

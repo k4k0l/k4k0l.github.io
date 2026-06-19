@@ -7,6 +7,8 @@
   --bg:#fbfbf4; --paper:#ffffff; --ink:#16140f; --dim:#5b5648;
   --link:#0000ee; --visited:#551a8b; --rule:#9a8f78; --hair:#d9d0bd;
   --accent:#7a1f1f; --accent2:#17407a; --mark:#fde04a; --faint:#f1eee2;
+  --panel:rgba(251,251,244,.85); --panelborder:rgba(120,114,92,.42);
+  --scrim-top:rgba(255,255,255,.20); --scrim-bot:rgba(255,255,255,.03); --sky1:#cdd9e6; --sky2:#9fb6cf;
   --mono:"Courier New",Courier,monospace; --serif:"Times New Roman",Times,Georgia,serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -19,14 +21,33 @@
   --accent:#e0a96d; --accent2:#7aa7e0; --mark:#5a4a00; --faint:#171b22;
 }
 
+/* cloud-backdrop tokens — dark: heavy scrim so the bright clouds become a dim, moody, moving texture */
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --panel:rgba(13,16,21,.85); --panelborder:rgba(120,140,170,.22);
+  --scrim-top:rgba(8,10,14,.64); --scrim-bot:rgba(8,10,14,.86); --sky1:#1a2330; --sky2:#0c0e11; }}
+:root[data-theme="dark"]{
+  --panel:rgba(13,16,21,.85); --panelborder:rgba(120,140,170,.22);
+  --scrim-top:rgba(8,10,14,.64); --scrim-bot:rgba(8,10,14,.86); --sky1:#1a2330; --sky2:#0c0e11; }
+
 *{box-sizing:border-box}
 html{ -webkit-text-size-adjust:100%; }
 body{
-  margin:0; background:var(--bg); color:var(--ink);
+  margin:0; background:var(--sky2); color:var(--ink);
   font-family:var(--serif); font-size:18px; line-height:1.5;
 }
-.wrap{ max-width:760px; margin:0 auto; padding:18px 20px 60px; background:var(--paper);
-  border-left:1px solid var(--hair); border-right:1px solid var(--hair); min-height:100vh; }
+/* fixed cloud backdrop (retro full-page looping gif) + theme scrim (modern: legibility & dark mode).
+   Uses a fixed pseudo-element instead of background-attachment:fixed (which breaks on iOS Safari). */
+body::before{
+  content:""; position:fixed; inset:0; z-index:-1;
+  background:
+    linear-gradient(180deg, var(--scrim-top), var(--scrim-bot)),
+    url("/clouds.gif") center center / cover no-repeat;
+}
+/* the content column = a translucent "frosted paper" page floating over the sky */
+.wrap{ max-width:760px; margin:28px auto; padding:22px 26px 54px;
+  background:var(--panel); border:1px solid var(--panelborder); border-radius:2px;
+  box-shadow:0 8px 34px rgba(18,22,38,.20);
+  -webkit-backdrop-filter:blur(3px) saturate(1.04); backdrop-filter:blur(3px) saturate(1.04); }
 a{ color:var(--link); }
 a:visited{ color:var(--visited); }
 a:hover{ background:var(--mark); color:#000; }
@@ -117,6 +138,9 @@ ul.notes .tag{ font-size:12px; color:var(--accent); }
 .cssmarquee > span{ display:inline-block; padding-left:100%; animation:mq 22s linear infinite; }
 @keyframes mq{ to{ transform:translateX(-100%); } }
 @media (prefers-reduced-motion: reduce){ .cssmarquee > span{ animation:none; padding-left:0; } }
+/* respect reduced-motion: swap the looping cloud gif for a static sky gradient */
+@media (prefers-reduced-motion: reduce){ body::before{
+  background:linear-gradient(180deg, var(--scrim-top), var(--scrim-bot)), linear-gradient(180deg, var(--sky1), var(--sky2)); } }
 
 /* footer */
 footer{ margin-top:18px; font-family:var(--mono); font-size:12px; color:var(--dim); text-align:center; }
@@ -145,7 +169,7 @@ body.crt .wrap{ filter:saturate(1.2) contrast(1.05); }
 /* responsive — works despite the "800x600" joke */
 @media (max-width:680px){
   body{ font-size:17px; }
-  .wrap{ border:0; padding:14px 14px 48px; }
+  .wrap{ margin:12px auto; padding:16px 15px 44px; }
   .masthead h1{ font-size:32px; }
   nav.main{ font-size:13px; }
   #site-search{ width:120px; }
@@ -155,6 +179,7 @@ body.crt .wrap{ filter:saturate(1.2) contrast(1.05); }
 @media print{
   :root{ --bg:#fff; --paper:#fff; --ink:#000; }
   .toolbar,nav.main,#palette,.webring,.uc,.badges,.guestbook,footer .nav-foot{ display:none; }
-  .wrap{ border:0; max-width:100%; }
+  body::before{ display:none; }
+  .wrap{ border:0; max-width:100%; background:#fff; box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; }
   a{ color:#000; text-decoration:underline; }
 }

@@ -7,6 +7,7 @@
 
   /* ---- ask-the-page chatbot endpoint (Cloudflare Worker). Empty = feature dormant (button hidden). ---- */
   var CHAT_ENDPOINT = "https://chat.kakol.workers.dev"; /* Cloudflare Worker (Workers AI) — repo: ~/Documents/Play/kakol-chat */
+  var TURNSTILE_SITEKEY = ""; /* Cloudflare Turnstile sitekey — set to activate the invisible bot check (empty = off) */
 
   /* ---- theme toggle (lights). Respects prefers-color-scheme by default ---- */
   try {
@@ -109,6 +110,44 @@
     } catch (e) {}
   }
 
+  /* ---- Cloudflare Turnstile: mint a fresh single-use token per message (invisible). Dormant if no sitekey. ---- */
+  var _tsLoaded = false;
+  function loadTurnstile() {
+    if (_tsLoaded) return; _tsLoaded = true;
+    var s = document.createElement("script");
+    s.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    s.async = true; s.defer = true; document.head.appendChild(s);
+  }
+  function turnstileReady(cb, tries) {
+    if (window.turnstile && window.turnstile.render) return cb(true);
+    if ((tries || 0) > 60) return cb(false);
+    setTimeout(function () { turnstileReady(cb, (tries || 0) + 1); }, 100);
+  }
+  function mintToken() {
+    return new Promise(function (resolve) {
+      if (!TURNSTILE_SITEKEY) { resolve(""); return; }
+      loadTurnstile();
+      turnstileReady(function (ok) {
+        if (!ok) { resolve(""); return; }
+        var holder = document.createElement("div");
+        holder.style.position = "absolute"; holder.style.left = "-9999px"; holder.style.top = "0";
+        document.body.appendChild(holder);
+        var wid, settled = false;
+        function done(tok) { if (settled) return; settled = true; try { window.turnstile.remove(wid); } catch (e) {} try { holder.remove(); } catch (e) {} resolve(tok || ""); }
+        try {
+          wid = window.turnstile.render(holder, {
+            sitekey: TURNSTILE_SITEKEY, action: "chat", size: "invisible",
+            callback: function (t) { done(t); },
+            "error-callback": function () { done(""); },
+            "timeout-callback": function () { done(""); },
+            "expired-callback": function () { done(""); }
+          });
+        } catch (e) { done(""); }
+        setTimeout(function () { done(""); }, 8000);
+      });
+    });
+  }
+
   /* ---- ask-the-page chatbot (green CRT terminal -> Cloudflare Worker -> Workers AI) ---- */
   function buildChat() {
     var btn = $("#askbtn"); if (btn) btn.hidden = false;
@@ -140,7 +179,9 @@
       open();
       input.value = ""; add("user", q); history.push({ role: "user", content: q });
       var pending = add("bot", "…"); pending.classList.add("pending"); busy = true;
-      fetch(CHAT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history.slice(-8) }) })
+      mintToken().then(function (token) {
+        return fetch(CHAT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history.slice(-8), cf_token: token }) });
+      })
         .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
         .then(function (res) {
           pending.remove();

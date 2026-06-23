@@ -7,7 +7,7 @@
 
   /* ---- ask-the-page chatbot endpoint (Cloudflare Worker). Empty = feature dormant (button hidden). ---- */
   var CHAT_ENDPOINT = "https://chat.kakol.workers.dev"; /* Cloudflare Worker (Workers AI) — repo: ~/Documents/Play/kakol-chat */
-  var TURNSTILE_SITEKEY = ""; /* Cloudflare Turnstile sitekey — set to activate the invisible bot check (empty = off) */
+  var TURNSTILE_SITEKEY = "0x4AAAAAADp2sUTEWuEBzFO3"; /* Cloudflare Turnstile sitekey (invisible widget for kakol.pro) */
 
   /* ---- theme toggle (lights). Respects prefers-color-scheme by default ---- */
   try {

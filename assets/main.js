@@ -129,21 +129,23 @@
       loadTurnstile();
       turnstileReady(function (ok) {
         if (!ok) { resolve(""); return; }
+        // visible, centered holder: for managed widgets the challenge (if any) must be solvable;
+        // for clean traffic (interaction-only) nothing renders and it resolves invisibly.
         var holder = document.createElement("div");
-        holder.style.position = "absolute"; holder.style.left = "-9999px"; holder.style.top = "0";
+        holder.style.cssText = "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:200;";
         document.body.appendChild(holder);
         var wid, settled = false;
         function done(tok) { if (settled) return; settled = true; try { window.turnstile.remove(wid); } catch (e) {} try { holder.remove(); } catch (e) {} resolve(tok || ""); }
         try {
           wid = window.turnstile.render(holder, {
-            sitekey: TURNSTILE_SITEKEY, action: "chat", size: "invisible",
+            sitekey: TURNSTILE_SITEKEY, action: "chat", appearance: "interaction-only",
             callback: function (t) { done(t); },
             "error-callback": function () { done(""); },
             "timeout-callback": function () { done(""); },
             "expired-callback": function () { done(""); }
           });
         } catch (e) { done(""); }
-        setTimeout(function () { done(""); }, 8000);
+        setTimeout(function () { done(""); }, 60000); // generous: a challenged user may need time to solve
       });
     });
   }

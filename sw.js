@@ -1,6 +1,6 @@
 /* kakol.pro service worker — small, offline-friendly, no tracking.
    Cache-first for same-origin GET; network fallback; offline -> cached page or /404.html. */
-var CACHE = "kakolpro-v8";
+var CACHE = "kakolpro-v9";
 var CORE = ["/", "/index.html", "/assets/style.css", "/assets/main.js", "/assets/index.json",
   "/projects.html", "/notes.html", "/research.html", "/cv.html", "/contact.html", "/404.html"];
 

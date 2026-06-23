@@ -161,6 +161,24 @@ footer a{ color:var(--dim); }
 #palette li[aria-selected="true"]{ background:var(--accent); color:#fff; }
 #palette .hint{ padding:6px 12px; font-size:11px; color:var(--dim); border-top:1px solid var(--hair); }
 
+/* ask-the-page chatbot — a green CRT terminal (modern LLM under the retro skin) */
+#chat{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:101; align-items:flex-end; justify-content:center; }
+#chat.open{ display:flex; }
+#chat .cbox{ width:min(560px,96vw); height:min(70vh,560px); display:flex; flex-direction:column;
+  background:#0a0e0a; color:#39ff14; font-family:var(--mono); border:2px solid #1f3a1f; box-shadow:0 -10px 44px rgba(0,0,0,.55); }
+#chat .chead{ display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:#0e160e; border-bottom:1px solid #1f3a1f; font-size:12px; letter-spacing:.05em; }
+#chat .cx{ background:none; border:0; color:#39ff14; font-size:18px; line-height:1; cursor:pointer; }
+#chat .clog{ flex:1; overflow:auto; padding:10px; font-size:13px; line-height:1.5; }
+#chat .cmsg{ margin:0 0 8px; white-space:pre-wrap; overflow-wrap:anywhere; }
+#chat .cmsg .who{ color:#7aa7e0; }
+#chat .c-user .who{ color:#e0a96d; }
+#chat .pending{ opacity:.6; }
+#chat .cform{ display:flex; align-items:center; gap:6px; padding:8px 10px; border-top:1px solid #1f3a1f; background:#0e160e; }
+#chat .cp{ color:#39ff14; }
+#chat .cin{ flex:1; background:transparent; border:0; color:#39ff14; font-family:var(--mono); font-size:13px; outline:none; }
+#chat .chint{ padding:4px 10px 8px; font-size:10px; color:#4a6a4a; }
+@media (max-width:680px){ #chat .cbox{ height:82vh; width:100vw; } }
+
 /* konami "1996 mode" */
 body.crt::after{ content:""; position:fixed; inset:0; pointer-events:none; z-index:90;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 1px,transparent 1px 3px); mix-blend-mode:multiply; }

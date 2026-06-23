@@ -93,6 +93,7 @@ def render(title, desc, body_main, url_path, page_kind="page", date=None, og_typ
     <button id="lights" class="btn" type="button" title="toggle the lights">💡 lights</button>
     <button id="sound" class="btn" type="button" title="play the site theme">♪ theme</button>
     <button id="palbtn" class="btn" type="button" title="press / anywhere">⌘ jump</button>
+    <button id="askbtn" class="btn" type="button" title="ask the page (AI)" hidden>✦ ask</button>
     <label class="small">find: <input id="site-search" type="search" placeholder="search the site" aria-label="Search the site"></label>
   </div>
   <ul id="search-results" aria-live="polite"></ul>

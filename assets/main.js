@@ -5,6 +5,9 @@
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
+  /* ---- ask-the-page chatbot endpoint (Cloudflare Worker). Empty = feature dormant (button hidden). ---- */
+  var CHAT_ENDPOINT = "https://chat.kakol.workers.dev"; /* Cloudflare Worker (Workers AI) — repo: ~/Documents/Play/kakol-chat */
+
   /* ---- theme toggle (lights). Respects prefers-color-scheme by default ---- */
   try {
     var saved = localStorage.getItem("kp-theme");
@@ -106,6 +109,49 @@
     } catch (e) {}
   }
 
+  /* ---- ask-the-page chatbot (green CRT terminal -> Cloudflare Worker -> Workers AI) ---- */
+  function buildChat() {
+    var btn = $("#askbtn"); if (btn) btn.hidden = false;
+    var panel = document.createElement("div"); panel.id = "chat"; panel.setAttribute("role", "dialog"); panel.setAttribute("aria-label", "Ask the page");
+    panel.innerHTML = '<div class="cbox">'
+      + '<div class="chead"><span>kakol.pro :: ask the page</span><button class="cx" type="button" aria-label="close">×</button></div>'
+      + '<div class="clog" aria-live="polite"></div>'
+      + '<form class="cform"><span class="cp">&gt;</span><input class="cin" type="text" autocomplete="off" placeholder="ask about Michał, his work, the notes…" aria-label="message"></form>'
+      + '<div class="chint">a small AI on a free Cloudflare Worker — it can be wrong. Esc to close.</div>'
+      + '</div>';
+    document.body.appendChild(panel);
+    var log = $(".clog", panel), input = $(".cin", panel), form = $(".cform", panel);
+    var history = [], busy = false;
+    var GREETING = "Hi — I'm the little assistant on Michał's homepage. Ask me about his work, the field notes, or how this site is built.";
+    function add(role, text) {
+      var line = document.createElement("div"); line.className = "cmsg c-" + role;
+      var who = document.createElement("span"); who.className = "who"; who.textContent = (role === "user" ? "you:" : "kakol.pro:");
+      line.appendChild(who); line.appendChild(document.createTextNode(" " + text));
+      log.appendChild(line); log.scrollTop = log.scrollHeight; return line;
+    }
+    function open() { panel.classList.add("open"); if (!log.childNodes.length) add("bot", GREETING); input.focus(); }
+    function close() { panel.classList.remove("open"); }
+    if (btn) btn.addEventListener("click", open);
+    $(".cx", panel).addEventListener("click", close);
+    panel.addEventListener("click", function (ev) { if (ev.target === panel) close(); });
+    document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && panel.classList.contains("open")) close(); });
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      var q = input.value.trim(); if (!q || busy) return;
+      input.value = ""; add("user", q); history.push({ role: "user", content: q });
+      var pending = add("bot", "…"); pending.classList.add("pending"); busy = true;
+      fetch(CHAT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history.slice(-8) }) })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          pending.remove();
+          if (res.ok && res.j && res.j.reply) { add("bot", res.j.reply); history.push({ role: "assistant", content: res.j.reply }); }
+          else { add("bot", (res.j && res.j.error) ? ("(" + res.j.error + ")") : "(something went wrong)"); }
+        })
+        .catch(function () { pending.remove(); add("bot", "(offline — couldn't reach the assistant)"); })
+        .then(function () { busy = false; input.focus(); });
+    });
+  }
+
   /* ---- wire up ---- */
   document.addEventListener("DOMContentLoaded", function () {
     paintCounter();
@@ -114,6 +160,7 @@
     var pal = buildPalette();
     var palBtn = $("#palbtn"); if (palBtn) palBtn.addEventListener("click", pal.open);
     loadIndex().then(function () { wireSearch(); });
+    if (CHAT_ENDPOINT) buildChat();
   });
 
   /* ---- service worker (offline) ---- */

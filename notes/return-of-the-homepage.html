@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--
+   _              _           _
+  | | ____ _  ___| | ___ _ __( )___   ___ ___  _ __ _ __   ___ _ __
+  | |/ / _` |/ __| |/ / | '__|/ __|  / __/ _ \| '__| '_ \ / _ \ '__|
+  |   < (_| | (__|   <| | |   \__ \ | (_| (_) | |  | | | |  __/ |
+  |_|\_\__,_|\___|_|\_\_|_|   |___/  \___\___/|_|  |_| |_|\___|_|
+
+  Hello, view-source friend. Yes, the page looks like 1996 on purpose.
+  Underneath: semantic HTML5, responsive, dark mode, RSS, sitemap, JSON-LD,
+  a service worker, and a command palette (press "/"). The retro is the joke;
+  the engineering is the punchline.   kto ma znaleźć, ten znajdzie.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Return of the Homepage · kakol.pro</title>
+<meta name="description" content="Why I built a plain homepage in 2026 instead of living on platforms: ownership, a deliberate filter, a retro surface over modern guts.">
+<link rel="canonical" href="https://kakol.pro/notes/return-of-the-homepage.html">
+<meta name="author" content="Michał Kąkol">
+<meta name="theme-color" content="#fbfbf4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e11" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="kakol.pro">
+<meta property="og:title" content="The Return of the Homepage · kakol.pro">
+<meta property="og:description" content="Why I built a plain homepage in 2026 instead of living on platforms: ownership, a deliberate filter, a retro surface over modern guts.">
+<meta property="og:url" content="https://kakol.pro/notes/return-of-the-homepage.html">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="kakol.pro — field notes" href="/feed.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@context": "https://schema.org", "@type": "WebSite", "name": "Michał Kąkol", "url": "https://kakol.pro", "inLanguage": "en", "author": {"@type": "Person", "name": "Michał Kąkol"}}, {"@type": "Article", "headline": "The Return of the Homepage", "description": "Why I built a plain homepage in 2026 instead of living on platforms: ownership, a deliberate filter, a retro surface over modern guts.", "datePublished": "2026-06-12", "url": "https://kakol.pro/notes/return-of-the-homepage.html", "author": {"@type": "Person", "name": "Michał Kąkol"}, "publisher": {"@type": "Person", "name": "Michał Kąkol"}}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">skip to content</a>
+<div class="wrap">
+  <header class="masthead">
+    <h1><a href="/" style="text-decoration:none;color:inherit">Michał Kąkol</a></h1>
+    <p class="tagline">building systems for when things get too complex to hold in your head</p>
+    <p class="sub">a home page · est. MMXXVI · best viewed with curiosity (and, allegedly, Netscape at 800&times;600)</p>
+  </header>
+  <nav class="main" aria-label="Sections">
+      <a href="/">Home</a>
+      <a href="/projects.html">Projects</a>
+      <a href="/notes.html">Field Notes</a>
+      <a href="/research.html">Research</a>
+      <a href="/cv.html">CV</a>
+      <a href="/contact.html">Contact</a>
+  </nav>
+  <div class="toolbar">
+    <span>visitors: <span id="hitcounter" class="counter" aria-label="hit counter">000000</span></span>
+    <button id="lights" class="btn" type="button" title="toggle the lights">💡 lights</button>
+    <button id="sound" class="btn" type="button" title="play the site theme">♪ theme</button>
+    <button id="palbtn" class="btn" type="button" title="press / anywhere">⌘ jump</button>
+    <label class="small">find: <input id="site-search" type="search" placeholder="search the site" aria-label="Search the site"></label>
+  </div>
+  <ul id="search-results" aria-live="polite"></ul>
+  <hr class="fancy">
+  <main id="main">
+<h1>The Return of the Homepage</h1>
+<p class="byline">2026-06-12 &middot; field note &middot; <span class="tag">#homepage</span> <span class="tag">#ownership</span> <span class="tag">#indie web</span> <span class="tag">#tooling</span></p>
+<p>In 2026 I did something my friends greeted with a faintly worried smile: I built a homepage. Not a profile. Not a newsletter with a signup form and a subscriber counter. A page, in the old sense — an address, a few texts, some links, a footer. Something that would have looked ordinary in 2004 and today looks almost subversive.</p>
+
+<p>The reason is mundane and a little stubborn. I'm tired of being content inside someone else's product. Every post I drop into a platform feeds a recommendation engine whose goal I don't set, and I've made a living tuning recommendation engines long enough to know what they optimize for. Not holding your thought. Holding your attention. Those are different things, and on these platforms the first one almost never wins.</p>
+
+<h2>Whoever needs to find me, will</h2>
+
+<p>The usual objection is: "but nobody will end up here." Good. That's not a bug, it's a filter. There's no algorithm shoving me at strangers in hope of engagement; it works the other way around. Someone has to <em>want</em> to find me — type a name, click a link in an email footer, arrive from a conversation. A small cost of entry, but it puts the right people on the right side of the door.</p>
+
+<p>I like that asymmetry. Reach measured in impressions always bored me; it's a metric that climbs fastest when I say the things least my own. There's nothing here to optimize against a chart, so I can write the way I'd take notes for myself five years from now. That reader is the one I try not to let down.</p>
+
+<h2>Retro on top, modern underneath</h2>
+
+<p>The surface is deliberately primitive: text, headings, a few links, nothing sliding in from the side. But underneath it's no museum. The site generates from files legible to me and to the agents that help me write and tidy. Content lives as durable, versioned context, not as a post trapped in someone else's database. The visual layer looks like 2004; the working layer like 2026.</p>
+
+<p>That's no accident — it's how I work everywhere. The interesting unit is never a single prompt; it's the place where context accumulates and you can return to it. I build systems with memory and stay the architect and reviewer of what comes out. The homepage is the smallest possible version of that principle, in public. Rough shell, ordered interior.</p>
+
+<blockquote>A platform gives you reach and takes ownership. A homepage does the reverse — and I prefer that direction of trade.</blockquote>
+
+<p>I won't pretend this is a manifesto. It's a gesture, the kind you make buying a paper notebook instead of another notes app. The page is mine in the most literal sense: I decide what's here, how long, and when it disappears. Nobody moderates it, rearranges it "for my own good," or wedges an ad between paragraphs. On an internet that increasingly resembles a rented flat with surprising clauses in the lease, owning a patch of floor feels good.</p>
+
+<p>There's irony in it, too. I'm returning to a form from twenty years ago, using tools that didn't exist then, to escape what those tools have built since. But maybe that's what technical maturity is: not chasing every new thing, but knowing which old things were right all along. The homepage was. It is. And — whoever needs to find me, will.</p>
+
+<hr>
+<p class="small">&#9664; <a href="/notes.html">back to all field notes</a></p>
+  </main>
+  <hr class="fancy">
+  <footer>
+    <p class="uc"><span class="bar"></span> this corner of the web is under eternal construction <span class="bar"></span></p>
+    <div class="cssmarquee" aria-hidden="true"><span>&#9733; welcome to my home page &#9733; thanks for stopping by &#9733; the prompt is a sentence, the workspace is a memory &#9733; kto ma znalez&#769;c&#769;, ten znajdzie &#9733;</span></div>
+    <p class="webring">&#9668; <a href="/notes.html">a random field note</a> &middot; you are on <strong>kakol.pro</strong> &middot; <a href="/feed.xml">subscribe</a> &#9658;</p>
+    <p class="guestbook"><a href="https://github.com/k4k0l/k4k0l.github.io/issues/new?title=hello%20from%20a%20visitor&amp;body=(this%20is%20the%20guestbook.%20a%2090s%20guestbook%2C%20backed%20by%20GitHub%20Issues.)">&#9998; sign the guestbook</a></p>
+    <div class="badges">
+      <a class="badge b-html" href="https://validator.w3.org/nu/?doc=https://kakol.pro/notes/return-of-the-homepage.html">VALID&nbsp;HTML5</a><a class="badge b-notepad" href="#">HAND-WRITTEN</a><a class="badge b-lynx" href="#">LYNX&nbsp;FRIENDLY</a><a class="badge b-noai" href="#">NO&nbsp;AI&nbsp;SLOP*</a><a class="badge b-rss" href="/feed.xml">RSS&nbsp;2.0</a>
+    </div>
+    <p class="small" id="konami-note" hidden>&#9650;&#9650;&#9660;&#9660;&#9664;&#9658;&#9664;&#9658;BA — 1996 mode engaged.</p>
+    <p class="nav-foot small"><a href="/">home</a> · <a href="/projects.html">projects</a> · <a href="/notes.html">notes</a> · <a href="/research.html">research</a> · <a href="/cv.html">cv</a> · <a href="/contact.html">contact</a> · <a href="https://github.com/k4k0l">github</a></p>
+    <p class="small">&copy; MMXXV–MMXXVI Michał Kąkol · last updated 2026-06-19 · *no-AI-slop is a joke; this site was written with AI as the executor and a human as the architect. that is rather the point.</p>
+  </footer>
+</div>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!--
+   _              _           _
+  | | ____ _  ___| | ___ _ __( )___   ___ ___  _ __ _ __   ___ _ __
+  | |/ / _` |/ __| |/ / | '__|/ __|  / __/ _ \| '__| '_ \ / _ \ '__|
+  |   < (_| | (__|   <| | |   \__ \ | (_| (_) | |  | | | |  __/ |
+  |_|\_\__,_|\___|_|\_\_|_|   |___/  \___\___/|_|  |_| |_|\___|_|
+
+  Hello, view-source friend. Yes, the page looks like 1996 on purpose.
+  Underneath: semantic HTML5, responsive, dark mode, RSS, sitemap, JSON-LD,
+  a service worker, and a command palette (press "/"). The retro is the joke;
+  the engineering is the punchline.   kto ma znaleźć, ten znajdzie.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Shame of Using AI · kakol.pro</title>
+<meta name="description" content="The shame of letting a model write the draft is aimed at the wrong thing. The value was never the typing — it&#x27;s the loop, the verification, the memory.">
+<link rel="canonical" href="https://kakol.pro/notes/the-shame-of-using-ai.html">
+<meta name="author" content="Michał Kąkol">
+<meta name="theme-color" content="#fbfbf4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0e11" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="kakol.pro">
+<meta property="og:title" content="The Shame of Using AI · kakol.pro">
+<meta property="og:description" content="The shame of letting a model write the draft is aimed at the wrong thing. The value was never the typing — it&#x27;s the loop, the verification, the memory.">
+<meta property="og:url" content="https://kakol.pro/notes/the-shame-of-using-ai.html">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="kakol.pro — field notes" href="/feed.xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@context": "https://schema.org", "@type": "WebSite", "name": "Michał Kąkol", "url": "https://kakol.pro", "inLanguage": "en", "author": {"@type": "Person", "name": "Michał Kąkol"}}, {"@type": "Article", "headline": "The Shame of Using AI", "description": "The shame of letting a model write the draft is aimed at the wrong thing. The value was never the typing — it's the loop, the verification, the memory.", "datePublished": "2026-05-29", "url": "https://kakol.pro/notes/the-shame-of-using-ai.html", "author": {"@type": "Person", "name": "Michał Kąkol"}, "publisher": {"@type": "Person", "name": "Michał Kąkol"}}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">skip to content</a>
+<div class="wrap">
+  <header class="masthead">
+    <h1><a href="/" style="text-decoration:none;color:inherit">Michał Kąkol</a></h1>
+    <p class="tagline">building systems for when things get too complex to hold in your head</p>
+    <p class="sub">a home page · est. MMXXVI · best viewed with curiosity (and, allegedly, Netscape at 800&times;600)</p>
+  </header>
+  <nav class="main" aria-label="Sections">
+      <a href="/">Home</a>
+      <a href="/projects.html">Projects</a>
+      <a href="/notes.html">Field Notes</a>
+      <a href="/research.html">Research</a>
+      <a href="/cv.html">CV</a>
+      <a href="/contact.html">Contact</a>
+  </nav>
+  <div class="toolbar">
+    <span>visitors: <span id="hitcounter" class="counter" aria-label="hit counter">000000</span></span>
+    <button id="lights" class="btn" type="button" title="toggle the lights">💡 lights</button>
+    <button id="sound" class="btn" type="button" title="play the site theme">♪ theme</button>
+    <button id="palbtn" class="btn" type="button" title="press / anywhere">⌘ jump</button>
+    <label class="small">find: <input id="site-search" type="search" placeholder="search the site" aria-label="Search the site"></label>
+  </div>
+  <ul id="search-results" aria-live="polite"></ul>
+  <hr class="fancy">
+  <main id="main">
+<h1>The Shame of Using AI</h1>
+<p class="byline">2026-05-29 &middot; field note &middot; <span class="tag">#ai</span> <span class="tag">#engineering</span> <span class="tag">#verification</span> <span class="tag">#craft</span></p>
+<p>I hear it from others, and sometimes feel it myself: a faint embarrassment. The model wrote the text. The agent suggested the code. It feels a little like cheating. The feeling is honest, but it is aimed at the wrong thing — at the quiet assumption that the value of work lives in typing the characters, in the fact that <em>I</em> thought of every line. It lives elsewhere.</p>
+
+<p>The interesting unit is not the prompt. It is the loop the prompt sits inside: where the model gets its context, who checks the output, what survives that check. The model is the executor. I am the architect and the reviewer — the part you cannot hand off, because it decides whether anything trustworthy comes out of a text generator at all.</p>
+
+<h2>Generation is cheap, verification is not</h2>
+
+<p>One result stays with me. An experiment, presented as a sure thing: <code>p = 5e-6</code>, a number that reads like a verdict. Only when someone pushed back did I drop to the raw counts and find three errors stacked on top of each other — the chart counted something other than the dataset, a cumulative sum had inflated the denominator roughly sixfold, and the continuous metric needed a Welch correction. After the fix: <code>p = 0.59</code>. Nothing. A plain null wearing the costume of a discovery.</p>
+
+<p>The lesson is not "never be wrong." It is: make the error visible before anyone builds on it. Trust is not a feeling — it is a system for surfacing mistakes. And that system answers the question about AI. If a model emits a paragraph or a function and I don't put it through the trial, I'm not the author, I'm a relay. If I do, generation stops being the point. The point becomes the gate every proposal has to pass before it becomes mine.</p>
+
+<blockquote>The model writes fast and sure. Confidence is cheap. You only pay when you check it.</blockquote>
+
+<h2>Memory over brilliance</h2>
+
+<p>A single brilliant prompt is fleeting. What lasts is context — analyses, handoff notes, operational recipes, reusable agent skills. I'm building an external brain, legible to the agent, to cut the cognitive load when the stack outgrows my head. The ambition runs ahead of reality: I still feed most of it by hand, and in one logged session the retrieval layer wasn't queried at all. A tool's presence is not a change in behavior. But the direction is right — value accrues in memory, not in the flash of one shot.</p>
+
+<p>The pattern recurs across unrelated domains: a book written in an adversarial-critique loop, a game played against bots on decision trees, a pipeline for the kids' homework — photo, OCR, flashcards checked against the source. Each time the AI is the executor and my work is the design of the loop and its controls.</p>
+
+<p>So when someone asks, with a smirk, "didn't the model write that for you?" — yes, the way a calculator does the integrals and a compiler turns my code into something I can't read. The shame would be earned only if I passed the output along unchecked: borrowing its confidence and signing it with my name. The rest is just a tool — fast, talkative, occasionally and convincingly wrong. The craft didn't disappear. It moved up a level: from making the text to designing the system that decides which text earns the right to stay.</p>
+
+<hr>
+<p class="small">&#9664; <a href="/notes.html">back to all field notes</a></p>
+  </main>
+  <hr class="fancy">
+  <footer>
+    <p class="uc"><span class="bar"></span> this corner of the web is under eternal construction <span class="bar"></span></p>
+    <div class="cssmarquee" aria-hidden="true"><span>&#9733; welcome to my home page &#9733; thanks for stopping by &#9733; the prompt is a sentence, the workspace is a memory &#9733; kto ma znalez&#769;c&#769;, ten znajdzie &#9733;</span></div>
+    <p class="webring">&#9668; <a href="/notes.html">a random field note</a> &middot; you are on <strong>kakol.pro</strong> &middot; <a href="/feed.xml">subscribe</a> &#9658;</p>
+    <p class="guestbook"><a href="https://github.com/k4k0l/k4k0l.github.io/issues/new?title=hello%20from%20a%20visitor&amp;body=(this%20is%20the%20guestbook.%20a%2090s%20guestbook%2C%20backed%20by%20GitHub%20Issues.)">&#9998; sign the guestbook</a></p>
+    <div class="badges">
+      <a class="badge b-html" href="https://validator.w3.org/nu/?doc=https://kakol.pro/notes/the-shame-of-using-ai.html">VALID&nbsp;HTML5</a><a class="badge b-notepad" href="#">HAND-WRITTEN</a><a class="badge b-lynx" href="#">LYNX&nbsp;FRIENDLY</a><a class="badge b-noai" href="#">NO&nbsp;AI&nbsp;SLOP*</a><a class="badge b-rss" href="/feed.xml">RSS&nbsp;2.0</a>
+    </div>
+    <p class="small" id="konami-note" hidden>&#9650;&#9650;&#9660;&#9660;&#9664;&#9658;&#9664;&#9658;BA — 1996 mode engaged.</p>
+    <p class="nav-foot small"><a href="/">home</a> · <a href="/projects.html">projects</a> · <a href="/notes.html">notes</a> · <a href="/research.html">research</a> · <a href="/cv.html">cv</a> · <a href="/contact.html">contact</a> · <a href="https://github.com/k4k0l">github</a></p>
+    <p class="small">&copy; MMXXV–MMXXVI Michał Kąkol · last updated 2026-06-19 · *no-AI-slop is a joke; this site was written with AI as the executor and a human as the architect. that is rather the point.</p>
+  </footer>
+</div>
+<script src="/assets/main.js" defer></script>
+</body>
+</html>

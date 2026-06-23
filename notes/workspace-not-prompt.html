@@ -16,7 +16,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The interesting unit is not the prompt. It is the workspace. · kakol.pro</title>
-<meta name="description" content="Why durable, agent-readable context — not clever prompting — is what turns an LLM from a party trick into an organizational tool. A field note, with caveats.">
+<meta name="description" content="Prompts are disposable; the durable, agent-readable workspace is the real unit. Plus the failure mode nobody demos: presence is not use.">
 <link rel="canonical" href="https://kakol.pro/notes/workspace-not-prompt.html">
 <meta name="author" content="Michał Kąkol">
 <meta name="theme-color" content="#fbfbf4" media="(prefers-color-scheme: light)">
@@ -24,14 +24,14 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="kakol.pro">
 <meta property="og:title" content="The interesting unit is not the prompt. It is the workspace. · kakol.pro">
-<meta property="og:description" content="Why durable, agent-readable context — not clever prompting — is what turns an LLM from a party trick into an organizational tool. A field note, with caveats.">
+<meta property="og:description" content="Prompts are disposable; the durable, agent-readable workspace is the real unit. Plus the failure mode nobody demos: presence is not use.">
 <meta property="og:url" content="https://kakol.pro/notes/workspace-not-prompt.html">
 <meta name="twitter:card" content="summary">
 <link rel="alternate" type="application/rss+xml" title="kakol.pro — field notes" href="/feed.xml">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@context": "https://schema.org", "@type": "WebSite", "name": "Michał Kąkol", "url": "https://kakol.pro", "inLanguage": "en", "author": {"@type": "Person", "name": "Michał Kąkol"}}, {"@type": "Article", "headline": "The interesting unit is not the prompt. It is the workspace.", "description": "Why durable, agent-readable context — not clever prompting — is what turns an LLM from a party trick into an organizational tool. A field note, with caveats.", "datePublished": "2026-06-19", "url": "https://kakol.pro/notes/workspace-not-prompt.html", "author": {"@type": "Person", "name": "Michał Kąkol"}, "publisher": {"@type": "Person", "name": "Michał Kąkol"}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@context": "https://schema.org", "@type": "WebSite", "name": "Michał Kąkol", "url": "https://kakol.pro", "inLanguage": "en", "author": {"@type": "Person", "name": "Michał Kąkol"}}, {"@type": "Article", "headline": "The interesting unit is not the prompt. It is the workspace.", "description": "Prompts are disposable; the durable, agent-readable workspace is the real unit. Plus the failure mode nobody demos: presence is not use.", "datePublished": "2026-06-19", "url": "https://kakol.pro/notes/workspace-not-prompt.html", "author": {"@type": "Person", "name": "Michał Kąkol"}, "publisher": {"@type": "Person", "name": "Michał Kąkol"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">skip to content</a>
@@ -60,36 +60,18 @@
   <hr class="fancy">
   <main id="main">
 <h1>The interesting unit is not the prompt. It is the workspace.</h1>
-<p class="byline">2026-06-19 &middot; field note &middot; <span class="tag">#llm</span> <span class="tag">#knowledge-systems</span> <span class="tag">#agents</span> <span class="tag">#field-notes</span> <span class="tag">#tooling</span></p>
-<p>There is a whole genre of advice about prompting now — frameworks, role-play incantations, the right way to ask a model to take a deep breath and think step by step. I have read a fair amount of it. Most of it is true and almost none of it matters, because the prompt is the part of the system with the shortest half-life. You write it, you get an answer, it evaporates. Nothing accumulates.</p>
+<p class="byline">2026-06-19 &middot; field note &middot; <span class="tag">#AI</span> <span class="tag">#knowledge-systems</span> <span class="tag">#engineering</span> <span class="tag">#agents</span></p>
+<p>There is a whole genre of advice about prompting now: frameworks, role-play incantations, the correct way to ask a model to take a deep breath and think step by step. Most of it is true and almost none of it matters, because the prompt has the shortest half-life in the system. You write it, you get an answer, it evaporates. Nothing accumulates.</p>
 
-<p>The thing that accumulates is the workspace. That is the unit I have come to care about: the durable, agent-readable context an organization carries around with it. Not the question you ask today, but the substrate that makes the answer worth trusting tomorrow.</p>
+<p>What accumulates is the workspace: the durable, agent-readable context an organization carries with it. Not the question you ask today, but the substrate that makes tomorrow's answer worth trusting.</p>
 
-<h2>What the workspace actually is</h2>
+<p>I have been building one — an internal, AI-augmented knowledge system for a stack that long ago stopped fitting in any single head. The premise is unglamorous. Real knowledge is scattered across wikis nobody updates, threads nobody can find, and a few experts tired of answering the same question. The bet is that you can <em>compress</em> that into context an agent can read. Mechanically it isn't exotic: analyses written down instead of remembered; handoffs between sessions and people; the operational recipe that actually fixes the thing at 2am, not the idealized one from the runbook; reusable skills; and a verification gate — because an exocortex that confidently remembers wrong things is worse than none.</p>
 
-<p>For the last while I have been building one — an internal, AI-augmented knowledge system, an exocortex of sorts, for a stack that has long since stopped fitting in any single person's head. The premise is unglamorous. An organization's real knowledge is scattered across wikis nobody updates, threads nobody can find, and a handful of experts who are tired of answering the same question. Most of it is stale, locked in a head, or both. The bet is that you can <em>compress</em> that into context an agent can read, and that doing so lowers the cognitive load enough for people to work more independently in a complicated system.</p>
+<p>None of those pieces is a prompt. The prompt is the last six inches of pipe. Everything load-bearing happens upstream, in the context the model gets to stand on. The model is the executor; I am the architect and reviewer. The same model on a thin, ad-hoc context produces fluent, plausible, occasionally catastrophic output. Standing on a well-maintained workspace, it produces something you can route to a colleague without re-checking every line.</p>
 
-<p>Mechanically it is not exotic. It is analyses written down instead of remembered. Handoffs between sessions and between people. Operational recipes — the actual sequence of commands that fixes the thing at 2am, not the idealized one from the runbook. Mirrors of the org's scattered sources, pulled into one place that an agent can search. Reusable agent skills, so a procedure done once becomes a procedure done reliably. And a verification gate: nothing becomes shared canon until it has been checked, because an exocortex that confidently remembers wrong things is worse than no exocortex at all.</p>
+<p>I won't pretend the thesis is vindicated. The system is largely aspirational and single-operator; the bus factor is roughly one. Worse, and more instructive: in at least one logged session, the retrieval layer I had carefully built went entirely unqueried. The context was <em>present</em> and the behavior did not change. Building the library does not mean anyone walks into it — and that is the failure mode nobody puts in the demo.</p>
 
-<p>None of those pieces is a prompt. The prompt is just the last six inches of the pipe. Everything load-bearing happens upstream, in the context the model gets to stand on.</p>
-
-<h2>The division of labor that this implies</h2>
-
-<p>Once you frame it this way, the role of the AI shifts. The model is the executor. I am the architect and the reviewer. That is not modesty; it is where the leverage is. A capable model with a thin, ad-hoc context will produce fluent, plausible, occasionally catastrophic output. The same model standing on a well-maintained workspace will produce something you can actually route to a colleague without re-checking every line.</p>
-
-<p>The interesting part is that this is the same pattern everywhere I have applied it. Drafting a long piece of fiction with adversarial critique rounds and a consistency-checking layer. A networked game whose bots run on behavior trees stitched to an LLM. A small robotics build with my kids, sensors talking to a model. A homework pipeline that turns photos into source-checked flashcards. The domains have nothing in common; the build is identical. Context first, executor second, reviewer last. When the same shape keeps showing up across unrelated problems, that repetition <em>is</em> the signal. It is telling you where the real abstraction lives.</p>
-
-<h2>Where I have to be honest</h2>
-
-<p>I will not pretend the workspace thesis is fully vindicated, because the data does not let me. The system I have been describing is, to a large degree, aspirational and single-operator. The bus factor is roughly one — me. I have no clean quantitative measure of adoption, which is a polite way of saying I cannot prove other people use it the way I imagine they do.</p>
-
-<p>Worse, and more instructively: in at least one logged session, the retrieval layer I had carefully built went entirely unqueried. The context was <em>present</em> and the behavior did not change. That gap — between availability and use — is the whole game, and I had quietly assumed it away. Presence is not behavior change. Building the library does not mean anyone walks into it. If you take one uncomfortable thing from this note, take that one, because it is the failure mode nobody puts in the demo.</p>
-
-<h2>The practical implication</h2>
-
-<p>So here is the contrarian part, said plainly. If you are building with AI and you are spending your energy on prompt craft, you are optimizing the cheapest, most disposable layer in the stack. The durable returns are in the boring infrastructure: capturing what you learn in a form an agent can read, gating it so the wrong things don't become canon, and — this is the hard one — designing for whether the context actually gets <em>used</em>, not merely whether it exists.</p>
-
-<p>The prompt is a sentence. The workspace is a memory. One of those is worth maintaining for years, and it is not the sentence.</p>
+<p>So, plainly: if you are building with AI and spending your energy on prompt craft, you are polishing the cheapest, most disposable layer in the stack. The durable returns are in the boring infrastructure — capturing what you learn in a form an agent can read, gating it so the wrong things don't become canon, and designing for whether the context gets <em>used</em>, not merely whether it exists. The prompt is a sentence. The workspace is a memory. Only one is worth maintaining for years, and it isn't the sentence.</p>
 
 <hr>
 <p class="small">&#9664; <a href="/notes.html">back to all field notes</a></p>

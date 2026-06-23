@@ -1,80 +1,5 @@
 [
   {
-    "slug": "workspace-not-prompt",
-    "title": "The interesting unit is not the prompt. It is the workspace.",
-    "lang": "en",
-    "date": "2026-06-19",
-    "description": "Why durable, agent-readable context — not clever prompting — is what turns an LLM from a party trick into an organizational tool. A field note, with caveats.",
-    "tags": [
-      "llm",
-      "knowledge-systems",
-      "agents",
-      "field-notes",
-      "tooling"
-    ],
-    "kind": "note"
-  },
-  {
-    "slug": "experimentation-error-surfacing",
-    "title": "Experimentation as an error-surfacing system",
-    "lang": "en",
-    "date": "2026-06-15",
-    "description": "A field note on the p=5e-6 result that audited down to a null p=0.59, clustered variance, the flip-user paradox, and why trust is an error-surfacing system.",
-    "tags": [
-      "experimentation",
-      "a/b testing",
-      "data science",
-      "statistics",
-      "field notes"
-    ],
-    "kind": "note"
-  },
-  {
-    "slug": "powrot-stron-domowych",
-    "title": "Powrót stron domowych",
-    "lang": "pl",
-    "date": "2026-06-12",
-    "description": "Dlaczego w 2026 zbudowałem prymitywną stronę domową zamiast siedzieć na social media. Kto ma znaleźć, ten znajdzie — i o własności nad swoim miejscem w sieci.",
-    "tags": [
-      "strona domowa",
-      "własność",
-      "indieweb",
-      "notatki",
-      "sprawczość"
-    ],
-    "kind": "note"
-  },
-  {
-    "slug": "czy-nadal-jestem-data-scientist",
-    "title": "Czy nadal jestem Data Scientistem?",
-    "lang": "pl",
-    "date": "2026-06-06",
-    "description": "Notatka o tożsamości zawodowej — od Data Scientista, przez team leada i managera, do AI-native buildera. I o tym, czym naprawdę się zajmuję.",
-    "tags": [
-      "tożsamość zawodowa",
-      "data science",
-      "manager vs maker",
-      "AI-native",
-      "career"
-    ],
-    "kind": "note"
-  },
-  {
-    "slug": "wstyd-korzystania-z-ai",
-    "title": "Wstyd korzystania z AI",
-    "lang": "pl",
-    "date": "2026-05-29",
-    "description": "Wstyd używania AI w pracy twórczej i inżynierskiej jest źle zaadresowany. Wartość nie leży w tym, że model coś napisał, tylko w architekturze pętli, weryfikacji i pamięci.",
-    "tags": [
-      "AI",
-      "rzemiosło",
-      "weryfikacja",
-      "notatki",
-      "workflow"
-    ],
-    "kind": "note"
-  },
-  {
     "slug": "projects",
     "title": "Projects",
     "lang": "en",
@@ -116,5 +41,75 @@
       "knowledge work"
     ],
     "kind": "home"
+  },
+  {
+    "slug": "workspace-not-prompt",
+    "title": "The interesting unit is not the prompt. It is the workspace.",
+    "lang": "en",
+    "date": "2026-06-19",
+    "description": "Prompts are disposable; the durable, agent-readable workspace is the real unit. Plus the failure mode nobody demos: presence is not use.",
+    "tags": [
+      "AI",
+      "knowledge-systems",
+      "engineering",
+      "agents"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "experimentation-error-surfacing",
+    "title": "Experimentation as an error-surfacing system",
+    "lang": "en",
+    "date": "2026-06-15",
+    "description": "A p=5e-6 result that collapsed to p=0.59 once three plausible errors came off — and why trust is an error-surfacing system, not a feeling.",
+    "tags": [
+      "experimentation",
+      "statistics",
+      "data-quality",
+      "ab-testing"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "return-of-the-homepage",
+    "title": "The Return of the Homepage",
+    "lang": "en",
+    "date": "2026-06-12",
+    "description": "Why I built a plain homepage in 2026 instead of living on platforms: ownership, a deliberate filter, a retro surface over modern guts.",
+    "tags": [
+      "homepage",
+      "ownership",
+      "indie web",
+      "tooling"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "am-i-still-a-data-scientist",
+    "title": "Am I Still a Data Scientist?",
+    "lang": "en",
+    "date": "2026-06-06",
+    "description": "From data scientist to manager to AI-native builder: the honest maker-vs-manager tension, and the one thread that actually runs through all of it.",
+    "tags": [
+      "career",
+      "AI",
+      "engineering-management",
+      "data-science"
+    ],
+    "kind": "note"
+  },
+  {
+    "slug": "the-shame-of-using-ai",
+    "title": "The Shame of Using AI",
+    "lang": "en",
+    "date": "2026-05-29",
+    "description": "The shame of letting a model write the draft is aimed at the wrong thing. The value was never the typing — it's the loop, the verification, the memory.",
+    "tags": [
+      "ai",
+      "engineering",
+      "verification",
+      "craft"
+    ],
+    "kind": "note"
   }
 ]

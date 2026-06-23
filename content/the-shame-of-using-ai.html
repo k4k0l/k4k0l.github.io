@@ -1,0 +1,19 @@
+<p>I hear it from others, and sometimes feel it myself: a faint embarrassment. The model wrote the text. The agent suggested the code. It feels a little like cheating. The feeling is honest, but it is aimed at the wrong thing — at the quiet assumption that the value of work lives in typing the characters, in the fact that <em>I</em> thought of every line. It lives elsewhere.</p>
+
+<p>The interesting unit is not the prompt. It is the loop the prompt sits inside: where the model gets its context, who checks the output, what survives that check. The model is the executor. I am the architect and the reviewer — the part you cannot hand off, because it decides whether anything trustworthy comes out of a text generator at all.</p>
+
+<h2>Generation is cheap, verification is not</h2>
+
+<p>One result stays with me. An experiment, presented as a sure thing: <code>p = 5e-6</code>, a number that reads like a verdict. Only when someone pushed back did I drop to the raw counts and find three errors stacked on top of each other — the chart counted something other than the dataset, a cumulative sum had inflated the denominator roughly sixfold, and the continuous metric needed a Welch correction. After the fix: <code>p = 0.59</code>. Nothing. A plain null wearing the costume of a discovery.</p>
+
+<p>The lesson is not "never be wrong." It is: make the error visible before anyone builds on it. Trust is not a feeling — it is a system for surfacing mistakes. And that system answers the question about AI. If a model emits a paragraph or a function and I don't put it through the trial, I'm not the author, I'm a relay. If I do, generation stops being the point. The point becomes the gate every proposal has to pass before it becomes mine.</p>
+
+<blockquote>The model writes fast and sure. Confidence is cheap. You only pay when you check it.</blockquote>
+
+<h2>Memory over brilliance</h2>
+
+<p>A single brilliant prompt is fleeting. What lasts is context — analyses, handoff notes, operational recipes, reusable agent skills. I'm building an external brain, legible to the agent, to cut the cognitive load when the stack outgrows my head. The ambition runs ahead of reality: I still feed most of it by hand, and in one logged session the retrieval layer wasn't queried at all. A tool's presence is not a change in behavior. But the direction is right — value accrues in memory, not in the flash of one shot.</p>
+
+<p>The pattern recurs across unrelated domains: a book written in an adversarial-critique loop, a game played against bots on decision trees, a pipeline for the kids' homework — photo, OCR, flashcards checked against the source. Each time the AI is the executor and my work is the design of the loop and its controls.</p>
+
+<p>So when someone asks, with a smirk, "didn't the model write that for you?" — yes, the way a calculator does the integrals and a compiler turns my code into something I can't read. The shame would be earned only if I passed the output along unchecked: borrowing its confidence and signing it with my name. The rest is just a tool — fast, talkative, occasionally and convincingly wrong. The craft didn't disappear. It moved up a level: from making the text to designing the system that decides which text earns the right to stay.</p>

@@ -135,9 +135,9 @@
     $(".cx", panel).addEventListener("click", close);
     panel.addEventListener("click", function (ev) { if (ev.target === panel) close(); });
     document.addEventListener("keydown", function (ev) { if (ev.key === "Escape" && panel.classList.contains("open")) close(); });
-    form.addEventListener("submit", function (ev) {
-      ev.preventDefault();
-      var q = input.value.trim(); if (!q || busy) return;
+    function submit(q) {
+      q = (q || "").trim(); if (!q || busy) return;
+      open();
       input.value = ""; add("user", q); history.push({ role: "user", content: q });
       var pending = add("bot", "…"); pending.classList.add("pending"); busy = true;
       fetch(CHAT_ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ messages: history.slice(-8) }) })
@@ -149,7 +149,23 @@
         })
         .catch(function () { pending.remove(); add("bot", "(offline — couldn't reach the assistant)"); })
         .then(function () { busy = false; input.focus(); });
-    });
+    }
+    form.addEventListener("submit", function (ev) { ev.preventDefault(); submit(input.value); });
+
+    /* persistent corner launcher (all pages) */
+    var fab = document.createElement("button");
+    fab.id = "ask-fab"; fab.type = "button"; fab.setAttribute("aria-label", "Ask the page (AI)");
+    fab.innerHTML = '<span class="fab-star" aria-hidden="true">✦</span> ask <span class="fab-caret" aria-hidden="true">▸</span>';
+    document.body.appendChild(fab);
+    fab.addEventListener("click", open);
+
+    /* home hero terminal prompt -> opens chat with the typed question */
+    var hero = $("#ask-hero");
+    if (hero) {
+      hero.hidden = false;
+      var heroIn = $("#ask-hero-in", hero);
+      hero.addEventListener("submit", function (ev) { ev.preventDefault(); var v = heroIn.value; heroIn.value = ""; submit(v); });
+    }
   }
 
   /* ---- wire up ---- */

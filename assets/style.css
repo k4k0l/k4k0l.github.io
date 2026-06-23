@@ -179,6 +179,35 @@ footer a{ color:var(--dim); }
 #chat .chint{ padding:4px 10px 8px; font-size:10px; color:#4a6a4a; }
 @media (max-width:680px){ #chat .cbox{ height:82vh; width:100vw; } }
 
+/* home hero "ask" terminal prompt — invites you to interrogate the page */
+.ask-hero{ display:flex; align-items:center; gap:8px; margin:0 0 6px; padding:10px 12px;
+  background:#0a0e0a; border:2px solid #1f3a1f; border-radius:3px;
+  box-shadow:0 2px 14px rgba(0,0,0,.18), inset 0 0 22px rgba(57,255,20,.04); font-family:var(--mono); color:#39ff14; }
+.ask-hero .ask-host{ color:#7aa7e0; white-space:nowrap; }
+.ask-hero .ask-sep{ color:#39ff14; margin-right:2px; }
+.ask-hero .ask-hero-in{ flex:1; min-width:0; background:transparent; border:0; outline:none;
+  color:#39ff14; font-family:var(--mono); font-size:14px; caret-color:#39ff14; }
+.ask-hero .ask-hero-in::placeholder{ color:#3f7a3f; }
+.ask-hero .ask-hero-go{ background:transparent; border:1px solid #1f3a1f; color:#39ff14; cursor:pointer;
+  font-family:var(--mono); font-size:15px; line-height:1; padding:4px 9px; border-radius:3px; }
+.ask-hero .ask-hero-go:hover{ background:#102010; }
+.ask-hero:focus-within{ border-color:#39ff14; box-shadow:0 2px 18px rgba(57,255,20,.18), inset 0 0 26px rgba(57,255,20,.07); }
+.ask-hero-cap{ color:var(--dim); margin:2px 0 20px; }
+
+/* persistent corner launcher (every page) */
+#ask-fab{ position:fixed; right:16px; bottom:16px; z-index:90; display:inline-flex; align-items:center; gap:6px;
+  background:#0a0e0a; color:#39ff14; border:2px solid #1f3a1f; border-radius:4px; cursor:pointer;
+  font-family:var(--mono); font-size:13px; padding:8px 12px; box-shadow:0 4px 16px rgba(0,0,0,.3);
+  animation:askpulse 2.2s ease-out 1.2s 2; }
+#ask-fab:hover{ background:#102010; border-color:#39ff14; }
+#ask-fab .fab-star{ color:#9effa0; }
+#ask-fab .fab-caret{ opacity:.7; }
+@keyframes askpulse{ 0%{ box-shadow:0 4px 16px rgba(0,0,0,.3), 0 0 0 0 rgba(57,255,20,.35); }
+  70%{ box-shadow:0 4px 16px rgba(0,0,0,.3), 0 0 0 12px rgba(57,255,20,0); }
+  100%{ box-shadow:0 4px 16px rgba(0,0,0,.3), 0 0 0 0 rgba(57,255,20,0); } }
+@media (prefers-reduced-motion: reduce){ #ask-fab{ animation:none; } }
+@media (max-width:680px){ #ask-fab{ right:10px; bottom:10px; font-size:12px; padding:7px 10px; } }
+
 /* konami "1996 mode" */
 body.crt::after{ content:""; position:fixed; inset:0; pointer-events:none; z-index:90;
   background:repeating-linear-gradient(0deg,rgba(0,0,0,.10) 0 1px,transparent 1px 3px); mix-blend-mode:multiply; }

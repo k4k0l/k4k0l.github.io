@@ -140,7 +140,15 @@ def read_content(slug): return open(os.path.join(HERE, "content", slug + ".html"
 home = by_slug["home"]
 recent = "".join('<li><span class="date">{d}</span> &nbsp; <a href="/notes/{s}.html">{t}</a></li>'.format(
     d=n["date"], s=n["slug"], t=esc(n["title"])) for n in notes[:4])
-home_body = ('<h1>What I have been thinking about</h1>\n' + read_content("home") +
+ask_hero = ('<form id="ask-hero" class="ask-hero" hidden aria-label="Ask this page">'
+            '<span class="ask-host">kakol.pro</span><span class="ask-sep">:~$</span>'
+            '<input id="ask-hero-in" class="ask-hero-in" type="text" autocomplete="off" '
+            'placeholder="ask this page about my work, writing, research…" aria-label="Ask this page about Michał">'
+            '<button class="ask-hero-go" type="submit" aria-label="ask">&crarr;</button>'
+            '</form>'
+            '<p class="ask-hero-cap small">a small AI, grounded in this site &amp; my CV — '
+            'it answers from what is here, and says so when it does not know.</p>\n')
+home_body = (ask_hero + '<h1>What I have been thinking about</h1>\n' + read_content("home") +
              '\n<h2>Recent field notes</h2>\n<ul class="notes">\n' + recent + '\n</ul>\n'
              '<p class="small"><a href="/notes.html">all field notes &rarr;</a> &middot; <a href="/feed.xml">rss</a></p>')
 write("index.html", render(home["title"], home["description"], home_body, "/index.html", "home", og_type="website"))

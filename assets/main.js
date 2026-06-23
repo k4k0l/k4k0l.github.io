@@ -44,10 +44,10 @@
 
   /* ---- command palette ( / or Cmd/Ctrl-K ) ---- */
   function buildPalette() {
-    var p = document.createElement("div"); p.id = "palette"; p.setAttribute("role", "dialog"); p.setAttribute("aria-label", "Command palette");
+    var p = document.createElement("div"); p.id = "palette"; p.setAttribute("role", "dialog"); p.setAttribute("aria-modal", "true"); p.setAttribute("aria-label", "Command palette");
     p.innerHTML = '<div class="box"><input type="text" placeholder="jump to… (type a page or note)" aria-label="Search pages"><ul role="listbox"></ul><div class="hint">↑↓ to move · ↵ to open · Esc to close — (yes, this 1996 page has a command palette)</div></div>';
     document.body.appendChild(p);
-    var input = $("input", p), list = $("ul", p), sel = 0, items = [];
+    var input = $("input", p), list = $("ul", p), sel = 0, items = [], prevFocus = null;
     function render() {
       var q = input.value.trim();
       items = INDEX.map(function (e) { return { e: e, s: Math.max(score(q, e.title), score(q, e.kind || "")) }; })
@@ -57,8 +57,8 @@
       $$("li", list).forEach(function (li, i) { li.setAttribute("aria-selected", i === sel); li.onclick = function () { go(i); }; });
     }
     function go(i) { if (items[i]) location.href = items[i].url; }
-    function open() { p.classList.add("open"); input.value = ""; sel = 0; render(); input.focus(); }
-    function close() { p.classList.remove("open"); }
+    function open() { prevFocus = document.activeElement; p.classList.add("open"); input.value = ""; sel = 0; render(); input.focus(); }
+    function close() { p.classList.remove("open"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }
     input.addEventListener("input", function () { sel = 0; render(); });
     input.addEventListener("keydown", function (ev) {
       if (ev.key === "ArrowDown") { sel = Math.min(sel + 1, items.length - 1); render(); ev.preventDefault(); }
@@ -112,7 +112,7 @@
   /* ---- ask-the-page chatbot (green CRT terminal -> Cloudflare Worker -> Workers AI) ---- */
   function buildChat() {
     var btn = $("#askbtn"); if (btn) btn.hidden = false;
-    var panel = document.createElement("div"); panel.id = "chat"; panel.setAttribute("role", "dialog"); panel.setAttribute("aria-label", "Ask the page");
+    var panel = document.createElement("div"); panel.id = "chat"; panel.setAttribute("role", "dialog"); panel.setAttribute("aria-modal", "true"); panel.setAttribute("aria-label", "Ask the page");
     panel.innerHTML = '<div class="cbox">'
       + '<div class="chead"><span>kakol.pro :: ask the page</span><button class="cx" type="button" aria-label="close">×</button></div>'
       + '<div class="clog" aria-live="polite"></div>'
@@ -121,7 +121,7 @@
       + '</div>';
     document.body.appendChild(panel);
     var log = $(".clog", panel), input = $(".cin", panel), form = $(".cform", panel);
-    var history = [], busy = false;
+    var history = [], busy = false, prevFocus = null;
     var GREETING = "Hi — I'm the little assistant on Michał's homepage. Ask me about his work, the field notes, or how this site is built.";
     function add(role, text) {
       var line = document.createElement("div"); line.className = "cmsg c-" + role;
@@ -129,8 +129,8 @@
       line.appendChild(who); line.appendChild(document.createTextNode(" " + text));
       log.appendChild(line); log.scrollTop = log.scrollHeight; return line;
     }
-    function open() { panel.classList.add("open"); if (!log.childNodes.length) add("bot", GREETING); input.focus(); }
-    function close() { panel.classList.remove("open"); }
+    function open() { prevFocus = document.activeElement; panel.classList.add("open"); if (!log.childNodes.length) add("bot", GREETING); input.focus(); }
+    function close() { panel.classList.remove("open"); if (prevFocus && prevFocus.focus) prevFocus.focus(); }
     if (btn) btn.addEventListener("click", open);
     $(".cx", panel).addEventListener("click", close);
     panel.addEventListener("click", function (ev) { if (ev.target === panel) close(); });

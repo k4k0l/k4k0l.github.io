@@ -1,0 +1,1620 @@
+<!doctype html>
+<html lang="pl" data-visualize-standalone>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Mielno na mapach wojennych</title>
+<meta name="description" content="Interaktywny atlas okolic Mielna pod Grunwaldem: mapy sztabowe z 1909 i 1938 roku, rekonstrukcja frontu z sierpnia 1914, Stalag I-B i wydarzenia 1945 roku.">
+<style>:root {
+  color-scheme: light dark;
+  background-color: transparent !important;
+
+  /* Agent-facing contract; keep in sync with SKILL.md. */
+  --background: var(
+    --main-surface-primary,
+    light-dark(rgb(255 255 255), rgb(24 24 24))
+  );
+  --foreground: light-dark(rgb(26 28 31), rgb(255 255 255));
+  --card: color-mix(in oklab, var(--foreground) 5%, transparent);
+  --card-foreground: var(--foreground);
+  --popover: light-dark(rgb(255 255 255), rgb(45 45 45));
+  --popover-foreground: var(--foreground);
+  --primary: light-dark(rgb(51 156 255), rgb(131 195 255));
+  --primary-foreground: light-dark(rgb(255 255 255), rgb(13 13 13));
+  --secondary: light-dark(rgb(255 255 255 / 96%), rgb(54 54 54 / 96%));
+  --secondary-foreground: var(--foreground);
+  --muted: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --muted-foreground: light-dark(
+    rgb(26 28 31 / 49.4%),
+    rgb(255 255 255 / 49.8%)
+  );
+  --accent: light-dark(rgb(229 242 255), rgb(13 39 63));
+  --accent-foreground: var(--primary);
+  --destructive: light-dark(rgb(226 85 7), rgb(255 133 73));
+  --border: light-dark(rgb(26 28 31 / 8%), rgb(255 255 255 / 8.2%));
+  --input: light-dark(
+    rgb(26 28 31 / 11.8%),
+    color-mix(in oklab, rgb(0 0 0) 10%, transparent)
+  );
+  --ring: light-dark(rgb(51 156 255), rgb(131 195 255 / 76%));
+  --font-size-base: 14px;
+  --red: light-dark(rgb(186 38 35), rgb(250 66 62));
+  --green: light-dark(rgb(0 162 64), rgb(64 201 119));
+
+  /* Internal implementation variables; not part of the agent contract. */
+  --font-sans: -apple-system, system-ui, "Segoe UI", sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono",
+    monospace;
+  --font-size-normal: max(11px, var(--font-size-base));
+  --font-size-tooltip: calc(var(--font-size-base) - 1px);
+  --font-size-small: max(11px, calc(var(--font-size-base) - 2px));
+  --font-size-h1: calc(var(--font-size-normal) * 1.7142857143);
+  --font-size-h2: calc(var(--font-size-normal) * 1.4285714286);
+  --font-size-h3: calc(var(--font-size-normal) * 1.2857142857);
+  --font-weight-normal: 430;
+  --font-weight-medium: 500;
+  --line-height-normal: calc(var(--font-size-normal) * 1.5);
+  --line-height-tooltip: calc(var(--font-size-tooltip) * 1.4285714286);
+  --line-height-small: calc(var(--font-size-small) + 4px);
+  --radius: 10px;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-2xl: calc(var(--radius) * 1.6);
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px -1px rgb(0 0 0 / 8%);
+  --checkmark-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 17 17'%3E%3Cpath d='M12.8961 3.64101C13.1297 3.41418 13.4984 3.37523 13.7779 3.56581C14.0571 3.75635 14.1554 4.11331 14.0299 4.41347L13.9615 4.53847L7.71151 13.7045C7.59411 13.8767 7.4063 13.9877 7.19881 14.0072C6.99136 14.0267 6.78564 13.9533 6.63826 13.806L2.88826 10.056L2.79842 9.9457C2.6192 9.67407 2.64927 9.30496 2.88826 9.06581C3.12738 8.82669 3.49647 8.79676 3.76815 8.97597L3.8785 9.06581L7.03084 12.2182L12.8053 3.74941L12.8961 3.64101Z'/%3E%3C/svg%3E");
+
+  /* Legacy aliases; not part of the current agent contract. */
+  --viz-bg: transparent;
+  --viz-panel: var(--card);
+  --viz-border: var(--border);
+  --viz-text: var(--foreground);
+  --viz-muted: var(--muted-foreground);
+  --viz-accent: var(--primary);
+  --viz-accent-text: var(--primary-foreground);
+  --viz-accent-bg: var(--accent);
+  --viz-font-size: var(--font-size-base);
+  --viz-warning: var(--destructive);
+  --color-background-primary: var(--background);
+  --color-text-primary: var(--foreground);
+  --color-border-secondary: var(--border);
+}
+
+:root[data-visualize-standalone] {
+  background-color: var(--background) !important;
+}
+
+/* Generic mobile code-block hosts provide light/dark mode but no series palette.
+   AppBlock hosts set all six variables themselves. */
+:root:not([data-app-block-surface]) {
+  --viz-series-1: var(--primary);
+  --viz-series-2: light-dark(#f3883b, #f59a56);
+  --viz-series-3: light-dark(#5dc977, #74d58b);
+  --viz-series-4: light-dark(#eb77b1, #f08fc0);
+  --viz-series-5: light-dark(#9b79ec, #aa91ef);
+  --viz-series-6: light-dark(#3ab9b1, #5acbc2);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html > body {
+  margin: 0;
+  padding: 5px;
+  color: var(--foreground);
+  background: transparent !important;
+  font-family: var(--font-sans);
+  font-size: var(--font-size-normal);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+}
+
+:root:not([data-app-block-surface]) > body {
+  padding: 12px;
+}
+
+a {
+  color: color-mix(in srgb, var(--viz-accent) 80%, var(--viz-text) 20%);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  text-underline-offset: 2px;
+}
+
+a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 0.5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block: 0;
+}
+
+h1 {
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.3;
+}
+
+b,
+strong,
+th {
+  font-weight: var(--font-weight-medium);
+}
+
+code:not(pre code) {
+  display: inline;
+  padding: 1px 6px;
+  border-radius: var(--radius-sm);
+  background: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  word-break: break-word;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--foreground);
+  font: inherit;
+  text-align: start;
+}
+
+.table :is(th, td) {
+  padding-block: 10px;
+  padding-inline: 0 24px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.table-responsive > .table :is(th, td) {
+  overflow-wrap: break-word;
+}
+
+.table :is(th, td):last-child {
+  padding-inline-end: 0;
+}
+
+.table :is(caption, thead th) {
+  font-weight: 600;
+}
+
+.table thead th {
+  padding-block: 8px;
+  border-bottom-color: color-mix(in srgb, var(--foreground) 16%, transparent);
+}
+
+.table tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.table.table-sm :is(th, td) {
+  padding-block: 6px;
+}
+
+.table.table-sm :is(th, td):not(:last-child) {
+  padding-inline-end: 16px;
+}
+
+.table :is(.text-end, [align="right"]) {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.table :is(.text-center, [align="center"]) {
+  text-align: center;
+}
+
+.table .text-nowrap {
+  white-space: nowrap;
+}
+
+#widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  background: transparent !important;
+}
+
+.card {
+  min-width: 0;
+  padding: 12px;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  border-radius: var(--radius-2xl);
+  color: var(--card-foreground);
+  background: var(--card);
+}
+
+#widget > :not(.card) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  left: 0;
+  width: max-content;
+  max-width: min(
+    20rem,
+    var(--tooltip-available-width, calc(100vw - 10px)),
+    calc(100vw - 10px)
+  );
+  max-height: min(
+    var(--tooltip-available-height, calc(100vh - 10px)),
+    calc(100vh - 10px)
+  );
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--popover-foreground);
+  background: var(--popover);
+  box-shadow: none;
+  font-size: var(--font-size-tooltip);
+  line-height: var(--line-height-tooltip);
+  overflow-wrap: break-word;
+  white-space: normal;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The bundled tooltip runtime owns [data-tooltip]. AppBlock's CSS-only
+   pseudo-tooltip can widen dense grids even while hidden. */
+main [data-tooltip]::after {
+  content: none;
+}
+
+.viz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(max(180px, 24%), 1fr));
+  gap: 10px;
+}
+
+.viz-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.viz-stat-value {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+}
+
+.viz-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.viz-badge {
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  color: var(--accent-foreground);
+  background: var(--accent);
+  font-weight: var(--font-weight-medium);
+}
+
+small,
+.text-small,
+.viz-badge {
+  font-size: var(--font-size-small);
+  line-height: var(--line-height-small);
+}
+
+.text-muted {
+  color: var(--muted-foreground);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.viz-controls > .form-label {
+  display: grid;
+  min-width: min(100%, 260px);
+  flex: 1 1 280px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 2px 12px;
+  margin-bottom: 0;
+}
+
+.viz-controls > .form-label > :is(.form-control, .form-range, .form-select) {
+  grid-column: 1 / -1;
+}
+
+.btn,
+.form-check-input,
+.form-control,
+.form-range,
+.form-select {
+  font: inherit;
+}
+
+.btn {
+  appearance: button;
+  display: inline-flex;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0 8px;
+  -webkit-app-region: no-drag;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: var(--cursor-interaction, pointer);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.btn:is(.btn-block, .viz-tile) {
+  inline-size: 100%;
+}
+
+.btn.viz-tile {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+a.btn {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn-primary {
+  border-color: transparent;
+  color: var(--interactive-label-primary-default, var(--primary-foreground));
+  background: var(--interactive-bg-primary-default, var(--foreground));
+  background-clip: padding-box;
+}
+
+.btn-primary .text-muted {
+  color: color-mix(
+    in srgb,
+    var(--interactive-label-primary-default, var(--primary-foreground)) 50%,
+    transparent
+  );
+}
+
+.btn-primary:not(:disabled):hover {
+  background: color-mix(in srgb, var(--foreground) 80%, transparent);
+  background-clip: padding-box;
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.btn-ghost:not(:disabled):hover {
+  color: var(--foreground);
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+[data-lucide] {
+  stroke-width: 1.6;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--foreground);
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  padding: 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background: var(--secondary);
+}
+
+.form-control::placeholder {
+  color: var(--muted-foreground);
+}
+
+.form-control[type="file"] {
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control[type="file"]::file-selector-button {
+  min-height: 26px;
+  margin-right: 8px;
+  padding: 0 8px;
+  border: 0;
+  border-right: 1px solid var(--input);
+  color: var(--secondary-foreground);
+  background: var(--secondary);
+  cursor: inherit;
+  font: inherit;
+}
+
+.form-control[type="file"]:not(:disabled):hover::file-selector-button {
+  background: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-control-color[type="color"] {
+  width: 40px;
+  height: 28px;
+  padding: 3px;
+  cursor: var(--cursor-interaction, pointer);
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.form-control-color[type="color"]::-webkit-color-swatch {
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+
+textarea.form-control {
+  height: auto;
+  min-height: 72px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+
+.form-control:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.form-select {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: 28px;
+  margin: 0;
+  padding: 0 32px 0 8px;
+  outline: none;
+  border: 1px solid var(--input);
+  border-radius: var(--radius-lg);
+  color: var(--foreground);
+  background-color: var(--secondary);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted-foreground) 50%),
+    linear-gradient(135deg, var(--muted-foreground) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 50%,
+    calc(100% - 10px) 50%;
+  background-repeat: no-repeat;
+  background-size: 4px 4px;
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-select:not(:disabled):hover {
+  background-color: color-mix(in srgb, var(--foreground) 6%, var(--secondary));
+}
+
+.form-select:focus-visible {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-check {
+  display: flex;
+  min-height: 20px;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  margin: 0;
+  border: 1px solid var(--input);
+  color: var(--primary-foreground);
+  background-color: transparent;
+  cursor: var(--cursor-interaction, default);
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    box-shadow 150ms;
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"] {
+  border-color: var(--input);
+  border-radius: var(--radius-sm);
+  background-color: var(--secondary);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input:not(:disabled):not(:checked):hover {
+  background-color: var(--card);
+}
+
+.form-check:not(.form-switch) .form-check-input[type="checkbox"]:checked {
+  border-color: var(--primary);
+  background-color: var(--primary);
+}
+
+.form-check:not(.form-switch)
+  .form-check-input[type="checkbox"]:checked::before {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--primary-foreground);
+  content: "";
+  mask: var(--checkmark-image) center / 12px 12px no-repeat;
+}
+
+.form-check-input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-full);
+}
+
+.form-check-input[type="radio"]:checked {
+  border: 2px solid var(--primary);
+  background:
+    radial-gradient(circle, var(--primary-foreground) 0 2.5px, transparent 3px),
+    var(--primary);
+}
+
+.form-check:not(.form-switch) .form-check-input:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.form-check:not(.form-switch) .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+}
+
+.form-switch .form-check-input:disabled,
+.form-switch .form-check-input:disabled + .form-check-label {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-check-label {
+  color: var(--foreground);
+  cursor: var(--cursor-interaction, default);
+}
+
+.form-switch .form-check-input {
+  position: relative;
+  width: 32px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  box-shadow: none;
+  transition: background-color 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  box-sizing: border-box;
+  border: 1px solid light-dark(var(--primary-foreground), var(--foreground));
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+  box-shadow: var(--shadow-sm);
+  content: "";
+  transform: translate(2px, -50%);
+  transition: transform 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.form-switch .form-check-input:checked {
+  background: var(--primary);
+}
+
+.form-switch .form-check-input:checked::before {
+  transform: translate(14px, -50%);
+}
+
+.form-switch .form-check-input:focus-visible {
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+.form-range {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 28px;
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  accent-color: var(--primary);
+  background: linear-gradient(
+      color-mix(in srgb, var(--foreground) 7%, transparent),
+      color-mix(in srgb, var(--foreground) 7%, transparent)
+    )
+    center / 100% 2px no-repeat;
+}
+
+.form-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-webkit-slider-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+
+.form-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: light-dark(var(--primary-foreground), var(--foreground));
+}
+
+.form-range:focus-visible::-moz-range-thumb {
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.form-range:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:not(.btn-primary, .viz-tile):is(
+    [aria-pressed="true"],
+    [aria-selected="true"],
+    .is-selected
+  ) {
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+
+.btn.viz-tile:is([aria-pressed="true"], [aria-selected="true"], .is-selected) {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+#widget > svg {
+  width: 100%;
+}
+
+.text-warning,
+.text-destructive {
+  color: var(--destructive);
+}
+</style>
+</head>
+<body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<div id="mielno-history-map" class="mh-shell">
+  <header class="mh-header">
+    <div>
+      <p class="mh-kicker">Mielno pod Grunwaldem · atlas terenowy</p>
+      <h1>Mielno na mapach wojennych</h1>
+      <p class="mh-lead">Współczesna mapa z georeferencjonowanymi sztabówkami, liniami działań i miejscami pamięci.</p>
+    </div>
+    <div class="mh-home-chip" aria-label="Punkt odniesienia Mielno 158">
+      <span class="mh-star" aria-hidden="true">★</span>
+      <span><strong>Mielno 158</strong><small>53.507008, 20.208230</small></span>
+    </div>
+  </header>
+
+  <section class="mh-timeline" aria-labelledby="mh-period-label">
+    <div class="mh-timeline-head">
+      <div>
+        <span class="mh-eyebrow">Okres</span>
+        <strong id="mh-period-label">1914 · I wojna światowa</strong>
+      </div>
+      <div class="mh-timeline-actions">
+        <button type="button" class="mh-button" id="mh-view-home">Mielno 158</button>
+        <button type="button" class="mh-button" id="mh-view-region">Cały rejon</button>
+      </div>
+    </div>
+    <input id="mh-period" class="mh-range" type="range" min="0" max="4" step="1" value="1" aria-label="Wybierz okres historyczny">
+    <div class="mh-milestones" aria-label="Skróty okresów">
+      <button type="button" data-period="0"><span>1807</span><small>Napoleon</small></button>
+      <button type="button" data-period="1" class="is-active"><span>1914</span><small>I wojna</small></button>
+      <button type="button" data-period="2"><span>1939</span><small>Stalag I-B</small></button>
+      <button type="button" data-period="3"><span>1945</span><small>front</small></button>
+      <button type="button" data-period="4"><span>dzisiaj</span><small>teren</small></button>
+    </div>
+    <div class="mh-compare">
+      <label for="mh-opacity"><span>Widoczność sztabówki</span><strong id="mh-opacity-value">62%</strong></label>
+      <input id="mh-opacity" class="mh-range mh-range-small" type="range" min="0" max="100" value="62">
+    </div>
+    <div id="mh-ww1-controls" class="mh-ww1-controls" aria-label="Przebieg walk w sierpniu 1914">
+      <span class="mh-eyebrow">Przebieg walk</span>
+      <div>
+        <button type="button" data-state="25">25 VIII</button>
+        <button type="button" data-state="2627">26–27 VIII</button>
+        <button type="button" data-state="28am" class="is-active">28 VIII rano</button>
+        <button type="button" data-state="28pm">28 VIII wieczór</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="mh-map-layout">
+    <div class="mh-map-frame">
+      <div id="mh-map" role="application" aria-label="Interaktywna mapa historyczna okolic Mielna i Olsztynka"></div>
+      <div id="mh-map-badge" class="mh-map-badge">Sztabówka 1909 · stan rano 28 VIII</div>
+      <div class="mh-legend" aria-label="Legenda mapy">
+        <span><i class="mh-line mh-line-de"></i>Niemcy</span>
+        <span><i class="mh-line mh-line-ru"></i>Rosjanie / ZSRR</span>
+        <span><i class="mh-dot mh-dot-event"></i>wydarzenie</span>
+        <span><i class="mh-cross">✚</i>cmentarz</span>
+      </div>
+    </div>
+
+    <aside class="mh-panel" aria-live="polite">
+      <div id="mh-period-copy"></div>
+      <div id="mh-selected" class="mh-selected">
+        <span class="mh-eyebrow">Punkt odniesienia</span>
+        <h2>Mielno 158</h2>
+        <p>Dom leży około kilometra na południe od cmentarzy wojennych i rejonu szturmu przez Höllental.</p>
+      </div>
+      <div class="mh-caveat">
+        <strong>Jak czytać rekonstrukcję</strong>
+        <p>Linie przerywane pokazują przebieg przybliżony z opisów jednostek. Nie są pomiarem zachowanych okopów.</p>
+      </div>
+    </aside>
+  </section>
+
+  <footer class="mh-footer">
+    <p><strong>Źródła map:</strong> Meßtischblatt 2487 Hohenstein, wyd. 1909 (Mapster/UW) oraz wyd. 1938 (SLUB Dresden / Deutsche Fotothek). Geografia współczesna: OpenStreetMap.</p>
+    <p><strong>Źródła wydarzeń:</strong> Reichsarchiv, <em>Die Befreiung Ostpreußens</em>; P. Fischer, <em>Bei Hindenburg in Ostpreußen</em> (1915); Portal Olsztynka; Encyklopedia Warmii i Mazur; Volksbund.</p>
+  </footer>
+</div>
+
+<style>
+  #mielno-history-map {
+    --mh-bg: #f4f1e8;
+    --mh-paper: #fffdf7;
+    --mh-ink: #1f2923;
+    --mh-muted: #657168;
+    --mh-border: #cfcbbd;
+    --mh-green: #2f5948;
+    --mh-green-soft: #dbe7df;
+    --mh-gold: #d7952d;
+    --mh-de: #17669a;
+    --mh-ru: #b33b3b;
+    --mh-soviet: #7d2f6f;
+    --mh-camp: #713d2f;
+    color: var(--mh-ink);
+    background: var(--mh-bg);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: clamp(14px, 2.8vw, 36px);
+    box-sizing: border-box;
+  }
+
+  #mielno-history-map *, #mielno-history-map *::before, #mielno-history-map *::after { box-sizing: border-box; }
+  #mielno-history-map [hidden] { display: none !important; }
+  #mielno-history-map button, #mielno-history-map input { font: inherit; }
+
+  .mh-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    max-width: 1440px;
+    margin: 0 auto 20px;
+  }
+  .mh-kicker, .mh-eyebrow {
+    margin: 0 0 5px;
+    color: var(--mh-green);
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .mh-header h1 { margin: 0; font: 700 clamp(2rem, 4.6vw, 4.25rem)/0.98 Georgia, "Times New Roman", serif; letter-spacing: -0.04em; }
+  .mh-lead { max-width: 720px; margin: 10px 0 0; color: var(--mh-muted); font-size: clamp(0.96rem, 1.5vw, 1.12rem); }
+  .mh-home-chip {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 13px;
+    border: 1px solid var(--mh-border);
+    border-radius: 12px;
+    background: var(--mh-paper);
+  }
+  .mh-home-chip span:last-child { display: grid; gap: 1px; }
+  .mh-home-chip small { color: var(--mh-muted); font-variant-numeric: tabular-nums; }
+  .mh-star { color: #dc6b34; font-size: 1.45rem; }
+
+  .mh-timeline {
+    max-width: 1440px;
+    margin: 0 auto 14px;
+    padding: 14px 16px 12px;
+    border: 1px solid var(--mh-border);
+    border-radius: 14px;
+    background: var(--mh-paper);
+  }
+  .mh-timeline-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .mh-timeline-head > div:first-child { display: grid; }
+  #mh-period-label { font-size: 1.12rem; }
+  .mh-timeline-actions { display: flex; gap: 7px; }
+  .mh-button, .mh-milestones button, .mh-ww1-controls button {
+    border: 1px solid var(--mh-border);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--mh-ink);
+    cursor: pointer;
+  }
+  .mh-button { padding: 7px 10px; }
+  .mh-button:hover, .mh-milestones button:hover, .mh-ww1-controls button:hover { background: var(--mh-green-soft); }
+  .mh-button:focus-visible, .mh-milestones button:focus-visible, .mh-ww1-controls button:focus-visible, .mh-range:focus-visible { outline: 3px solid rgba(47, 89, 72, 0.25); outline-offset: 2px; }
+  .mh-range { width: 100%; accent-color: var(--mh-green); cursor: pointer; }
+  #mh-period { margin: 12px 0 2px; }
+  .mh-milestones { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
+  .mh-milestones button { display: grid; padding: 7px 5px; text-align: center; }
+  .mh-milestones button span { font-weight: 750; font-variant-numeric: tabular-nums; }
+  .mh-milestones button small { color: var(--mh-muted); }
+  .mh-milestones button.is-active, .mh-ww1-controls button.is-active { color: #fff; border-color: var(--mh-green); background: var(--mh-green); }
+  .mh-milestones button.is-active small { color: rgba(255,255,255,0.82); }
+  .mh-compare { display: grid; grid-template-columns: minmax(155px, 230px) minmax(160px, 1fr); align-items: center; gap: 12px; margin-top: 11px; }
+  .mh-compare label { display: flex; justify-content: space-between; gap: 8px; color: var(--mh-muted); font-size: 0.88rem; }
+  .mh-compare strong { color: var(--mh-ink); font-variant-numeric: tabular-nums; }
+  .mh-ww1-controls { display: flex; align-items: center; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--mh-border); }
+  .mh-ww1-controls .mh-eyebrow { flex: 0 0 auto; margin: 0; }
+  .mh-ww1-controls > div { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mh-ww1-controls button { padding: 6px 9px; font-size: 0.88rem; }
+
+  .mh-map-layout { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 330px); gap: 14px; align-items: stretch; }
+  .mh-map-frame { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--mh-border); border-radius: 16px; background: #d9e2dc; }
+  #mh-map { width: 100%; height: min(72vh, 760px); min-height: 570px; background: #d9e2dc; }
+  .mh-map-badge { position: absolute; z-index: 600; top: 12px; left: 52px; max-width: calc(100% - 132px); padding: 7px 10px; border-radius: 8px; background: rgba(31,41,35,0.88); color: #fff; font-size: 0.82rem; pointer-events: none; }
+  .mh-legend { position: absolute; z-index: 600; left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px 12px; max-width: calc(100% - 24px); padding: 8px 10px; border-radius: 9px; background: rgba(255,253,247,0.91); color: var(--mh-ink); font-size: 0.76rem; pointer-events: none; }
+  .mh-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .mh-line { width: 22px; height: 0; border-top: 3px dashed; }
+  .mh-line-de { border-color: var(--mh-de); }
+  .mh-line-ru { border-color: var(--mh-ru); }
+  .mh-dot { width: 9px; height: 9px; border: 2px solid var(--mh-ink); border-radius: 50%; background: #f2bc4c; }
+  .mh-cross { color: var(--mh-ink); font-size: 1rem; }
+
+  .mh-panel { display: flex; flex-direction: column; gap: 12px; padding: 17px; border: 1px solid var(--mh-border); border-radius: 16px; background: var(--mh-paper); }
+  .mh-panel h2 { margin: 2px 0 6px; font: 700 1.42rem/1.1 Georgia, "Times New Roman", serif; }
+  .mh-panel p { margin: 0; color: var(--mh-muted); line-height: 1.48; }
+  .mh-period-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 9px 0 10px; }
+  .mh-tag { display: inline-flex; padding: 4px 7px; border-radius: 999px; background: var(--mh-green-soft); color: var(--mh-green); font-size: 0.75rem; font-weight: 700; }
+  .mh-selected { padding-top: 13px; border-top: 1px solid var(--mh-border); }
+  .mh-caveat { margin-top: auto; padding: 12px; border-radius: 10px; background: #efe8d7; }
+  .mh-caveat p { margin-top: 4px; font-size: 0.82rem; }
+  .mh-source-link { display: inline-flex; margin-top: 10px; color: var(--mh-green); font-weight: 700; text-underline-offset: 3px; }
+
+  .mh-footer { max-width: 1440px; margin: 12px auto 0; color: var(--mh-muted); font-size: 0.75rem; line-height: 1.45; }
+  .mh-footer p { margin: 3px 0; }
+
+  .mh-marker { display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid #fff; border-radius: 50%; color: #fff; background: var(--mh-green); box-shadow: 0 2px 7px rgba(0,0,0,0.28); font-size: 13px; font-weight: 800; }
+  .mh-marker-home { width: 32px; height: 32px; color: #fff; background: #d85f2e; font-size: 18px; }
+  .mh-marker-event { color: var(--mh-ink); background: #f2bc4c; }
+  .mh-marker-stop { background: #6f5e9b; }
+  .mh-marker-grave { border-radius: 7px; background: #242923; }
+  .mh-marker-camp { border-radius: 7px; background: var(--mh-camp); }
+  .mh-marker-soviet { background: var(--mh-soviet); }
+  .mh-arrow-inner { display: block; color: inherit; font-size: 20px; line-height: 20px; text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff; transform-origin: center; }
+  .leaflet-popup-content-wrapper { border-radius: 10px; }
+  .leaflet-popup-content { margin: 12px 14px; line-height: 1.4; }
+  .leaflet-control-attribution { font-size: 10px; }
+
+  @media (prefers-color-scheme: dark) {
+    #mielno-history-map {
+      --mh-bg: #161d19;
+      --mh-paper: #202923;
+      --mh-ink: #edf1ed;
+      --mh-muted: #b1bcb4;
+      --mh-border: #3d4941;
+      --mh-green: #9bc5af;
+      --mh-green-soft: #2d4638;
+    }
+    .mh-caveat { background: #3a3327; }
+    .mh-legend { background: rgba(32,41,35,0.92); }
+  }
+
+  @media (max-width: 880px) {
+    .mh-header { align-items: flex-start; }
+    .mh-map-layout { grid-template-columns: 1fr; }
+    #mh-map { height: 64vh; min-height: 520px; }
+    .mh-panel { min-height: 0; }
+    .mh-caveat { margin-top: 0; }
+  }
+  @media (max-width: 620px) {
+    #mielno-history-map { padding: 12px; }
+    .mh-header { display: grid; gap: 13px; }
+    .mh-home-chip { width: 100%; }
+    .mh-timeline { padding: 12px; }
+    .mh-timeline-head { align-items: flex-start; }
+    .mh-timeline-actions { display: grid; }
+    .mh-button { padding: 6px 8px; font-size: 0.8rem; }
+    .mh-milestones { gap: 4px; }
+    .mh-milestones button { padding: 6px 1px; border-radius: 7px; }
+    .mh-milestones button small { font-size: 0.65rem; }
+    .mh-compare { grid-template-columns: 1fr; gap: 3px; }
+    .mh-ww1-controls { display: grid; gap: 6px; }
+    .mh-ww1-controls > div { display: grid; grid-template-columns: repeat(2, 1fr); }
+    #mh-map { min-height: 500px; height: 61vh; }
+    .mh-map-badge { left: 48px; top: 10px; font-size: 0.72rem; }
+    .mh-legend { right: 9px; left: 9px; bottom: 9px; gap: 5px 9px; }
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(() => {
+  "use strict";
+  const root = document.getElementById("mielno-history-map");
+  if (!root || !window.L) return;
+
+  const PERIODS = [
+    {
+      year: "1807",
+      title: "Wojny napoleońskie",
+      badge: "1807 · obozy i przemarsze",
+      tags: ["przemarsze", "biwaki", "bez lokalnej sztabówki"],
+      summary: "Pod koniec 1806 roku do Hohenstein wkroczyły wojska francuskie. Między Olsztynkiem a Wilkowem obozowało około 12 tys. żołnierzy; w maju 1807 armia ruszyła dalej na wschód.",
+      source: "https://olsztynek.pl/miasto-i-gmina-olsztynek/historia/lata-1804-1907/",
+      sourceLabel: "Historia Olsztynka: lata 1804–1907"
+    },
+    {
+      year: "1914",
+      title: "I wojna światowa",
+      badge: "Sztabówka 1909 · stan rano 28 VIII",
+      tags: ["Meßtischblatt 1:25 000", "front 26–28 VIII", "rekonstrukcja"],
+      summary: "Mielno (Mühlen) znalazło się bezpośrednio na linii walk bitwy pod Tannenbergiem. Najbliższy domowi odcinek frontu przebiegał przez jar Höllental, około kilometra na północ.",
+      source: "https://igrek.amzp.pl/result.php?cmd=id&god=2487&cat=tk25",
+      sourceLabel: "Arkusz 2487 Hohenstein w Mapsterze"
+    },
+    {
+      year: "1939",
+      title: "II wojna: Stalag I-B",
+      badge: "Sztabówka 1938 · obóz 1939–1945",
+      tags: ["Meßtischblatt 1:25 000", "obóz jeniecki", "1939–1945"],
+      summary: "Na zachód od Olsztynka, między Królikowem a Sudwą, Niemcy uruchomili Stalag I-B Hohenstein. Przez obóz przeszły setki tysięcy jeńców; około 55 tys. zmarło lub zostało zamęczonych.",
+      source: "https://www.olsztynek.pl/informacje/turystyka/zabytki/",
+      sourceLabel: "Portal Olsztynka: Stalag I-B"
+    },
+    {
+      year: "1945",
+      title: "Operacja wschodniopruska",
+      badge: "Styczeń 1945 · kierunek natarcia (schemat)",
+      tags: ["Armia Czerwona", "22 I 1945", "schemat regionalny"],
+      summary: "Armia Czerwona wkroczyła do Olsztynka 22 stycznia 1945 roku. Dokładnego lokalnego przebiegu linii przez Mielno nie udało się potwierdzić; pokazany kierunek jest schematem regionalnym, nie linią okopów.",
+      source: "https://encyklopedia.warmia.mazury.pl/index.php/Olsztynek",
+      sourceLabel: "Encyklopedia Warmii i Mazur: Olsztynek"
+    },
+    {
+      year: "2026",
+      title: "Współczesny teren",
+      badge: "Współcześnie · ślady w krajobrazie",
+      tags: ["OpenStreetMap", "miejsca pamięci", "punkt adresowy GUGiK"],
+      summary: "Współczesna mapa pozwala odnaleźć teren szturmu, oba cmentarze wojenne pod Mielnem oraz pozostałości i upamiętnienia Stalagu I-B pod Olsztynkiem.",
+      source: "https://www.openstreetmap.org/#map=13/53.533/20.238",
+      sourceLabel: "OpenStreetMap: okolice Mielna"
+    }
+  ];
+
+  const WW1 = {
+    "25": {
+      label: "wieczór 25 VIII",
+      summary: "Niemiecki XX Korpus utrzymywał rygiel Gilgenburg–Mühlen–Hohenstein. Rosyjski XV Korpus dochodził do Waplitz; XIII Korpus biwakował koło Kurken.",
+      lines: [
+        {side:"de", name:"Rygiel XX Korpusu", desc:"Przybliżony odcinek obrony przez Mühlen ku Hohenstein.", coords:[[53.475,20.105],[53.49,20.165],[53.512,20.205],[53.555,20.235],[53.583,20.282]]},
+        {side:"ru", name:"Podejście XV Korpusu", desc:"XV Korpus osiągnął Waplitz około 15:30 i kierował się ku Mühlen.", coords:[[53.46,20.39],[53.499,20.322],[53.515,20.255]]}
+      ],
+      moves: []
+    },
+    "2627": {
+      label: "26–27 VIII",
+      summary: "Mühlen leżało na aktywnym froncie. Oddziały Landwehry i gen. Ungera blokowały szosę na wzgórzach; rosyjska 8. Dywizja nacierała od wschodu.",
+      lines: [
+        {side:"de", name:"Pozycja Mühlen–Ohmensee", desc:"Pozycja 70. Brygady Landwehry, dywizji Ungera i przydzielonego IR 147.", coords:[[53.499,20.197],[53.515,20.203],[53.54,20.204]]},
+        {side:"ru", name:"Pozycje na wschód od Höllental", desc:"Rekonstrukcja umocnień na wschodnim stoku jaru.", coords:[[53.501,20.219],[53.518,20.225],[53.539,20.23]]}
+      ],
+      moves: [
+        {side:"ru", name:"Natarcia na Mühlen", desc:"Powtarzane rosyjskie ataki na pozycję zamykającą szosę.", coords:[[53.515,20.25],[53.515,20.207]]}
+      ]
+    },
+    "28am": {
+      label: "rano 28 VIII",
+      summary: "Pod Waplitz niemiecka 41. Dywizja poniosła ciężką klęskę, a pod Mühlen Landwehra rozpoczęła szturm przez Höllental.",
+      lines: [
+        {side:"de", name:"Pozycja wyjściowa pod Mühlen", desc:"LIR 18 nacierał po prawej, a LIR 5 po lewej stronie szosy.", coords:[[53.501,20.198],[53.516,20.204],[53.538,20.207]]},
+        {side:"ru", name:"Rosyjskie umocnienia Höllental", desc:"Silne pozycje na wschodnim stoku jaru.", coords:[[53.5,20.217],[53.518,20.223],[53.538,20.229]]}
+      ],
+      moves: [
+        {side:"de", name:"Szturm przez Höllental", desc:"Natarcie Landwehry i IR 147 ruszyło na wschód.", coords:[[53.516,20.202],[53.516,20.218],[53.516,20.24]]},
+        {side:"de", name:"Marsz 41. Dywizji przez Waplitz", desc:"Nocny manewr zakończył się ciężką porażką we mgle.", coords:[[53.46,20.345],[53.499,20.322],[53.533,20.273]]},
+        {side:"de", name:"3. Dywizja Rezerwowa", desc:"Natarcie przez Dröbnitz w stronę Hohenstein.", coords:[[53.553,20.179],[53.57,20.235],[53.583,20.282]]}
+      ]
+    },
+    "28pm": {
+      label: "wieczór 28 VIII",
+      summary: "Około 17:00 Niemcy zdobyli pozycje w Höllental. Pościg doszedł do Ganshorn i Paulsgut, a rosyjskie centrum cofało się na południowy wschód.",
+      lines: [
+        {side:"de", name:"Linia osiągnięta wieczorem", desc:"Kierunek dojścia oddziałów gen. Ungera i Landwehry.", coords:[[53.515,20.235],[53.514,20.272],[53.533,20.273]]},
+        {side:"ru", name:"Odwrót XV Korpusu", desc:"Odwrót z odcinka Hohenstein–Mühlen.", coords:[[53.54,20.23],[53.50,20.30],[53.46,20.39]]}
+      ],
+      moves: [
+        {side:"de", name:"Pościg na Ganshorn", desc:"Po zdobyciu Höllental piechota ruszyła ku Ganshorn.", coords:[[53.516,20.218],[53.514,20.272]]},
+        {side:"ru", name:"Odwrót na południowy wschód", desc:"Rosyjskie oddziały odchodziły ku drogom na Neidenburg.", coords:[[53.515,20.27],[53.47,20.36],[53.445,20.43]]}
+      ]
+    }
+  };
+
+  const COLORS = {de:"#17669a", ru:"#b33b3b", soviet:"#7d2f6f"};
+  const HOME = [53.5070080, 20.2082296];
+  const SHEET_BOUNDS = [[53.5,20.1666667],[53.6,20.3333333]];
+  const REGION_BOUNDS = [[53.44,20.05],[53.615,20.49]];
+  const CLOSE_BOUNDS = [[53.492,20.17],[53.548,20.29]];
+  const OLSZTYNEK_BOUNDS = [[53.56,20.22],[53.612,20.32]];
+
+  const map = L.map(root.querySelector("#mh-map"), {zoomControl:true, preferCanvas:true, minZoom:9, maxZoom:18});
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: "&copy; OpenStreetMap contributors"
+  }).addTo(map);
+  L.control.scale({imperial:false, position:"bottomright"}).addTo(map);
+
+  const historic1909 = L.imageOverlay("assets/messtischblatt-1909.jpg", SHEET_BOUNDS, {opacity:0.62, interactive:false});
+  const historic1938 = L.imageOverlay("assets/messtischblatt-1938.jpg", SHEET_BOUNDS, {opacity:0.62, interactive:false});
+  const periodLayer = L.layerGroup().addTo(map);
+  const homeLayer = L.layerGroup().addTo(map);
+  let currentOverlay = null;
+  let currentPeriod = 1;
+  let currentWW1 = "28am";
+
+  function icon(kind, glyph) {
+    return L.divIcon({
+      className: "",
+      html: `<span class="mh-marker mh-marker-${kind}">${glyph}</span>`,
+      iconSize: kind === "home" ? [32,32] : [26,26],
+      iconAnchor: kind === "home" ? [16,16] : [13,13]
+    });
+  }
+
+  function setSelected(name, desc, eyebrow = "Wybrany punkt") {
+    root.querySelector("#mh-selected").innerHTML = `<span class="mh-eyebrow">${eyebrow}</span><h2>${name}</h2><p>${desc}</p>`;
+  }
+
+  function addMarker(item, kind = "event", glyph = "•") {
+    const marker = L.marker(item.coord, {icon:icon(kind, glyph)}).addTo(periodLayer);
+    marker.bindTooltip(item.name, {direction:"top", offset:[0,-10]});
+    marker.bindPopup(`<strong>${item.name}</strong><br>${item.desc}`);
+    marker.on("click", () => setSelected(item.name, item.desc));
+    return marker;
+  }
+
+  function addLine(item, movement = false) {
+    const color = COLORS[item.side] || COLORS.de;
+    const line = L.polyline(item.coords, {
+      color,
+      weight: movement ? 4 : 4,
+      opacity: 0.94,
+      dashArray: movement ? "2 9" : "10 8",
+      lineCap: "round",
+      interactive: true
+    }).addTo(periodLayer);
+    line.bindTooltip(item.name, {sticky:true});
+    line.bindPopup(`<strong>${item.name}</strong><br>${item.desc}`);
+    line.on("click", () => setSelected(item.name, item.desc, movement ? "Kierunek ruchu" : "Rekonstrukcja linii"));
+    if (movement && item.coords.length > 1) {
+      const a = item.coords[item.coords.length - 2];
+      const b = item.coords[item.coords.length - 1];
+      const angle = Math.atan2(b[1] - a[1], -(b[0] - a[0])) * 180 / Math.PI;
+      L.marker(b, {icon:L.divIcon({className:"", html:`<span class="mh-arrow-inner" style="color:${color};transform:rotate(${angle}deg)">▲</span>`, iconSize:[22,22], iconAnchor:[11,11]}), interactive:false}).addTo(periodLayer);
+    }
+    return line;
+  }
+
+  L.marker(HOME, {icon:icon("home", "★"), zIndexOffset:1000}).addTo(homeLayer)
+    .bindPopup("<strong>Mielno 158</strong><br>Punkt adresowy z państwowego rejestru GUGiK.")
+    .on("click", () => setSelected("Mielno 158", "Punkt adresowy GUGiK. Około 1 km na południe od cmentarzy wojennych i rejonu szturmu Höllental.", "Punkt odniesienia"));
+
+  function showOverlay(overlay) {
+    if (currentOverlay && map.hasLayer(currentOverlay)) map.removeLayer(currentOverlay);
+    currentOverlay = overlay;
+    if (currentOverlay) {
+      currentOverlay.setOpacity(Number(root.querySelector("#mh-opacity").value) / 100);
+      currentOverlay.addTo(map);
+      currentOverlay.bringToBack();
+    }
+    root.querySelector(".mh-compare").style.display = currentOverlay ? "grid" : "none";
+  }
+
+  function renderPeriodCopy(period, extra = "") {
+    const tags = period.tags.map(tag => `<span class="mh-tag">${tag}</span>`).join("");
+    root.querySelector("#mh-period-copy").innerHTML = `
+      <span class="mh-eyebrow">${period.year}</span>
+      <h2>${period.title}</h2>
+      <div class="mh-period-meta">${tags}</div>
+      <p>${extra || period.summary}</p>
+      <a class="mh-source-link" href="${period.source}" target="_blank" rel="noopener">${period.sourceLabel} ↗</a>`;
+  }
+
+  function addWW1Places() {
+    [
+      {name:"Mühlen / Mielno", coord:[53.5103,20.2011], desc:"Wieś leżała bezpośrednio na linii walk 26–28 sierpnia 1914."},
+      {name:"Höllental — główny szturm", coord:[53.516,20.216], desc:"28 sierpnia Landwehra i IR 147 zdobywały rosyjskie pozycje na wschodnim stoku jaru."},
+      {name:"Waplitz / Waplewo", coord:[53.4989,20.3222], desc:"O świcie 28 sierpnia 41. Dywizja weszła we mgle pod silny ogień i poniosła ciężkie straty."},
+      {name:"Dröbnitz / Drwęck", coord:[53.5526,20.1793], desc:"Tędy nacierała niemiecka 3. Dywizja Rezerwowa w stronę Hohenstein."},
+      {name:"Tannenberg / Stębark", coord:[53.4954,20.1335], desc:"Wieś dała bitwie nazwę symboliczną, ale nie była centrum walk 1914 roku."}
+    ].forEach(item => addMarker(item, "event", "•"));
+    [
+      {name:"Frygnowo — AOK 8", coord:[53.5051,20.0813], desc:"28 sierpnia około 13:00 Hindenburg wydał tu rozkaz pościgu. Stanowisko dowodzenia, nie stały obóz."},
+      {name:"Nadrowo — Samsonow", coord:[53.535,20.35], desc:"Przybliżone stanowisko dowodzenia rosyjskiego XV Korpusu 28 sierpnia."},
+      {name:"Kurki — biwaki XIII Korpusu", coord:[53.5366,20.4768], desc:"Wieczorem 25 sierpnia rozpoznanie meldowało tu rosyjskie biwaki marszowe."}
+    ].forEach(item => addMarker(item, "stop", "▣"));
+    [
+      {name:"Cmentarz Mielno — zachodni", coord:[53.5155561,20.2054719], desc:"Cmentarz poległych w walkach przy Mühlen."},
+      {name:"Cmentarz Mielno — Höllental", coord:[53.51570,20.21276], desc:"Volksbund podaje 209 żołnierzy niemieckich i 78 rosyjskich."}
+    ].forEach(item => addMarker(item, "grave", "✚"));
+  }
+
+  function renderWW1() {
+    periodLayer.clearLayers();
+    const state = WW1[currentWW1];
+    state.lines.forEach(line => addLine(line, false));
+    state.moves.forEach(move => addLine(move, true));
+    addWW1Places();
+    renderPeriodCopy(PERIODS[1], state.summary);
+    root.querySelector("#mh-map-badge").textContent = `Sztabówka 1909 · ${state.label}`;
+  }
+
+  function render1807() {
+    addMarker({name:"Hohenstein / Olsztynek", coord:[53.58342,20.28162], desc:"30 grudnia 1806 wkroczyły tu francuskie regimenty; przez miasto maszerowały oddziały Neya, Davouta, Bernadotte’a i Murata."}, "event", "N");
+    L.polygon([[53.578,20.255],[53.603,20.258],[53.606,20.286],[53.584,20.294]], {color:"#785c24", weight:3, dashArray:"8 7", fillColor:"#d7952d", fillOpacity:0.16}).addTo(periodLayer)
+      .bindPopup("<strong>Rejon francuskich obozów</strong><br>Źródło opisuje około 12 tys. żołnierzy między Olsztynkiem a Wilkowem; granica jest orientacyjna.")
+      .on("click", () => setSelected("Rejon francuskich obozów", "Około 12 tys. żołnierzy obozowało na niewielkim obszarze między Olsztynkiem a Wilkowem. Zasięg na mapie jest orientacyjny."));
+    addMarker({name:"Wilkowo", coord:[53.600951,20.270986], desc:"Północny punkt odniesienia dla opisu rejonu francuskich obozów."}, "stop", "▣");
+  }
+
+  function render1939() {
+    addMarker({name:"Stalag I-B Hohenstein", coord:[53.576578,20.252487], desc:"Obóz jeniecki działający w latach 1939–1945 między Królikowem a Sudwą. Na terenie znajdowało się ponad 100 baraków."}, "camp", "▦");
+    addMarker({name:"Cmentarz ofiar w Sudwie", coord:[53.5891984,20.2419141], desc:"Miejsce masowych mogił więźniów Stalagu I-B; według Portalu Olsztynka zmarło lub zostało zamęczonych około 55 tys. jeńców."}, "grave", "✚");
+    addMarker({name:"Olsztynek / Hohenstein", coord:[53.58342,20.28162], desc:"Miasto i węzeł komunikacyjny leżący około 2 km od obozu."}, "event", "•");
+  }
+
+  function render1945() {
+    addMarker({name:"Olsztynek — 22 I 1945", coord:[53.58342,20.28162], desc:"Armia Czerwona wkroczyła do miasta 22 stycznia 1945 roku. Encyklopedia Warmii i Mazur podaje zniszczenie około 70% zabudowy."}, "soviet", "★");
+    addMarker({name:"Stalag I-B — koniec funkcjonowania", coord:[53.576578,20.252487], desc:"Obóz działał do stycznia 1945 roku; zachowały się upamiętnienia i cmentarz w Sudwie."}, "camp", "▦");
+    addLine({side:"soviet", name:"Kierunek operacji wschodniopruskiej", desc:"Schemat regionalnego natarcia w stronę Olsztynka. Nie przedstawia dokładnej osi konkretnego pułku ani lokalnej linii okopów.", coords:[[53.47,20.40],[53.52,20.345],[53.58342,20.28162],[53.64,20.25]]}, true);
+  }
+
+  function renderToday() {
+    [
+      {name:"Cmentarz Mielno — zachodni", coord:[53.5155561,20.2054719], desc:"Zachowany cmentarz z I wojny światowej, około 0,97 km od Mielna 158."},
+      {name:"Cmentarz Mielno — Höllental", coord:[53.51570,20.21276], desc:"Zachowany cmentarz w rejonie głównego szturmu, około 1,01 km od Mielna 158."}
+    ].forEach(item => addMarker(item, "grave", "✚"));
+    addMarker({name:"Upamiętnienie Stalagu I-B", coord:[53.576578,20.252487], desc:"Miejsce dawnego obozu pomiędzy Królikowem a Sudwą."}, "camp", "▦");
+    addMarker({name:"Muzeum Stalagu I-B", coord:[53.5833,20.2840], desc:"Multimedialne muzeum w centrum Olsztynka dokumentuje historię obozu i miasta."}, "event", "M");
+  }
+
+  function updatePeriod(index, fit = true) {
+    currentPeriod = Number(index);
+    const period = PERIODS[currentPeriod];
+    root.querySelector("#mh-period").value = String(currentPeriod);
+    root.querySelector("#mh-period-label").textContent = `${period.year} · ${period.title}`;
+    root.querySelector("#mh-map-badge").textContent = period.badge;
+    root.querySelectorAll(".mh-milestones button").forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.period) === currentPeriod));
+    root.querySelector("#mh-ww1-controls").hidden = currentPeriod !== 1;
+    periodLayer.clearLayers();
+    renderPeriodCopy(period);
+
+    if (currentPeriod === 0) {
+      showOverlay(null);
+      render1807();
+      if (fit) map.fitBounds(OLSZTYNEK_BOUNDS, {padding:[20,20]});
+    } else if (currentPeriod === 1) {
+      showOverlay(historic1909);
+      renderWW1();
+      if (fit) map.fitBounds(REGION_BOUNDS, {padding:[18,18]});
+    } else if (currentPeriod === 2) {
+      showOverlay(historic1938);
+      render1939();
+      if (fit) map.fitBounds(OLSZTYNEK_BOUNDS, {padding:[20,20]});
+    } else if (currentPeriod === 3) {
+      showOverlay(historic1938);
+      render1945();
+      if (fit) map.fitBounds(REGION_BOUNDS, {padding:[18,18]});
+    } else {
+      showOverlay(null);
+      renderToday();
+      if (fit) map.fitBounds(CLOSE_BOUNDS, {padding:[18,18]});
+    }
+  }
+
+  root.querySelector("#mh-period").addEventListener("input", event => updatePeriod(event.target.value));
+  root.querySelectorAll(".mh-milestones button").forEach(btn => btn.addEventListener("click", () => updatePeriod(btn.dataset.period)));
+  root.querySelector("#mh-opacity").addEventListener("input", event => {
+    root.querySelector("#mh-opacity-value").textContent = `${event.target.value}%`;
+    if (currentOverlay) currentOverlay.setOpacity(Number(event.target.value) / 100);
+  });
+  root.querySelectorAll("#mh-ww1-controls button").forEach(btn => btn.addEventListener("click", () => {
+    currentWW1 = btn.dataset.state;
+    root.querySelectorAll("#mh-ww1-controls button").forEach(b => b.classList.toggle("is-active", b === btn));
+    renderWW1();
+  }));
+  root.querySelector("#mh-view-home").addEventListener("click", () => map.setView(HOME, 15));
+  root.querySelector("#mh-view-region").addEventListener("click", () => map.fitBounds(REGION_BOUNDS, {padding:[18,18]}));
+
+  updatePeriod(1, true);
+  setTimeout(() => map.invalidateSize(), 80);
+})();
+</script>
+
+<script id="codex-visualization-floating-ui-core" src="https://unpkg.com/@floating-ui/core@1.7.3/dist/floating-ui.core.umd.min.js"></script>
+<script id="codex-visualization-floating-ui-dom" src="https://unpkg.com/@floating-ui/dom@1.7.4/dist/floating-ui.dom.umd.min.js"></script>
+<script id="codex-visualization-lucide" async src="https://unpkg.com/lucide@1.17.0/dist/umd/lucide.js"></script>
+<script id="codex-visualization-tooltip">/* oxlint-disable typescript/no-unsafe-argument, typescript/no-unsafe-call, typescript/no-unsafe-return */
+// Runs inside the visualization sandbox, not the host webview.
+(() => {
+  if (window.FloatingUIDOM == null) {
+    return;
+  }
+  const { autoUpdate, computePosition, flip, offset, shift, size } =
+    window.FloatingUIDOM;
+  const tooltipPlacements = new Set(["top", "right", "bottom", "left"]);
+  const tooltipId = `codex-visualization-tooltip-${
+    window.crypto?.randomUUID?.() ?? Date.now().toString(36)
+  }`;
+  const tooltipGap = 5;
+  const hoverDelay = 700;
+  const skipDelay = 300;
+  let activeTrigger = null;
+  let pendingTrigger = null;
+  let tooltip = null;
+  let openTimeout = null;
+  let autoUpdateCleanup = null;
+  let positionRequest = 0;
+  let skipDelayUntil = 0;
+
+  const getTrigger = (target) =>
+    target?.nodeType === Node.ELEMENT_NODE
+      ? target.closest("[data-tooltip]")
+      : null;
+  const containsTarget = (trigger, target) =>
+    target?.nodeType != null && trigger.contains(target);
+  const getContent = (trigger) =>
+    trigger.getAttribute("data-tooltip")?.trim() ?? "";
+  const getPlacement = (trigger) => {
+    const placement = trigger.getAttribute("data-tooltip-placement");
+    return tooltipPlacements.has(placement) ? placement : "top";
+  };
+  const getTooltip = () => {
+    if (tooltip == null) {
+      tooltip = document.createElement("div");
+      tooltip.id = tooltipId;
+      tooltip.className = "tooltip";
+      tooltip.setAttribute("role", "tooltip");
+    }
+    return tooltip;
+  };
+  const setDescribedBy = (trigger, described) => {
+    const ids = new Set(
+      (trigger.getAttribute("aria-describedby") ?? "")
+        .split(/\s+/)
+        .filter(Boolean),
+    );
+    if (described) {
+      ids.add(tooltipId);
+    } else {
+      ids.delete(tooltipId);
+    }
+    if (ids.size === 0) {
+      trigger.removeAttribute("aria-describedby");
+    } else {
+      trigger.setAttribute("aria-describedby", [...ids].join(" "));
+    }
+  };
+  const clearOpenTimeout = () => {
+    if (openTimeout != null) {
+      window.clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    pendingTrigger = null;
+  };
+  const closeTooltip = (activateSkipDelay = true) => {
+    clearOpenTimeout();
+    positionRequest += 1;
+    autoUpdateCleanup?.();
+    autoUpdateCleanup = null;
+    if (activeTrigger == null) {
+      return;
+    }
+    setDescribedBy(activeTrigger, false);
+    activeTrigger = null;
+    tooltip?.remove();
+    if (activateSkipDelay) {
+      skipDelayUntil = Date.now() + skipDelay;
+    }
+  };
+  const updatePosition = (trigger, floating) => {
+    const request = ++positionRequest;
+    void computePosition(trigger, floating, {
+      middleware: [
+        offset(tooltipGap),
+        flip({ padding: tooltipGap }),
+        shift({ padding: tooltipGap }),
+        size({
+          padding: tooltipGap,
+          apply({ availableHeight, availableWidth, elements }) {
+            elements.floating.style.setProperty(
+              "--tooltip-available-width",
+              `${Math.max(0, availableWidth)}px`,
+            );
+            elements.floating.style.setProperty(
+              "--tooltip-available-height",
+              `${Math.max(0, availableHeight)}px`,
+            );
+          },
+        }),
+      ],
+      placement: getPlacement(trigger),
+      strategy: "fixed",
+    })
+      .then(({ x, y }) => {
+        if (activeTrigger !== trigger || request !== positionRequest) {
+          return;
+        }
+        const scale = window.devicePixelRatio || 1;
+        floating.style.transform = `translate(${Math.round(x * scale) / scale}px, ${Math.round(y * scale) / scale}px)`;
+        floating.style.visibility = "visible";
+      })
+      .catch(() => {
+        if (activeTrigger === trigger && request === positionRequest) {
+          closeTooltip(false);
+        }
+      });
+  };
+  const openTooltip = (trigger) => {
+    const content = getContent(trigger);
+    if (!trigger.isConnected || content.length === 0) {
+      return;
+    }
+    clearOpenTimeout();
+    if (activeTrigger === trigger) {
+      return;
+    }
+    closeTooltip();
+    const floating = getTooltip();
+    floating.textContent = content;
+    floating.style.visibility = "hidden";
+    floating.style.transform = "translate(0, 0)";
+    document.body.appendChild(floating);
+    activeTrigger = trigger;
+    setDescribedBy(trigger, true);
+    autoUpdateCleanup = autoUpdate(trigger, floating, () => {
+      updatePosition(trigger, floating);
+    });
+  };
+  const requestOpen = (trigger, immediate = false) => {
+    if (
+      getContent(trigger).length === 0 ||
+      activeTrigger === trigger ||
+      pendingTrigger === trigger
+    ) {
+      return;
+    }
+    clearOpenTimeout();
+    pendingTrigger = trigger;
+    const delay =
+      immediate || activeTrigger != null || Date.now() < skipDelayUntil
+        ? 0
+        : hoverDelay;
+    if (delay === 0) {
+      openTooltip(trigger);
+      return;
+    }
+    openTimeout = window.setTimeout(() => {
+      openTimeout = null;
+      pendingTrigger = null;
+      openTooltip(trigger);
+    }, delay);
+  };
+  const handlePointerOpen = (event) => {
+    if (event.pointerType === "touch") {
+      return;
+    }
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    requestOpen(trigger);
+  };
+  const handleLeave = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger == null || containsTarget(trigger, event.relatedTarget)) {
+      return;
+    }
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const handleFocusIn = (event) => {
+    const trigger = getTrigger(event.target);
+    if (trigger?.matches(":focus-visible")) {
+      requestOpen(trigger, true);
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === "Escape") {
+      closeTooltip();
+    }
+  };
+  const handleContextMenu = (event) => {
+    const trigger = getTrigger(event.target);
+    if (activeTrigger === trigger || pendingTrigger === trigger) {
+      closeTooltip();
+    }
+  };
+  const destroy = () => {
+    closeTooltip(false);
+    document.removeEventListener("pointerover", handlePointerOpen);
+    document.removeEventListener("pointerout", handleLeave);
+    document.removeEventListener("focusin", handleFocusIn);
+    document.removeEventListener("focusout", handleLeave);
+    document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("contextmenu", handleContextMenu);
+    tooltip = null;
+  };
+
+  document.addEventListener("pointerover", handlePointerOpen);
+  document.addEventListener("pointerout", handleLeave);
+  document.addEventListener("focusin", handleFocusIn);
+  document.addEventListener("focusout", handleLeave);
+  document.addEventListener("keydown", handleKeyDown);
+  document.addEventListener("contextmenu", handleContextMenu);
+  window.addEventListener("pagehide", destroy, { once: true });
+})();
+</script>
+<script id="codex-visualization-lucide-initialization">(() => {
+  const initialize = () => {
+    globalThis.lucide?.createIcons({ attrs: { width: 16, height: 16 } });
+  };
+  if (globalThis.lucide != null) {
+    initialize();
+    return;
+  }
+  document
+    .getElementById("codex-visualization-lucide")
+    ?.addEventListener("load", initialize, { once: true });
+})();
+</script>
+</body>
+</html>

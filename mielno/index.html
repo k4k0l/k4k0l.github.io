@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>Mielno na mapach wojennych</title>
-<meta name="description" content="Interaktywny atlas okolic Mielna pod Grunwaldem: mapy sztabowe z 1909 i 1938 roku, rekonstrukcja frontu z sierpnia 1914, Stalag I-B i wydarzenia 1945 roku.">
+<meta name="description" content="Interaktywny atlas historyczny Mielna pod Grunwaldem: zrektyfikowane mapy sztabowe, osiem etapów walk 25–29 sierpnia 1914, Stalag I-B i styczeń 1945.">
+<title>Mielno History Map</title>
 <style>:root {
   color-scheme: light dark;
   background-color: transparent !important;
@@ -822,255 +822,278 @@ svg {
 </head>
 <body>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
-<div id="mielno-history-map" class="mh-shell">
-  <header class="mh-header">
+<div id="mielno-war-atlas" class="mwa-shell">
+  <header class="mwa-header">
     <div>
-      <p class="mh-kicker">Mielno pod Grunwaldem · atlas terenowy</p>
-      <h1>Mielno na mapach wojennych</h1>
-      <p class="mh-lead">Współczesna mapa z georeferencjonowanymi sztabówkami, liniami działań i miejscami pamięci.</p>
+      <p class="mwa-kicker">Mielno pod Grunwaldem · atlas terenowy</p>
+      <h1>Mielno: wojny zapisane w krajobrazie</h1>
+      <p class="mwa-lead">Współczesna mapa, zrektyfikowane arkusze sztabowe i etapowa rekonstrukcja działań 25–29 sierpnia 1914.</p>
     </div>
-    <div class="mh-home-chip" aria-label="Punkt odniesienia Mielno 158">
-      <span class="mh-star" aria-hidden="true">★</span>
+    <div class="mwa-reference" aria-label="Punkt odniesienia Mielno 158">
+      <span aria-hidden="true">★</span>
       <span><strong>Mielno 158</strong><small>53.507008, 20.208230</small></span>
     </div>
   </header>
 
-  <section class="mh-timeline" aria-labelledby="mh-period-label">
-    <div class="mh-timeline-head">
+  <section class="mwa-controls" aria-label="Sterowanie osią czasu i warstwami">
+    <div class="mwa-period-head">
       <div>
-        <span class="mh-eyebrow">Okres</span>
-        <strong id="mh-period-label">1914 · I wojna światowa</strong>
+        <span class="mwa-eyebrow">Okres</span>
+        <strong id="mwa-period-title">1914 · bitwa pod Tannenbergiem</strong>
       </div>
-      <div class="mh-timeline-actions">
-        <button type="button" class="mh-button" id="mh-view-home">Mielno 158</button>
-        <button type="button" class="mh-button" id="mh-view-region">Cały rejon</button>
+      <div class="mwa-view-actions">
+        <button type="button" id="mwa-home" class="mwa-btn">Mielno 158</button>
+        <button type="button" id="mwa-region" class="mwa-btn">Cały rejon</button>
       </div>
     </div>
-    <input id="mh-period" class="mh-range" type="range" min="0" max="4" step="1" value="1" aria-label="Wybierz okres historyczny">
-    <div class="mh-milestones" aria-label="Skróty okresów">
+    <input id="mwa-period-range" class="mwa-range" type="range" min="0" max="4" step="1" value="1" aria-label="Wybierz okres historyczny">
+    <div class="mwa-period-buttons" aria-label="Okresy historyczne">
       <button type="button" data-period="0"><span>1807</span><small>Napoleon</small></button>
-      <button type="button" data-period="1" class="is-active"><span>1914</span><small>I wojna</small></button>
-      <button type="button" data-period="2"><span>1939</span><small>Stalag I-B</small></button>
-      <button type="button" data-period="3"><span>1945</span><small>front</small></button>
-      <button type="button" data-period="4"><span>dzisiaj</span><small>teren</small></button>
+      <button type="button" data-period="1" class="is-active"><span>1914</span><small>8 etapów</small></button>
+      <button type="button" data-period="2"><span>1939–45</span><small>Stalag I-B</small></button>
+      <button type="button" data-period="3"><span>I 1945</span><small>Olsztynek</small></button>
+      <button type="button" data-period="4"><span>dzisiaj</span><small>ślady</small></button>
     </div>
-    <div class="mh-compare">
-      <label for="mh-opacity"><span>Widoczność sztabówki</span><strong id="mh-opacity-value">62%</strong></label>
-      <input id="mh-opacity" class="mh-range mh-range-small" type="range" min="0" max="100" value="62">
+
+    <div id="mwa-ww1-timeline" class="mwa-ww1-timeline">
+      <div class="mwa-stage-head">
+        <div>
+          <span class="mwa-eyebrow">Sierpień 1914</span>
+          <strong id="mwa-stage-title">28 VIII · 09:00–12:00</strong>
+          <small id="mwa-stage-focus">Mielno / Höllental i Waplewo</small>
+        </div>
+        <div>
+          <button type="button" id="mwa-prev-stage" class="mwa-btn" aria-label="Poprzedni etap">←</button>
+          <span id="mwa-stage-counter">5 / 8</span>
+          <button type="button" id="mwa-next-stage" class="mwa-btn" aria-label="Następny etap">→</button>
+        </div>
+      </div>
+      <input id="mwa-stage-range" class="mwa-range" type="range" min="0" max="7" step="1" value="4" aria-label="Etap działań od 25 do 29 sierpnia 1914">
+      <div class="mwa-stage-ticks" aria-hidden="true">
+        <span>25 wiecz.</span><span>26</span><span>27 wiecz.</span><span>28 świt</span><span>28 rano</span><span>28 połud.</span><span>28 wiecz.</span><span>29 rano</span>
+      </div>
     </div>
-    <div id="mh-ww1-controls" class="mh-ww1-controls" aria-label="Przebieg walk w sierpniu 1914">
-      <span class="mh-eyebrow">Przebieg walk</span>
-      <div>
-        <button type="button" data-state="25">25 VIII</button>
-        <button type="button" data-state="2627">26–27 VIII</button>
-        <button type="button" data-state="28am" class="is-active">28 VIII rano</button>
-        <button type="button" data-state="28pm">28 VIII wieczór</button>
+
+    <div class="mwa-layerbar">
+      <label class="mwa-select-label" for="mwa-raster">
+        <span>Skan sztabowy</span>
+        <select id="mwa-raster">
+          <option value="none">bez skanu</option>
+          <option value="1901" selected>arkusz 2487 · wyd. 1901</option>
+          <option value="1933">arkusz 2487 · wyd. 1933</option>
+          <option value="1938">arkusz 2487 · wyd. 1938</option>
+        </select>
+      </label>
+      <label class="mwa-opacity-label" for="mwa-opacity">
+        <span>Krycie <strong id="mwa-opacity-value">58%</strong></span>
+        <input id="mwa-opacity" class="mwa-range" type="range" min="0" max="88" value="58">
+      </label>
+      <div class="mwa-layer-checks" aria-label="Warstwy rekonstrukcji">
+        <label><input type="checkbox" data-layer="fronts" checked> pozycje</label>
+        <label><input type="checkbox" data-layer="moves" checked> ruch</label>
+        <label><input type="checkbox" data-layer="battles" checked> starcia</label>
+        <label><input type="checkbox" data-layer="command" checked> sztaby / biwaki</label>
+        <label><input type="checkbox" data-layer="memory" checked> cmentarze</label>
       </div>
     </div>
   </section>
 
-  <section class="mh-map-layout">
-    <div class="mh-map-frame">
-      <div id="mh-map" role="application" aria-label="Interaktywna mapa historyczna okolic Mielna i Olsztynka"></div>
-      <div id="mh-map-badge" class="mh-map-badge">Sztabówka 1909 · stan rano 28 VIII</div>
-      <div class="mh-legend" aria-label="Legenda mapy">
-        <span><i class="mh-line mh-line-de"></i>Niemcy</span>
-        <span><i class="mh-line mh-line-ru"></i>Rosjanie / ZSRR</span>
-        <span><i class="mh-dot mh-dot-event"></i>wydarzenie</span>
-        <span><i class="mh-cross">✚</i>cmentarz</span>
+  <main class="mwa-layout">
+    <section class="mwa-map-wrap" aria-label="Mapa historyczna">
+      <div id="mwa-map" role="application" aria-label="Interaktywna mapa okolic Mielna, Waplewa i Olsztynka"></div>
+      <div id="mwa-map-badge" class="mwa-map-badge">1901 · skan po rektyfikacji do ramki 53°30′–53°36′ N / 20°10′–20°20′ E</div>
+      <div class="mwa-map-status"><strong id="mwa-visible-count">0</strong> obiektów widocznych</div>
+      <div class="mwa-legend" aria-label="Legenda">
+        <span><i class="mwa-line mwa-de"></i>Niemcy</span>
+        <span><i class="mwa-line mwa-ru"></i>Rosjanie</span>
+        <span><i class="mwa-arrow">➜</i>ruch</span>
+        <span><i class="mwa-battle">✦</i>starcie</span>
+        <span><i class="mwa-box">▣</i>sztab / biwak</span>
+        <span><i class="mwa-cross">✚</i>cmentarz</span>
       </div>
-    </div>
+    </section>
 
-    <aside class="mh-panel" aria-live="polite">
-      <div id="mh-period-copy"></div>
-      <div id="mh-selected" class="mh-selected">
-        <span class="mh-eyebrow">Punkt odniesienia</span>
+    <aside class="mwa-panel" aria-live="polite">
+      <div id="mwa-period-copy"></div>
+      <div id="mwa-stage-copy"></div>
+      <div id="mwa-selected" class="mwa-selected">
+        <span class="mwa-eyebrow">Punkt odniesienia</span>
         <h2>Mielno 158</h2>
-        <p>Dom leży około kilometra na południe od cmentarzy wojennych i rejonu szturmu przez Höllental.</p>
+        <p>Dom leży około kilometra na południe od obu cmentarzy wojennych i od odcinka walk w rejonie dawnego Höllental.</p>
       </div>
-      <div class="mh-caveat">
-        <strong>Jak czytać rekonstrukcję</strong>
-        <p>Linie przerywane pokazują przebieg przybliżony z opisów jednostek. Nie są pomiarem zachowanych okopów.</p>
+      <div class="mwa-method">
+        <strong>Dokładność</strong>
+        <p><b>Punkt</b> oznacza współrzędne obiektu lub miejscowości. <b>Odcinek</b> jest rekonstrukcją z nazw miejsc i opisów jednostek. Nie udaje zachowanej linii okopów.</p>
       </div>
     </aside>
-  </section>
+  </main>
 
-  <footer class="mh-footer">
-    <p><strong>Źródła map:</strong> Meßtischblatt 2487 Hohenstein, wyd. 1909 (Mapster/UW) oraz wyd. 1938 (SLUB Dresden / Deutsche Fotothek). Geografia współczesna: OpenStreetMap.</p>
-    <p><strong>Źródła wydarzeń:</strong> Reichsarchiv, <em>Die Befreiung Ostpreußens</em>; P. Fischer, <em>Bei Hindenburg in Ostpreußen</em> (1915); Portal Olsztynka; Encyklopedia Warmii i Mazur; Volksbund.</p>
+  <footer class="mwa-footer">
+    <p><strong>Rektyfikacja:</strong> arkusz 2487 został wycięty do wewnętrznej ramki współrzędnych i przekształcony perspektywicznie; wcześniejsza wersja błędnie rozciągała także kołnierz skanu. Metadane transformacji: <a href="assets/georeferencing.json">georeferencing.json</a>.</p>
+    <p><strong>Mapy:</strong> <a href="http://igrek.amzp.pl/result.php?cmd=id&god=2487&cat=tk25" target="_blank" rel="noopener">Mapster / UW — wyd. 1901 i 1933</a>; <a href="https://www.deutschefotothek.de/documents/obj/71052604" target="_blank" rel="noopener">Deutsche Fotothek / SLUB — wyd. 1938</a>. Tło: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.</p>
+    <p><strong>Działania 1914:</strong> Reichsarchiv, <em>Der Weltkrieg 1914–1918</em>, t. II, <em>Die Befreiung Ostpreußens</em> (1925) — oficjalna niemiecka rekonstrukcja, czytana krytycznie; lokalizacje cmentarzy: Volksbund.</p>
   </footer>
 </div>
 
 <style>
-  #mielno-history-map {
-    --mh-bg: #f4f1e8;
-    --mh-paper: #fffdf7;
-    --mh-ink: #1f2923;
-    --mh-muted: #657168;
-    --mh-border: #cfcbbd;
-    --mh-green: #2f5948;
-    --mh-green-soft: #dbe7df;
-    --mh-gold: #d7952d;
-    --mh-de: #17669a;
-    --mh-ru: #b33b3b;
-    --mh-soviet: #7d2f6f;
-    --mh-camp: #713d2f;
-    color: var(--mh-ink);
-    background: var(--mh-bg);
+  #mielno-war-atlas {
+    --mwa-bg: #f2efe6;
+    --mwa-paper: #fffdf7;
+    --mwa-ink: #202923;
+    --mwa-muted: #647068;
+    --mwa-border: #cbc6b7;
+    --mwa-green: #315f4d;
+    --mwa-green-soft: #dce9e1;
+    --mwa-blue: #1f6396;
+    --mwa-red: #b13e43;
+    --mwa-purple: #7d3e76;
+    --mwa-gold: #d58f2b;
+    --mwa-brown: #75503c;
+    color: var(--mwa-ink);
+    background: var(--mwa-bg);
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    padding: clamp(14px, 2.8vw, 36px);
+    padding: clamp(12px, 2.5vw, 32px);
     box-sizing: border-box;
   }
+  #mielno-war-atlas *, #mielno-war-atlas *::before, #mielno-war-atlas *::after { box-sizing: border-box; }
+  #mielno-war-atlas [hidden] { display: none !important; }
+  #mielno-war-atlas button, #mielno-war-atlas input, #mielno-war-atlas select { font: inherit; }
+  #mielno-war-atlas a { color: var(--mwa-green); text-underline-offset: 3px; }
 
-  #mielno-history-map *, #mielno-history-map *::before, #mielno-history-map *::after { box-sizing: border-box; }
-  #mielno-history-map [hidden] { display: none !important; }
-  #mielno-history-map button, #mielno-history-map input { font: inherit; }
+  .mwa-header { max-width: 1500px; margin: 0 auto 16px; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+  .mwa-header h1 { margin: 0; max-width: 980px; font: 700 clamp(2rem, 4.4vw, 4.4rem)/0.98 Georgia, "Times New Roman", serif; letter-spacing: -0.045em; }
+  .mwa-kicker, .mwa-eyebrow { display: block; margin: 0 0 5px; color: var(--mwa-green); font-size: 0.72rem; font-weight: 750; letter-spacing: 0.12em; text-transform: uppercase; }
+  .mwa-lead { max-width: 840px; margin: 10px 0 0; color: var(--mwa-muted); }
+  .mwa-reference { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--mwa-border); border-radius: 12px; background: var(--mwa-paper); }
+  .mwa-reference > span:first-child { color: #d96331; font-size: 1.45rem; }
+  .mwa-reference > span:last-child { display: grid; gap: 1px; }
+  .mwa-reference small { color: var(--mwa-muted); font-variant-numeric: tabular-nums; }
 
-  .mh-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px;
-    max-width: 1440px;
-    margin: 0 auto 20px;
-  }
-  .mh-kicker, .mh-eyebrow {
-    margin: 0 0 5px;
-    color: var(--mh-green);
-    font-size: 0.73rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .mh-header h1 { margin: 0; font: 700 clamp(2rem, 4.6vw, 4.25rem)/0.98 Georgia, "Times New Roman", serif; letter-spacing: -0.04em; }
-  .mh-lead { max-width: 720px; margin: 10px 0 0; color: var(--mh-muted); font-size: clamp(0.96rem, 1.5vw, 1.12rem); }
-  .mh-home-chip {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 13px;
-    border: 1px solid var(--mh-border);
-    border-radius: 12px;
-    background: var(--mh-paper);
-  }
-  .mh-home-chip span:last-child { display: grid; gap: 1px; }
-  .mh-home-chip small { color: var(--mh-muted); font-variant-numeric: tabular-nums; }
-  .mh-star { color: #dc6b34; font-size: 1.45rem; }
-
-  .mh-timeline {
-    max-width: 1440px;
-    margin: 0 auto 14px;
-    padding: 14px 16px 12px;
-    border: 1px solid var(--mh-border);
-    border-radius: 14px;
-    background: var(--mh-paper);
-  }
-  .mh-timeline-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-  .mh-timeline-head > div:first-child { display: grid; }
-  #mh-period-label { font-size: 1.12rem; }
-  .mh-timeline-actions { display: flex; gap: 7px; }
-  .mh-button, .mh-milestones button, .mh-ww1-controls button {
-    border: 1px solid var(--mh-border);
-    border-radius: 9px;
+  .mwa-controls { max-width: 1500px; margin: 0 auto 12px; padding: 13px 15px; border: 1px solid var(--mwa-border); border-radius: 14px; background: var(--mwa-paper); }
+  .mwa-period-head, .mwa-stage-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .mwa-period-head > div:first-child, .mwa-stage-head > div:first-child { display: grid; }
+  .mwa-view-actions, .mwa-stage-head > div:last-child { display: flex; align-items: center; gap: 6px; }
+  .mwa-btn, .mwa-period-buttons button {
+    border: 1px solid var(--mwa-border);
+    border-radius: 8px;
+    color: var(--mwa-ink);
     background: transparent;
-    color: var(--mh-ink);
     cursor: pointer;
   }
-  .mh-button { padding: 7px 10px; }
-  .mh-button:hover, .mh-milestones button:hover, .mh-ww1-controls button:hover { background: var(--mh-green-soft); }
-  .mh-button:focus-visible, .mh-milestones button:focus-visible, .mh-ww1-controls button:focus-visible, .mh-range:focus-visible { outline: 3px solid rgba(47, 89, 72, 0.25); outline-offset: 2px; }
-  .mh-range { width: 100%; accent-color: var(--mh-green); cursor: pointer; }
-  #mh-period { margin: 12px 0 2px; }
-  .mh-milestones { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
-  .mh-milestones button { display: grid; padding: 7px 5px; text-align: center; }
-  .mh-milestones button span { font-weight: 750; font-variant-numeric: tabular-nums; }
-  .mh-milestones button small { color: var(--mh-muted); }
-  .mh-milestones button.is-active, .mh-ww1-controls button.is-active { color: #fff; border-color: var(--mh-green); background: var(--mh-green); }
-  .mh-milestones button.is-active small { color: rgba(255,255,255,0.82); }
-  .mh-compare { display: grid; grid-template-columns: minmax(155px, 230px) minmax(160px, 1fr); align-items: center; gap: 12px; margin-top: 11px; }
-  .mh-compare label { display: flex; justify-content: space-between; gap: 8px; color: var(--mh-muted); font-size: 0.88rem; }
-  .mh-compare strong { color: var(--mh-ink); font-variant-numeric: tabular-nums; }
-  .mh-ww1-controls { display: flex; align-items: center; gap: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--mh-border); }
-  .mh-ww1-controls .mh-eyebrow { flex: 0 0 auto; margin: 0; }
-  .mh-ww1-controls > div { display: flex; flex-wrap: wrap; gap: 6px; }
-  .mh-ww1-controls button { padding: 6px 9px; font-size: 0.88rem; }
+  .mwa-btn { padding: 6px 9px; }
+  .mwa-btn:hover, .mwa-period-buttons button:hover { background: var(--mwa-green-soft); }
+  .mwa-btn:focus-visible, .mwa-period-buttons button:focus-visible, .mwa-range:focus-visible, #mwa-raster:focus-visible { outline: 3px solid rgba(49,95,77,0.25); outline-offset: 2px; }
+  .mwa-range { width: 100%; accent-color: var(--mwa-green); cursor: pointer; }
+  #mwa-period-range { margin: 10px 0 1px; }
+  .mwa-period-buttons { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 6px; }
+  .mwa-period-buttons button { display: grid; padding: 6px 4px; text-align: center; }
+  .mwa-period-buttons button span { font-weight: 750; }
+  .mwa-period-buttons button small { color: var(--mwa-muted); }
+  .mwa-period-buttons button.is-active { color: #fff; border-color: var(--mwa-green); background: var(--mwa-green); }
+  .mwa-period-buttons button.is-active small { color: rgba(255,255,255,0.82); }
 
-  .mh-map-layout { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 330px); gap: 14px; align-items: stretch; }
-  .mh-map-frame { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--mh-border); border-radius: 16px; background: #d9e2dc; }
-  #mh-map { width: 100%; height: min(72vh, 760px); min-height: 570px; background: #d9e2dc; }
-  .mh-map-badge { position: absolute; z-index: 600; top: 12px; left: 52px; max-width: calc(100% - 132px); padding: 7px 10px; border-radius: 8px; background: rgba(31,41,35,0.88); color: #fff; font-size: 0.82rem; pointer-events: none; }
-  .mh-legend { position: absolute; z-index: 600; left: 12px; bottom: 12px; display: flex; flex-wrap: wrap; gap: 8px 12px; max-width: calc(100% - 24px); padding: 8px 10px; border-radius: 9px; background: rgba(255,253,247,0.91); color: var(--mh-ink); font-size: 0.76rem; pointer-events: none; }
-  .mh-legend span { display: inline-flex; align-items: center; gap: 5px; }
-  .mh-line { width: 22px; height: 0; border-top: 3px dashed; }
-  .mh-line-de { border-color: var(--mh-de); }
-  .mh-line-ru { border-color: var(--mh-ru); }
-  .mh-dot { width: 9px; height: 9px; border: 2px solid var(--mh-ink); border-radius: 50%; background: #f2bc4c; }
-  .mh-cross { color: var(--mh-ink); font-size: 1rem; }
+  .mwa-ww1-timeline { margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--mwa-border); }
+  .mwa-stage-head small { color: var(--mwa-muted); }
+  #mwa-stage-range { margin: 8px 0 0; }
+  .mwa-stage-ticks { display: grid; grid-template-columns: repeat(8, minmax(0,1fr)); color: var(--mwa-muted); font-size: 0.68rem; text-align: center; }
+  .mwa-stage-ticks span:first-child { text-align: left; }
+  .mwa-stage-ticks span:last-child { text-align: right; }
+  #mwa-stage-counter { min-width: 44px; color: var(--mwa-muted); text-align: center; font-variant-numeric: tabular-nums; }
 
-  .mh-panel { display: flex; flex-direction: column; gap: 12px; padding: 17px; border: 1px solid var(--mh-border); border-radius: 16px; background: var(--mh-paper); }
-  .mh-panel h2 { margin: 2px 0 6px; font: 700 1.42rem/1.1 Georgia, "Times New Roman", serif; }
-  .mh-panel p { margin: 0; color: var(--mh-muted); line-height: 1.48; }
-  .mh-period-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 9px 0 10px; }
-  .mh-tag { display: inline-flex; padding: 4px 7px; border-radius: 999px; background: var(--mh-green-soft); color: var(--mh-green); font-size: 0.75rem; font-weight: 700; }
-  .mh-selected { padding-top: 13px; border-top: 1px solid var(--mh-border); }
-  .mh-caveat { margin-top: auto; padding: 12px; border-radius: 10px; background: #efe8d7; }
-  .mh-caveat p { margin-top: 4px; font-size: 0.82rem; }
-  .mh-source-link { display: inline-flex; margin-top: 10px; color: var(--mh-green); font-weight: 700; text-underline-offset: 3px; }
+  .mwa-layerbar { display: grid; grid-template-columns: minmax(205px, 1.1fr) minmax(190px, 0.9fr) minmax(400px, 2.6fr); align-items: end; gap: 12px 18px; margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--mwa-border); }
+  .mwa-select-label, .mwa-opacity-label { display: grid; gap: 4px; color: var(--mwa-muted); font-size: 0.8rem; }
+  #mwa-raster { width: 100%; min-height: 34px; padding: 5px 7px; border: 1px solid var(--mwa-border); border-radius: 8px; color: var(--mwa-ink); background: var(--mwa-paper); }
+  .mwa-opacity-label > span { display: flex; justify-content: space-between; gap: 8px; }
+  .mwa-opacity-label strong { color: var(--mwa-ink); font-variant-numeric: tabular-nums; }
+  .mwa-layer-checks { display: flex; flex-wrap: wrap; align-items: center; gap: 7px 13px; min-height: 34px; }
+  .mwa-layer-checks label { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; font-size: 0.8rem; cursor: pointer; }
+  .mwa-layer-checks input { accent-color: var(--mwa-green); }
 
-  .mh-footer { max-width: 1440px; margin: 12px auto 0; color: var(--mh-muted); font-size: 0.75rem; line-height: 1.45; }
-  .mh-footer p { margin: 3px 0; }
+  .mwa-layout { max-width: 1500px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) minmax(265px,320px); gap: 12px; align-items: stretch; }
+  .mwa-map-wrap { position: relative; min-width: 0; overflow: hidden; border: 1px solid var(--mwa-border); border-radius: 15px; background: #d9e3dc; }
+  #mwa-map { width: 100%; height: min(75vh, 820px); min-height: 600px; background: #d9e3dc; }
+  .mwa-map-badge, .mwa-map-status { position: absolute; z-index: 600; top: 10px; padding: 7px 9px; border-radius: 8px; color: #fff; background: rgba(29,38,32,0.88); font-size: 0.75rem; pointer-events: none; }
+  .mwa-map-badge { left: 50px; max-width: calc(100% - 220px); }
+  .mwa-map-status { right: 10px; }
+  .mwa-legend { position: absolute; z-index: 600; left: 10px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 7px 11px; max-width: calc(100% - 20px); padding: 7px 9px; border-radius: 8px; color: var(--mwa-ink); background: rgba(255,253,247,0.93); font-size: 0.72rem; pointer-events: none; }
+  .mwa-legend span { display: inline-flex; align-items: center; gap: 5px; }
+  .mwa-line { width: 21px; height: 0; border-top: 3px dashed; }
+  .mwa-de { border-color: var(--mwa-blue); }
+  .mwa-ru { border-color: var(--mwa-red); }
+  .mwa-arrow { color: var(--mwa-green); font-size: 1rem; }
+  .mwa-battle { color: var(--mwa-gold); font-size: 1rem; }
+  .mwa-box { color: #67538e; }
+  .mwa-cross { color: #202923; }
 
-  .mh-marker { display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid #fff; border-radius: 50%; color: #fff; background: var(--mh-green); box-shadow: 0 2px 7px rgba(0,0,0,0.28); font-size: 13px; font-weight: 800; }
-  .mh-marker-home { width: 32px; height: 32px; color: #fff; background: #d85f2e; font-size: 18px; }
-  .mh-marker-event { color: var(--mh-ink); background: #f2bc4c; }
-  .mh-marker-stop { background: #6f5e9b; }
-  .mh-marker-grave { border-radius: 7px; background: #242923; }
-  .mh-marker-camp { border-radius: 7px; background: var(--mh-camp); }
-  .mh-marker-soviet { background: var(--mh-soviet); }
-  .mh-arrow-inner { display: block; color: inherit; font-size: 20px; line-height: 20px; text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff; transform-origin: center; }
+  .mwa-panel { display: flex; flex-direction: column; gap: 12px; padding: 16px; border: 1px solid var(--mwa-border); border-radius: 15px; background: var(--mwa-paper); }
+  .mwa-panel h2 { margin: 2px 0 6px; font: 700 1.35rem/1.12 Georgia, "Times New Roman", serif; }
+  .mwa-panel p { margin: 0; color: var(--mwa-muted); line-height: 1.45; }
+  .mwa-tags { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 9px; }
+  .mwa-tag { display: inline-flex; padding: 3px 6px; border-radius: 999px; color: var(--mwa-green); background: var(--mwa-green-soft); font-size: 0.72rem; font-weight: 700; }
+  .mwa-source { display: inline-flex; margin-top: 8px; font-size: 0.8rem; font-weight: 700; }
+  .mwa-stage-summary { padding-top: 11px; border-top: 1px solid var(--mwa-border); }
+  .mwa-stage-summary strong { display: block; margin-bottom: 4px; }
+  .mwa-selected { padding-top: 11px; border-top: 1px solid var(--mwa-border); }
+  .mwa-detail-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+  .mwa-method { margin-top: auto; padding: 11px; border-radius: 10px; background: #eee7d7; }
+  .mwa-method p { margin-top: 4px; font-size: 0.79rem; }
+  .mwa-method b { color: var(--mwa-ink); }
+  .mwa-footer { max-width: 1500px; margin: 10px auto 0; color: var(--mwa-muted); font-size: 0.72rem; line-height: 1.45; }
+  .mwa-footer p { margin: 3px 0; }
+
+  .mwa-symbol { display: grid; place-items: center; width: 27px; height: 27px; border: 2px solid #fff; border-radius: 50%; color: #fff; background: var(--mwa-green); box-shadow: 0 2px 7px rgba(0,0,0,0.3); font-size: 13px; font-weight: 800; }
+  .mwa-symbol-home { width: 34px; height: 34px; background: #d96231; font-size: 17px; }
+  .mwa-symbol-battle { color: #352b1b; background: #f1b94a; }
+  .mwa-symbol-command { border-radius: 7px; background: #69548d; }
+  .mwa-symbol-memory { border-radius: 7px; background: #262b27; }
+  .mwa-symbol-camp { border-radius: 7px; background: var(--mwa-brown); }
+  .mwa-symbol-soviet { background: var(--mwa-purple); }
+  .mwa-symbol-place { width: 20px; height: 20px; border-width: 1px; color: var(--mwa-ink); background: var(--mwa-paper); font-size: 10px; }
+  .mwa-arrowhead { display: block; color: inherit; font-size: 20px; line-height: 20px; text-shadow: 0 1px 2px #fff, 0 -1px 2px #fff; transform-origin: center; }
+  .mwa-permanent-label { border: 0; box-shadow: none; color: var(--mwa-ink); background: rgba(255,253,247,0.88); font-weight: 700; }
+  .mwa-permanent-label::before { display: none; }
   .leaflet-popup-content-wrapper { border-radius: 10px; }
   .leaflet-popup-content { margin: 12px 14px; line-height: 1.4; }
   .leaflet-control-attribution { font-size: 10px; }
 
   @media (prefers-color-scheme: dark) {
-    #mielno-history-map {
-      --mh-bg: #161d19;
-      --mh-paper: #202923;
-      --mh-ink: #edf1ed;
-      --mh-muted: #b1bcb4;
-      --mh-border: #3d4941;
-      --mh-green: #9bc5af;
-      --mh-green-soft: #2d4638;
+    #mielno-war-atlas {
+      --mwa-bg: #151c18;
+      --mwa-paper: #202923;
+      --mwa-ink: #edf1ed;
+      --mwa-muted: #b3bdb6;
+      --mwa-border: #3d4941;
+      --mwa-green: #9bc5af;
+      --mwa-green-soft: #2d4638;
     }
-    .mh-caveat { background: #3a3327; }
-    .mh-legend { background: rgba(32,41,35,0.92); }
+    .mwa-method { background: #3a3327; }
+    .mwa-legend { background: rgba(32,41,35,0.93); }
+    .mwa-cross { color: #edf1ed; }
+    .mwa-permanent-label { background: rgba(32,41,35,0.9); }
   }
-
-  @media (max-width: 880px) {
-    .mh-header { align-items: flex-start; }
-    .mh-map-layout { grid-template-columns: 1fr; }
-    #mh-map { height: 64vh; min-height: 520px; }
-    .mh-panel { min-height: 0; }
-    .mh-caveat { margin-top: 0; }
+  @media (max-width: 980px) {
+    .mwa-layerbar { grid-template-columns: 1fr 1fr; }
+    .mwa-layer-checks { grid-column: 1 / -1; }
+    .mwa-layout { grid-template-columns: 1fr; }
+    #mwa-map { height: 68vh; min-height: 560px; }
+    .mwa-method { margin-top: 0; }
   }
-  @media (max-width: 620px) {
-    #mielno-history-map { padding: 12px; }
-    .mh-header { display: grid; gap: 13px; }
-    .mh-home-chip { width: 100%; }
-    .mh-timeline { padding: 12px; }
-    .mh-timeline-head { align-items: flex-start; }
-    .mh-timeline-actions { display: grid; }
-    .mh-button { padding: 6px 8px; font-size: 0.8rem; }
-    .mh-milestones { gap: 4px; }
-    .mh-milestones button { padding: 6px 1px; border-radius: 7px; }
-    .mh-milestones button small { font-size: 0.65rem; }
-    .mh-compare { grid-template-columns: 1fr; gap: 3px; }
-    .mh-ww1-controls { display: grid; gap: 6px; }
-    .mh-ww1-controls > div { display: grid; grid-template-columns: repeat(2, 1fr); }
-    #mh-map { min-height: 500px; height: 61vh; }
-    .mh-map-badge { left: 48px; top: 10px; font-size: 0.72rem; }
-    .mh-legend { right: 9px; left: 9px; bottom: 9px; gap: 5px 9px; }
+  @media (max-width: 660px) {
+    #mielno-war-atlas { padding: 10px; }
+    .mwa-header { display: grid; gap: 12px; }
+    .mwa-reference { width: 100%; }
+    .mwa-period-head { align-items: flex-start; }
+    .mwa-view-actions { display: grid; }
+    .mwa-period-buttons { gap: 3px; }
+    .mwa-period-buttons button { padding: 5px 1px; }
+    .mwa-period-buttons button small { font-size: 0.61rem; }
+    .mwa-stage-ticks { font-size: 0.56rem; }
+    .mwa-layerbar { grid-template-columns: 1fr; }
+    .mwa-layer-checks { grid-column: auto; }
+    #mwa-map { min-height: 520px; height: 64vh; }
+    .mwa-map-badge { left: 47px; max-width: calc(100% - 57px); }
+    .mwa-map-status { top: 47px; right: 9px; }
+    .mwa-legend { right: 8px; left: 8px; bottom: 8px; gap: 5px 8px; }
   }
 </style>
 
@@ -1078,303 +1101,550 @@ svg {
 <script>
 (() => {
   "use strict";
-  const root = document.getElementById("mielno-history-map");
+  const root = document.getElementById("mielno-war-atlas");
   if (!root || !window.L) return;
 
-  const PERIODS = [
+  const SOURCES = {
+    reichsarchiv: {label:"Reichsarchiv, Die Befreiung Ostpreußens (1925)", url:"https://dokumen.pub/die-befreiung-ostpreuens.html"},
+    mapster: {label:"Mapster / UW, arkusz 2487 Hohenstein", url:"http://igrek.amzp.pl/result.php?cmd=id&god=2487&cat=tk25"},
+    fotothek: {label:"Deutsche Fotothek, arkusz 2487 (1938)", url:"https://www.deutschefotothek.de/documents/obj/71052604"},
+    mielnoGraves: {label:"Volksbund: Mühlen / Mielno", url:"https://kriegsgraeberstaetten.volksbund.de/friedhof/muehlen-mielno"},
+    waplewoGraves: {label:"Volksbund: Waplitz / Waplewo", url:"https://kriegsgraeberstaetten.volksbund.de/friedhof/waplitz-waplewo"},
+    olsztynek1807: {label:"Portal Olsztynka: lata 1804–1907", url:"https://olsztynek.pl/miasto-i-gmina-olsztynek/historia/lata-1804-1907/"},
+    stalag: {label:"Portal Olsztynka: Stalag I-B", url:"https://www.olsztynek.pl/informacje/turystyka/zabytki/"},
+    january1945: {label:"Portal Olsztynka: Czas przełomu", url:"https://olsztynek.pl/miasto-i-gmina-olsztynek/historia/czas-przelomu/"},
+    ewm: {label:"Encyklopedia Warmii i Mazur: Olsztynek", url:"https://encyklopedia.warmia.mazury.pl/index.php/Olsztynek"},
+    osm: {label:"OpenStreetMap", url:"https://www.openstreetmap.org/copyright"}
+  };
+
+  const PRECISION = {
+    exact: "dokładny punkt źródłowy",
+    place: "dokładna miejscowość; położenie jednostki przybliżone",
+    recon: "rekonstrukcja odcinka z opisu operacyjnego",
+    regional: "schemat regionalny; brak dokładnej osi taktycznej"
+  };
+
+  const HOME = [53.5070080, 20.2082296];
+  const SHEET_BOUNDS = [[53.5,20.1666666667],[53.6,20.3333333333]];
+  const REGION_BOUNDS = [[53.425,20.055],[53.635,20.495]];
+  const MIELNO_BOUNDS = [[53.488,20.165],[53.535,20.285]];
+  const OLSZTYNEK_BOUNDS = [[53.552,20.215],[53.605,20.345]];
+  const WAPLITZ_BOUNDS = [[53.428,20.245],[53.545,20.39]];
+  const NORTH_EAST_BOUNDS = [[53.54,20.255],[53.63,20.49]];
+
+  const PLACES = {
+    mielno: [53.51105,20.19566],
+    hollental: [53.51413,20.21380],
+    waplewo: [53.49891,20.32217],
+    pawlowo: [53.53324,20.27317],
+    gasiorowo: [53.514165,20.272197],
+    kunki: [53.53874,20.31145],
+    nadrowo: [53.5350,20.3630],
+    olsztynek: [53.58342,20.28162],
+    mierki: [53.58472,20.32639],
+    kolatek: [53.57934,20.35513],
+    swaderki: [53.550278,20.41750],
+    gryzliny: [53.618333,20.340556],
+    kurki: [53.5366,20.4768],
+    drweck: [53.5526,20.1793],
+    lichtajny: [53.554371,20.230428],
+    krolikowo: [53.572413,20.253118],
+    sudwa: [53.586389,20.263611],
+    witramowo: [53.47910,20.33557],
+    januszkowo: [53.43703,20.28833],
+    frygnowo: [53.5051,20.0813],
+    wilkowo: [53.600951,20.270986],
+    stalag: [53.578611,20.245278],
+    sudwaCemetery: [53.5891984,20.2419141]
+  };
+
+  function feature(category, kind, name, desc, geometry, side, precision, source, extra) {
+    return Object.assign({
+      category: category,
+      kind: kind,
+      name: name,
+      desc: desc,
+      geometry: geometry,
+      side: side || "neutral",
+      precision: precision || "recon",
+      source: source || SOURCES.reichsarchiv
+    }, extra || {});
+  }
+  function front(name, desc, coords, side, precision) { return feature("fronts","line",name,desc,coords,side,precision,SOURCES.reichsarchiv); }
+  function move(name, desc, coords, side, precision) { return feature("moves","move",name,desc,coords,side,precision,SOURCES.reichsarchiv); }
+  function battle(name, desc, coord, precision, extra) { return feature("battles","point",name,desc,coord,"neutral",precision,SOURCES.reichsarchiv,extra); }
+  function battleArea(name, desc, coords, side, precision) { return feature("battles","area",name,desc,coords,side,precision,SOURCES.reichsarchiv); }
+  function command(name, desc, coord, side, precision, extra) { return feature("command","point",name,desc,coord,side,precision,SOURCES.reichsarchiv,extra); }
+
+  const WW1_STAGES = [
     {
-      year: "1807",
-      title: "Wojny napoleońskie",
-      badge: "1807 · obozy i przemarsze",
-      tags: ["przemarsze", "biwaki", "bez lokalnej sztabówki"],
-      summary: "Pod koniec 1806 roku do Hohenstein wkroczyły wojska francuskie. Między Olsztynkiem a Wilkowem obozowało około 12 tys. żołnierzy; w maju 1807 armia ruszyła dalej na wschód.",
-      source: "https://olsztynek.pl/miasto-i-gmina-olsztynek/historia/lata-1804-1907/",
-      sourceLabel: "Historia Olsztynka: lata 1804–1907"
+      title:"25 VIII · wieczór",
+      focus:"rozstawienie przed główną bitwą",
+      summary:"XX Korpus wiązał odcinek Mielno–Olsztynek. Rosyjski XV Korpus osiągnął Waplewo około 15:30, a XIII Korpus miał biwaki przy Kurkach i na wschód od nich.",
+      fit: REGION_BOUNDS,
+      features:[
+        front("Niemiecki rygiel XX Korpusu","Przybliżony pas osłony od rejonu Mielna ku Olsztynkowi; nie jest to ciągła linia okopów.",[[53.48,20.145],[53.499,20.177],[53.515,20.205],[53.554,20.235],[53.583,20.282]],"de","recon"),
+        front("70. Brygada Landwehry i oddziały Ungera","Jedenaście batalionów i siedem szwadronów, lecz tylko cztery baterie, w rejonie na północ od Mielna.",[[53.51,20.19],[53.533,20.205],[53.555,20.225]],"de","recon"),
+        front("Rosyjski XV Korpus pod Waplewem","Czoło korpusu Martosa osiągnęło Waplewo około 15:30.",[[53.482,20.303],[53.499,20.322],[53.518,20.35]],"ru","recon"),
+        move("Podejście XV Korpusu","Marsz z południowego wschodu do Waplewa.",[[53.455,20.39],[53.478,20.35],[53.49891,20.32217]],"ru","recon"),
+        move("Ruch XIII Korpusu ku Kurkom","Marsz i koncentracja na obu stronach jeziora Łańskiego.",[[53.59,20.47],[53.56,20.49],[53.5366,20.4768]],"ru","regional"),
+        command("Waplewo — koncentracja XV Korpusu","Miejscowość osiągnięta przez korpus Martosa po południu 25 sierpnia.",PLACES.waplewo,"ru","place",{label:true}),
+        command("Kurki — biwaki XIII Korpusu","Rozpoznanie meldowało biwaki przy Kurkach i dalej na wschód.",PLACES.kurki,"ru","place",{label:true}),
+        command("3. Dywizja Rezerwowa","Dywizja stała w rejonie Reichenau; znak pokazuje jedynie kierunek zachodniego zaplecza arkusza.",[53.575,20.105],"de","regional"),
+        command("Kawaleria rezerwowa","Reichsarchiv lokuje ją w rejonie Wittigwalde; pozycja na mapie ma charakter orientacyjny.",[53.585,20.18],"de","regional")
+      ]
     },
     {
-      year: "1914",
-      title: "I wojna światowa",
-      badge: "Sztabówka 1909 · stan rano 28 VIII",
-      tags: ["Meßtischblatt 1:25 000", "front 26–28 VIII", "rekonstrukcja"],
-      summary: "Mielno (Mühlen) znalazło się bezpośrednio na linii walk bitwy pod Tannenbergiem. Najbliższy domowi odcinek frontu przebiegał przez jar Höllental, około kilometra na północ.",
-      source: "https://igrek.amzp.pl/result.php?cmd=id&god=2487&cat=tk25",
-      sourceLabel: "Arkusz 2487 Hohenstein w Mapsterze"
+      title:"26 VIII",
+      focus:"front na drodze Mielno–Olsztynek",
+      summary:"Mielno znalazło się na aktywnym styku. Niemiecka Landwehra blokowała szosę i wzgórza, a oddziały rosyjskie sondowały podejścia od wschodu.",
+      fit: MIELNO_BOUNDS,
+      features:[
+        front("Pozycja Mielno–jezioro Omulew","Rekonstrukcja niemieckiego odcinka zamykającego drogę i przejścia na północ od wsi.",[[53.496,20.194],[53.511,20.202],[53.529,20.204],[53.544,20.202]],"de","recon"),
+        front("Rosyjskie pozycje na wschód od Mielna","Odcinek na wyniesieniach i skraju jaru Höllental.",[[53.499,20.218],[53.516,20.224],[53.536,20.229]],"ru","recon"),
+        move("Rosyjskie rozpoznanie i nacisk","Kierunek podejść z rejonu Gąsiorowa ku Mielnu.",[[53.514165,20.272197],[53.515,20.245],[53.515,20.218]],"ru","recon"),
+        move("Niemieckie wzmocnienia od Olsztynka","Kierunek przesuwania oddziałów na odcinek Mielna.",[[53.58342,20.28162],[53.553,20.242],[53.521,20.207]],"de","regional"),
+        battleArea("Pierwsze walki pod Mielnem","Pas patroli, ognia artylerii i lokalnych starć; granice strefy są przybliżone.",[[53.503,20.198],[53.522,20.199],[53.527,20.226],[53.505,20.229]],"neutral","recon"),
+        battle("Mühlen / Mielno","Wieś leżała bezpośrednio w pasie walk 26–28 sierpnia.",PLACES.mielno,"place",{label:true}),
+        command("Niemieckie zaplecze odcinka","Rejon Landwehry i oddziałów fortecznych na północ od wsi.",[53.532,20.202],"de","recon"),
+        command("Rosyjskie zaplecze pod Gąsiorowem","Miejscowość stanowi punkt odniesienia dla podejść od wschodu.",PLACES.gasiorowo,"ru","place")
+      ]
     },
     {
-      year: "1939",
-      title: "II wojna: Stalag I-B",
-      badge: "Sztabówka 1938 · obóz 1939–1945",
-      tags: ["Meßtischblatt 1:25 000", "obóz jeniecki", "1939–1945"],
-      summary: "Na zachód od Olsztynka, między Królikowem a Sudwą, Niemcy uruchomili Stalag I-B Hohenstein. Przez obóz przeszły setki tysięcy jeńców; około 55 tys. zmarło lub zostało zamęczonych.",
-      source: "https://www.olsztynek.pl/informacje/turystyka/zabytki/",
-      sourceLabel: "Portal Olsztynka: Stalag I-B"
+      title:"27 VIII · wieczór",
+      focus:"pozycje wyjściowe do uderzenia na Waplewo",
+      summary:"41. Dywizja zatrzymała się na szerokim froncie Januszkowo–Albrechtsau–południowy kraniec jeziora Mielno. XV Korpus utrzymywał rejon Waplewa i Nadrowa.",
+      fit: WAPLITZ_BOUNDS,
+      features:[
+        front("41. Dywizja Piechoty — linia wyjściowa","Źródło podaje front Januszkowo–Albrechtsau–południowy kraniec Mühlensee; środkowy przebieg jest rekonstrukcją.",[PLACES.januszkowo,[53.455,20.315],[53.476,20.304],[53.492,20.253]],"de","recon"),
+        front("XV Korpus — Waplewo–Nadrowo","Przybliżony pas rosyjskich stanowisk i odwodów.",[[53.487,20.314],[53.499,20.322],[53.52,20.345],[53.535,20.363]],"ru","recon"),
+        front("Utrzymany odcinek Mielna","Niemiecka Landwehra nadal osłaniała drogę Mielno–Olsztynek.",[[53.497,20.196],[53.516,20.204],[53.541,20.208]],"de","recon"),
+        move("Nocny marsz 41. Dywizji","Podejście kolumn na Waplewo w ciemności i mgle.",[[53.43703,20.28833],[53.462,20.315],[53.487,20.322]],"de","recon"),
+        move("Rosyjskie odwody ku Waplewu","Kierunek przesuwania sił XV Korpusu od Nadrowa.",[[53.535,20.363],[53.518,20.345],[53.499,20.322]],"ru","recon"),
+        command("Januszkowo / Januschkau","Południowy punkt wymienionej linii 41. Dywizji.",PLACES.januszkowo,"de","place",{label:true}),
+        command("Witramowo / Wittmannsdorf","Punkt na południowym zapleczu operacji.",PLACES.witramowo,"de","place"),
+        command("Nadrowo — rejon XV Korpusu","Punkt odniesienia rosyjskiego zaplecza pod Waplewem.",PLACES.nadrowo,"ru","place",{label:true}),
+        battle("Waplewo — pole przyszłego starcia","Most, wieś i dolina Marózki znalazły się na osi ataku o świcie 28 sierpnia.",PLACES.waplewo,"place",{label:true})
+      ]
     },
     {
-      year: "1945",
-      title: "Operacja wschodniopruska",
-      badge: "Styczeń 1945 · kierunek natarcia (schemat)",
-      tags: ["Armia Czerwona", "22 I 1945", "schemat regionalny"],
-      summary: "Armia Czerwona wkroczyła do Olsztynka 22 stycznia 1945 roku. Dokładnego lokalnego przebiegu linii przez Mielno nie udało się potwierdzić; pokazany kierunek jest schematem regionalnym, nie linią okopów.",
-      source: "https://encyklopedia.warmia.mazury.pl/index.php/Olsztynek",
-      sourceLabel: "Encyklopedia Warmii i Mazur: Olsztynek"
+      title:"28 VIII · 04:00–09:00",
+      focus:"klęska 41. Dywizji pod Waplewem",
+      summary:"Niemieckie kolumny weszły we mgle w dolinę pod Waplewem. Rosyjski kontratak rozbił część 41. Dywizji; lokalny wynik był rosyjskim zwycięstwem, choć nie odwrócił całej bitwy.",
+      fit: WAPLITZ_BOUNDS,
+      features:[
+        front("41. Dywizja — rozwinięcie do ataku","Przybliżona szeroka linia rozwinięcia przed Waplewem.",[[53.468,20.294],[53.477,20.322],[53.482,20.348]],"de","recon"),
+        front("XV Korpus — obrona Waplewa","Pozycje na krawędzi doliny i przy drogach wokół wsi.",[[53.493,20.309],[53.501,20.322],[53.508,20.338]],"ru","recon"),
+        front("Landwehra pod Mielnem","Równocześnie utrzymywany odcinek Mielna, jeszcze przed głównym szturmem.",[[53.499,20.198],[53.516,20.205],[53.538,20.208]],"de","recon"),
+        move("Niemieckie wejście w dolinę","Nocny atak 41. Dywizji ku Waplewu.",[[53.462,20.31],[53.479,20.319],[53.49891,20.32217]],"de","recon"),
+        move("Rosyjski kontratak","Uderzenie XV Korpusu na niemieckie kolumny w rejonie wsi i mostu.",[[53.518,20.351],[53.505,20.335],[53.488,20.318]],"ru","recon"),
+        move("Odwrót części 41. Dywizji","Kierunek cofania rozbitych oddziałów na południe i zachód.",[[53.495,20.319],[53.475,20.302],[53.452,20.285]],"de","recon"),
+        battleArea("Pole walki pod Waplewem","Wieś, most na Marózce i podejścia od południa. Obrys pokazuje strefę, nie granicę archeologiczną.",[[53.489,20.307],[53.509,20.307],[53.511,20.337],[53.489,20.341]],"ru","recon"),
+        battle("Most i wieś Waplewo","Centralny punkt starcia 28 sierpnia.",PLACES.waplewo,"place",{label:true}),
+        command("Nadrowo — Martos / XV Korpus","Przybliżony rejon dowodzenia korpusu Martosa.",PLACES.nadrowo,"ru","place",{label:true}),
+        command("Witramowo — południowe zaplecze","Punkt na drodze odwrotu i reorganizacji niemieckich oddziałów.",PLACES.witramowo,"de","place")
+      ]
     },
     {
-      year: "2026",
-      title: "Współczesny teren",
-      badge: "Współcześnie · ślady w krajobrazie",
-      tags: ["OpenStreetMap", "miejsca pamięci", "punkt adresowy GUGiK"],
-      summary: "Współczesna mapa pozwala odnaleźć teren szturmu, oba cmentarze wojenne pod Mielnem oraz pozostałości i upamiętnienia Stalagu I-B pod Olsztynkiem.",
-      source: "https://www.openstreetmap.org/#map=13/53.533/20.238",
-      sourceLabel: "OpenStreetMap: okolice Mielna"
+      title:"28 VIII · 09:00–12:00",
+      focus:"Mielno / Höllental i Waplewo",
+      summary:"Pod Waplewem 41. Dywizja była pobita. Pod Mielnem Landwehra i IR 147 szturmowały rosyjskie pozycje na wschodnim stoku Höllental, lecz do południa natarcie utknęło.",
+      fit: [[53.475,20.165],[53.545,20.37]],
+      features:[
+        front("Landwehra — pozycja wyjściowa","LIR 18 po prawej i LIR 5 po lewej stronie szosy; przebieg sektorów jest przybliżony.",[[53.499,20.198],[53.516,20.204],[53.538,20.207]],"de","recon"),
+        front("Rosyjskie umocnienia Höllental","Silne stanowiska na wschodnim stoku jaru i na wyniesieniach.",[[53.499,20.218],[53.516,20.223],[53.538,20.229]],"ru","recon"),
+        front("Rozbita 41. Dywizja pod Waplewem","Przybliżony rejon reorganizacji po porannej porażce.",[[53.478,20.291],[53.489,20.311],[53.486,20.338]],"de","recon"),
+        move("LIR 18 — natarcie prawego skrzydła","Kierunek szturmu z zachodu na wschód przez jar.",[[53.508,20.199],[53.509,20.211],[53.51,20.226]],"de","recon"),
+        move("LIR 5 — natarcie lewego skrzydła","Kierunek natarcia północnym skrajem odcinka.",[[53.521,20.202],[53.521,20.214],[53.522,20.229]],"de","recon"),
+        move("IR 147 — wzmocnienie uderzenia","Kierunek wejścia pułku na zablokowany odcinek.",[[53.54,20.195],[53.528,20.205],[53.518,20.218]],"de","recon"),
+        battleArea("Höllental — główna strefa szturmu","Jar i wschodni stok, gdzie rosyjskie pozycje blokowały drogę Mielno–Olsztynek.",[[53.506,20.205],[53.525,20.207],[53.527,20.229],[53.507,20.23]],"neutral","recon"),
+        battle("Cmentarz i rejon Höllental","Dzisiejszy cmentarz leży w obrębie pola walki.",PLACES.hollental,"exact",{label:true}),
+        battle("Waplewo — poranne pole walki","Lokalne rosyjskie zwycięstwo na południowym skrzydle.",PLACES.waplewo,"place",{label:true}),
+        command("Odcinek Landwehry pod Mielnem","Dowodzenie natarciem na pozycje Höllental.",[53.516,20.199],"de","recon"),
+        command("Rosyjskie zaplecze w Gąsiorowie","Miejscowość na osi rosyjskiego odwrotu i niemieckiego pościgu.",PLACES.gasiorowo,"ru","place")
+      ]
+    },
+    {
+      title:"28 VIII · 12:00–15:00",
+      focus:"przełamanie centrum i walki o Olsztynek",
+      summary:"Landwehra pod Mielnem stała do czasu nadejścia trzech batalionów i trzech baterii. 3. Dywizja Rezerwowa nacierała od zachodu, a w Olsztynku i Lesie Miejskim narastały walki.",
+      fit: [[53.495,20.16],[53.61,20.39]],
+      features:[
+        front("Zatrzymany front pod Mielnem","Południowy odcinek nadal opierał się na Höllental.",[[53.501,20.211],[53.518,20.218],[53.537,20.224]],"ru","recon"),
+        front("3. Dywizja Rezerwowa","Rozwinięcie od Drwęcka i Lichtajn w stronę Olsztynka.",[[53.548,20.176],[53.557,20.218],[53.57,20.252]],"de","recon"),
+        front("Landwehra Goltz — północ Olsztynka","Przybliżony odcinek na północ od linii Hohenstein–Mörken.",[[53.592,20.272],[53.594,20.325]],"de","recon"),
+        front("Rosyjski XIII Korpus","Odcinek na wschód i północny wschód od Olsztynka.",[[53.589,20.315],[53.603,20.342],[53.616,20.365]],"ru","recon"),
+        move("Trzy bataliony i trzy baterie ku Mielnu","Wzmocnienia pozostawione przez 37. Dywizję ruszyły na odcinek Landwehry.",[[53.553,20.23],[53.538,20.215],[53.52,20.214]],"de","recon"),
+        move("3. Dywizja Rezerwowa na Olsztynek","Natarcie od Drwęcka przez Lichtajny.",[PLACES.drweck,PLACES.lichtajny,PLACES.olsztynek],"de","recon"),
+        move("5. Brygada Rezerwowa ku Kunki","Skręt na południe na zachód od Kunki.",[[53.566,20.292],PLACES.kunki,[53.521,20.324]],"de","recon"),
+        battleArea("Olsztynek — walki uliczne","Przybliżony obszar zabudowy, gdzie 6. Brygada Rezerwowa walczyła dom po domu.",[[53.576,20.271],[53.591,20.271],[53.593,20.293],[53.576,20.296]],"neutral","place"),
+        battleArea("Kämmerei-Wald / Las Miejski","Rozległa strefa walk leśnych na północny wschód od miasta.",[[53.591,20.292],[53.61,20.294],[53.613,20.337],[53.594,20.344]],"neutral","recon"),
+        command("Bateria pod Lasem Miejskim","2. bateria Landwehry dotarła na południowy skraj lasu od strony Biesala.",[53.596,20.298],"de","recon"),
+        command("Olsztynek / Hohenstein","Węzeł walk centrum i punkt ciężkości 3. Dywizji Rezerwowej.",PLACES.olsztynek,"de","place",{label:true})
+      ]
+    },
+    {
+      title:"28 VIII · 15:00–wieczór",
+      focus:"odwrót Rosjan i pościg na Pawłowo",
+      summary:"Pod naciskiem od północy Rosjanie około 15:00 zaczęli odchodzić z rejonu Mielna. Oddziały Ungera osiągnęły Gąsiorowo i Pawłowo, 5. Brygada Rezerwowa doszła na północ od Waplewa, a w Olsztynku trwały walki uliczne.",
+      fit: [[53.492,20.18],[53.61,20.39]],
+      features:[
+        front("Linia osiągnięta przez Landwehrę","Wieczorny pas dojścia od Mielna przez Gąsiorowo ku Pawłowu.",[[53.514,20.226],PLACES.gasiorowo,PLACES.pawlowo],"de","recon"),
+        front("5. Brygada Rezerwowa na północ od Waplewa","Brygada doszła do rejonu na północ od Waplewa; mieszany oddział zatrzymał się przed Nadrowem.",[[53.529,20.309],[53.516,20.323],[53.511,20.346]],"de","recon"),
+        front("Rosyjskie tylne straże przy Nadrowie","Majątek Nadrowo pozostawał obsadzony przez Rosjan.",[[53.526,20.351],[53.537,20.363],[53.545,20.376]],"ru","recon"),
+        front("Olsztynek i zachodnie wzgórza","Wieczorem Niemcy utrzymywali miasto i wyniesienia na zachód od niego.",[[53.576,20.257],[53.583,20.282],[53.589,20.3]],"de","recon"),
+        move("Przełamanie pod Mielnem","Po nadejściu wzmocnień natarcie ruszyło na wschód.",[[53.516,20.205],[53.516,20.223],[53.514165,20.272197]],"de","recon"),
+        move("Pościg na Gąsiorowo i Pawłowo","Oddziały Ungera i Landwehry ruszyły za wycofującymi się Rosjanami.",[[53.516,20.218],PLACES.gasiorowo,PLACES.pawlowo],"de","recon"),
+        move("Rosyjski odwrót z Mielna","Kierunek odwrotu na południowy wschód.",[[53.518,20.231],[53.51,20.285],[53.49,20.34]],"ru","recon"),
+        move("5. Brygada Rezerwowa ku Waplewu","Ruch od Kunki na północne podejścia Waplewa.",[PLACES.kunki,[53.521,20.323],[53.509,20.323]],"de","recon"),
+        battleArea("Olsztynek — walki dom po domu","6. Brygada Rezerwowa zdobywała zabudowę; Reichsarchiv podaje około 2000 jeńców.",[[53.576,20.271],[53.591,20.271],[53.593,20.294],[53.576,20.296]],"neutral","place"),
+        battleArea("Kämmerei-Wald","Walki rosyjskiego XIII Korpusu z niemieckimi oddziałami na leśnych przesiekach.",[[53.593,20.295],[53.61,20.297],[53.613,20.339],[53.595,20.344]],"neutral","recon"),
+        command("Gąsiorowo / Ganshorn","Wieczorny punkt dojścia oddziałów Ungera.",PLACES.gasiorowo,"de","place",{label:true}),
+        command("Pawłowo / Paulsgut","Wieczorny punkt dojścia i zbierania jeńców.",PLACES.pawlowo,"de","place",{label:true}),
+        command("Nadrowo — rosyjskie stanowiska","Majątek obsadzony przez rosyjskie oddziały tylne.",PLACES.nadrowo,"ru","place")
+      ]
+    },
+    {
+      title:"29 VIII · 06:00–14:00",
+      focus:"Mierki, Gryźliny, Kołatek i Swaderki",
+      summary:"37. Dywizja ruszyła o 06:00 na Mierki i Las Miejski. Rosyjskie tylne straże zostały odcięte; most przy Kołatku zdobyto około 14:00, a 5. Brygada Rezerwowa zajęła Swaderki i ruszyła ku Kurkom.",
+      fit: NORTH_EAST_BOUNDS,
+      features:[
+        front("37. Dywizja — natarcie na Mierki","Rozwinięcie od Olsztynka na Mierki i południowy skraj Lasu Miejskiego.",[[53.579,20.281],[53.588,20.305],[53.58472,20.32639]],"de","recon"),
+        front("Rosyjskie tylne straże Mierki–Gryźliny","Odcinek osłaniający odwrót XIII Korpusu.",[[53.583,20.328],[53.6,20.337],[53.618333,20.340556]],"ru","recon"),
+        front("5. Brygada Rezerwowa pod Swaderkami","Odcinek po zdobyciu miejscowości i przepraw na Marózce.",[[53.545,20.397],[53.550278,20.4175],[53.558,20.438]],"de","recon"),
+        move("Atak 37. Dywizji","Natarcie z Olsztynka przez Mierki w stronę Gryźlin.",[PLACES.olsztynek,PLACES.mierki,PLACES.gryzliny],"de","recon"),
+        move("Uderzenie Landwehry Goltz","Natarcie z południowego wschodu Olsztynka na rosyjski bok.",[[53.572,20.3],[53.584,20.32],[53.596,20.333]],"de","recon"),
+        move("Pościg 5. Brygady Rezerwowej","Po zajęciu Swaderek brygada ruszyła ku Kurkom.",[PLACES.swaderki,[53.544,20.455],PLACES.kurki],"de","recon"),
+        move("Rosyjski odwrót ku Kurkom","Kierunek wycofywania się resztek na wschód.",[[53.6,20.34],[53.57,20.41],[53.5366,20.4768]],"ru","recon"),
+        battleArea("Mierki i Las Miejski","Strefa walk rosyjskich tylnych straży i niemieckiego uderzenia oskrzydlającego.",[[53.578,20.31],[53.605,20.31],[53.612,20.351],[53.584,20.359]],"neutral","recon"),
+        battle("Gryźliny — zamknięcie pierścienia","Reichsarchiv opisuje kapitulację dużych grup XIII Korpusu w rejonie Mierki–Gryźliny.",PLACES.gryzliny,"place",{label:true}),
+        battle("Kołatek / Schlagamühle — most","Most na osi odwrotu zdobyto według Reichsarchiv około 14:00.",PLACES.kolatek,"place",{label:true}),
+        battle("Swaderki / Schwedrich","5. Brygada Rezerwowa zdobyła miejscowość po ciężkiej walce.",PLACES.swaderki,"place",{label:true}),
+        command("Mierki / Mörken","Punkt odniesienia walk przed południem 29 sierpnia.",PLACES.mierki,"ru","place"),
+        command("Kurki — kierunek odwrotu","Wschodni punkt pościgu po walkach pod Swaderkami.",PLACES.kurki,"ru","place")
+      ]
     }
   ];
 
-  const WW1 = {
-    "25": {
-      label: "wieczór 25 VIII",
-      summary: "Niemiecki XX Korpus utrzymywał rygiel Gilgenburg–Mühlen–Hohenstein. Rosyjski XV Korpus dochodził do Waplitz; XIII Korpus biwakował koło Kurken.",
-      lines: [
-        {side:"de", name:"Rygiel XX Korpusu", desc:"Przybliżony odcinek obrony przez Mühlen ku Hohenstein.", coords:[[53.475,20.105],[53.49,20.165],[53.512,20.205],[53.555,20.235],[53.583,20.282]]},
-        {side:"ru", name:"Podejście XV Korpusu", desc:"XV Korpus osiągnął Waplitz około 15:30 i kierował się ku Mühlen.", coords:[[53.46,20.39],[53.499,20.322],[53.515,20.255]]}
-      ],
-      moves: []
+  const PERIODS = [
+    {
+      year:"1807", title:"wojny napoleońskie", raster:"none",
+      tags:["obóz francuski","przemarsze","lokalizacja opisowa"],
+      summary:"Na przełomie 1806 i 1807 przez Hohenstein przechodziły francuskie korpusy. Źródło lokalne opisuje obóz około 12 tysięcy żołnierzy między Olsztynkiem a Wilkowem.",
+      source:SOURCES.olsztynek1807, fit:OLSZTYNEK_BOUNDS
     },
-    "2627": {
-      label: "26–27 VIII",
-      summary: "Mühlen leżało na aktywnym froncie. Oddziały Landwehry i gen. Ungera blokowały szosę na wzgórzach; rosyjska 8. Dywizja nacierała od wschodu.",
-      lines: [
-        {side:"de", name:"Pozycja Mühlen–Ohmensee", desc:"Pozycja 70. Brygady Landwehry, dywizji Ungera i przydzielonego IR 147.", coords:[[53.499,20.197],[53.515,20.203],[53.54,20.204]]},
-        {side:"ru", name:"Pozycje na wschód od Höllental", desc:"Rekonstrukcja umocnień na wschodnim stoku jaru.", coords:[[53.501,20.219],[53.518,20.225],[53.539,20.23]]}
-      ],
-      moves: [
-        {side:"ru", name:"Natarcia na Mühlen", desc:"Powtarzane rosyjskie ataki na pozycję zamykającą szosę.", coords:[[53.515,20.25],[53.515,20.207]]}
-      ]
+    {
+      year:"1914", title:"bitwa pod Tannenbergiem", raster:"1901",
+      tags:["8 etapów","25–29 VIII","linie i ruchy jednostek"],
+      summary:"Najgęściej udokumentowana część atlasu. Suwak rozdziela koncentrację, starcie pod Waplewem, szturm Höllental, walki o Olsztynek i domknięcie okrążenia.",
+      source:SOURCES.reichsarchiv, fit:REGION_BOUNDS
     },
-    "28am": {
-      label: "rano 28 VIII",
-      summary: "Pod Waplitz niemiecka 41. Dywizja poniosła ciężką klęskę, a pod Mühlen Landwehra rozpoczęła szturm przez Höllental.",
-      lines: [
-        {side:"de", name:"Pozycja wyjściowa pod Mühlen", desc:"LIR 18 nacierał po prawej, a LIR 5 po lewej stronie szosy.", coords:[[53.501,20.198],[53.516,20.204],[53.538,20.207]]},
-        {side:"ru", name:"Rosyjskie umocnienia Höllental", desc:"Silne pozycje na wschodnim stoku jaru.", coords:[[53.5,20.217],[53.518,20.223],[53.538,20.229]]}
-      ],
-      moves: [
-        {side:"de", name:"Szturm przez Höllental", desc:"Natarcie Landwehry i IR 147 ruszyło na wschód.", coords:[[53.516,20.202],[53.516,20.218],[53.516,20.24]]},
-        {side:"de", name:"Marsz 41. Dywizji przez Waplitz", desc:"Nocny manewr zakończył się ciężką porażką we mgle.", coords:[[53.46,20.345],[53.499,20.322],[53.533,20.273]]},
-        {side:"de", name:"3. Dywizja Rezerwowa", desc:"Natarcie przez Dröbnitz w stronę Hohenstein.", coords:[[53.553,20.179],[53.57,20.235],[53.583,20.282]]}
-      ]
+    {
+      year:"1939–45", title:"Stalag I-B Hohenstein", raster:"1938",
+      tags:["obóz jeniecki","Królikowo–Sudwa","zasięg orientacyjny"],
+      summary:"Stalag I-B działał między Królikowem a Sudwą. Obóz liczył ponad 100 baraków; precyzyjny obrys całego kompleksu wymaga osobnej kwerendy planów i danych archeologicznych.",
+      source:SOURCES.stalag, fit:OLSZTYNEK_BOUNDS
     },
-    "28pm": {
-      label: "wieczór 28 VIII",
-      summary: "Około 17:00 Niemcy zdobyli pozycje w Höllental. Pościg doszedł do Ganshorn i Paulsgut, a rosyjskie centrum cofało się na południowy wschód.",
-      lines: [
-        {side:"de", name:"Linia osiągnięta wieczorem", desc:"Kierunek dojścia oddziałów gen. Ungera i Landwehry.", coords:[[53.515,20.235],[53.514,20.272],[53.533,20.273]]},
-        {side:"ru", name:"Odwrót XV Korpusu", desc:"Odwrót z odcinka Hohenstein–Mühlen.", coords:[[53.54,20.23],[53.50,20.30],[53.46,20.39]]}
-      ],
-      moves: [
-        {side:"de", name:"Pościg na Ganshorn", desc:"Po zdobyciu Höllental piechota ruszyła ku Ganshorn.", coords:[[53.516,20.218],[53.514,20.272]]},
-        {side:"ru", name:"Odwrót na południowy wschód", desc:"Rosyjskie oddziały odchodziły ku drogom na Neidenburg.", coords:[[53.515,20.27],[53.47,20.36],[53.445,20.43]]}
-      ]
+    {
+      year:"I 1945", title:"operacja wschodniopruska", raster:"1938",
+      tags:["22 I 1945","Olsztynek","schemat regionalny"],
+      summary:"22 stycznia niewielkie siły radzieckie zajęły wyludniony Olsztynek. Lokalny opis potwierdza prowizoryczne zapory na drogach wylotowych, lecz nie daje ich dokładnych współrzędnych.",
+      source:SOURCES.january1945, fit:OLSZTYNEK_BOUNDS
+    },
+    {
+      year:"dzisiaj", title:"miejsca pamięci i teren", raster:"none",
+      tags:["cmentarze","miejsca pamięci","współczesne drogi"],
+      summary:"W terenie nadal można odnaleźć oba cmentarze pod Mielnem, cmentarz pod Waplewem, teren Stalagu I-B i cmentarz jego ofiar w Sudwie.",
+      source:SOURCES.osm, fit:[[53.485,20.16],[53.605,20.35]]
     }
-  };
+  ];
 
-  const COLORS = {de:"#17669a", ru:"#b33b3b", soviet:"#7d2f6f"};
-  const HOME = [53.5070080, 20.2082296];
-  const SHEET_BOUNDS = [[53.5,20.1666667],[53.6,20.3333333]];
-  const REGION_BOUNDS = [[53.44,20.05],[53.615,20.49]];
-  const CLOSE_BOUNDS = [[53.492,20.17],[53.548,20.29]];
-  const OLSZTYNEK_BOUNDS = [[53.56,20.22],[53.612,20.32]];
-
-  const map = L.map(root.querySelector("#mh-map"), {zoomControl:true, preferCanvas:true, minZoom:9, maxZoom:18});
+  const map = L.map(root.querySelector("#mwa-map"), {zoomControl:true, preferCanvas:true, minZoom:8, maxZoom:18});
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: "&copy; OpenStreetMap contributors"
+    maxZoom:19,
+    attribution:"&copy; OpenStreetMap contributors"
   }).addTo(map);
   L.control.scale({imperial:false, position:"bottomright"}).addTo(map);
 
-  const historic1909 = L.imageOverlay("assets/messtischblatt-1909.jpg", SHEET_BOUNDS, {opacity:0.62, interactive:false});
-  const historic1938 = L.imageOverlay("assets/messtischblatt-1938.jpg", SHEET_BOUNDS, {opacity:0.62, interactive:false});
-  const periodLayer = L.layerGroup().addTo(map);
-  const homeLayer = L.layerGroup().addTo(map);
-  let currentOverlay = null;
-  let currentPeriod = 1;
-  let currentWW1 = "28am";
+  const rasterLayers = {
+    "1901": L.imageOverlay("assets/messtischblatt-1901-rectified.jpg",SHEET_BOUNDS,{opacity:0.58,interactive:false}),
+    "1933": L.imageOverlay("assets/messtischblatt-1933-rectified.jpg",SHEET_BOUNDS,{opacity:0.58,interactive:false}),
+    "1938": L.imageOverlay("assets/messtischblatt-1938-rectified.jpg",SHEET_BOUNDS,{opacity:0.58,interactive:false})
+  };
+  const rasterLabels = {
+    "none":"bez skanu historycznego",
+    "1901":"1901 · pomiar 1879; skan zrektyfikowany do wewnętrznej ramki arkusza",
+    "1933":"1933 · skan zrektyfikowany do wewnętrznej ramki arkusza",
+    "1938":"1938 · rewizja do 1937; skan zrektyfikowany do wewnętrznej ramki arkusza"
+  };
 
-  function icon(kind, glyph) {
-    return L.divIcon({
-      className: "",
-      html: `<span class="mh-marker mh-marker-${kind}">${glyph}</span>`,
-      iconSize: kind === "home" ? [32,32] : [26,26],
-      iconAnchor: kind === "home" ? [16,16] : [13,13]
+  const groups = {
+    fronts:L.layerGroup().addTo(map),
+    moves:L.layerGroup().addTo(map),
+    battles:L.layerGroup().addTo(map),
+    command:L.layerGroup().addTo(map),
+    memory:L.layerGroup().addTo(map)
+  };
+  const groupCounts = {fronts:0,moves:0,battles:0,command:0,memory:0};
+  const COLORS = {de:"#1f6396",ru:"#b13e43",soviet:"#7d3e76",neutral:"#7b6548"};
+  let currentRaster = null;
+  let currentPeriod = 1;
+  let currentStage = 4;
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g,function(char){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[char];
     });
   }
 
-  function setSelected(name, desc, eyebrow = "Wybrany punkt") {
-    root.querySelector("#mh-selected").innerHTML = `<span class="mh-eyebrow">${eyebrow}</span><h2>${name}</h2><p>${desc}</p>`;
+  function markerIcon(kind, glyph) {
+    const home = kind === "home";
+    return L.divIcon({
+      className:"",
+      html:'<span class="mwa-symbol mwa-symbol-' + kind + '">' + glyph + '</span>',
+      iconSize:home ? [34,34] : kind === "place" ? [20,20] : [27,27],
+      iconAnchor:home ? [17,17] : kind === "place" ? [10,10] : [13.5,13.5]
+    });
   }
 
-  function addMarker(item, kind = "event", glyph = "•") {
-    const marker = L.marker(item.coord, {icon:icon(kind, glyph)}).addTo(periodLayer);
-    marker.bindTooltip(item.name, {direction:"top", offset:[0,-10]});
-    marker.bindPopup(`<strong>${item.name}</strong><br>${item.desc}`);
-    marker.on("click", () => setSelected(item.name, item.desc));
-    return marker;
+  function selectedHtml(item) {
+    const sourceLink = item.source ? '<a class="mwa-source" href="' + escapeHtml(item.source.url) + '" target="_blank" rel="noopener">' + escapeHtml(item.source.label) + ' ↗</a>' : "";
+    return '<span class="mwa-eyebrow">' + escapeHtml(item.kind === "move" ? "Kierunek ruchu" : item.category === "fronts" ? "Pozycja / odcinek" : item.category === "command" ? "Sztab lub biwak" : item.category === "memory" ? "Miejsce pamięci" : "Wydarzenie") + '</span>' +
+      '<h2>' + escapeHtml(item.name) + '</h2>' +
+      '<p>' + escapeHtml(item.desc) + '</p>' +
+      '<div class="mwa-detail-meta"><span class="mwa-tag">' + escapeHtml(PRECISION[item.precision] || PRECISION.recon) + '</span></div>' +
+      sourceLink;
   }
 
-  function addLine(item, movement = false) {
-    const color = COLORS[item.side] || COLORS.de;
-    const line = L.polyline(item.coords, {
-      color,
-      weight: movement ? 4 : 4,
-      opacity: 0.94,
-      dashArray: movement ? "2 9" : "10 8",
-      lineCap: "round",
-      interactive: true
-    }).addTo(periodLayer);
-    line.bindTooltip(item.name, {sticky:true});
-    line.bindPopup(`<strong>${item.name}</strong><br>${item.desc}`);
-    line.on("click", () => setSelected(item.name, item.desc, movement ? "Kierunek ruchu" : "Rekonstrukcja linii"));
-    if (movement && item.coords.length > 1) {
-      const a = item.coords[item.coords.length - 2];
-      const b = item.coords[item.coords.length - 1];
-      const angle = Math.atan2(b[1] - a[1], -(b[0] - a[0])) * 180 / Math.PI;
-      L.marker(b, {icon:L.divIcon({className:"", html:`<span class="mh-arrow-inner" style="color:${color};transform:rotate(${angle}deg)">▲</span>`, iconSize:[22,22], iconAnchor:[11,11]}), interactive:false}).addTo(periodLayer);
+  function setSelected(item) {
+    root.querySelector("#mwa-selected").innerHTML = selectedHtml(item);
+  }
+
+  function popupHtml(item) {
+    return '<strong>' + escapeHtml(item.name) + '</strong><br>' +
+      escapeHtml(item.desc) + '<br><small>' + escapeHtml(PRECISION[item.precision] || PRECISION.recon) + '</small>';
+  }
+
+  function registerLayer(item, layer) {
+    layer.addTo(groups[item.category]);
+    groupCounts[item.category] += 1;
+    layer.bindPopup(popupHtml(item));
+    layer.bindTooltip(item.name,{sticky:true});
+    layer.on("click",function(){ setSelected(item); });
+    if (item.label && item.kind === "point") {
+      layer.bindTooltip(item.name,{permanent:true,direction:"top",offset:[0,-12],className:"mwa-permanent-label"});
     }
-    return line;
+    return layer;
   }
 
-  L.marker(HOME, {icon:icon("home", "★"), zIndexOffset:1000}).addTo(homeLayer)
-    .bindPopup("<strong>Mielno 158</strong><br>Punkt adresowy z państwowego rejestru GUGiK.")
-    .on("click", () => setSelected("Mielno 158", "Punkt adresowy GUGiK. Około 1 km na południe od cmentarzy wojennych i rejonu szturmu Höllental.", "Punkt odniesienia"));
-
-  function showOverlay(overlay) {
-    if (currentOverlay && map.hasLayer(currentOverlay)) map.removeLayer(currentOverlay);
-    currentOverlay = overlay;
-    if (currentOverlay) {
-      currentOverlay.setOpacity(Number(root.querySelector("#mh-opacity").value) / 100);
-      currentOverlay.addTo(map);
-      currentOverlay.bringToBack();
+  function addFeature(item) {
+    const color = COLORS[item.side] || COLORS.neutral;
+    if (item.kind === "line" || item.kind === "move") {
+      const moving = item.kind === "move";
+      const layer = L.polyline(item.geometry,{
+        color:color,
+        weight:moving ? 4 : 4,
+        opacity:0.94,
+        dashArray:moving ? "2 8" : item.precision === "recon" ? "10 7" : null,
+        lineCap:"round",
+        interactive:true
+      });
+      registerLayer(item,layer);
+      if (moving && item.geometry.length > 1) {
+        const a = item.geometry[item.geometry.length - 2];
+        const b = item.geometry[item.geometry.length - 1];
+        const angle = Math.atan2(b[1] - a[1],-(b[0] - a[0])) * 180 / Math.PI;
+        L.marker(b,{
+          icon:L.divIcon({className:"",html:'<span class="mwa-arrowhead" style="color:' + color + ';transform:rotate(' + angle + 'deg)">▲</span>',iconSize:[22,22],iconAnchor:[11,11]}),
+          interactive:false
+        }).addTo(groups[item.category]);
+      }
+      return;
     }
-    root.querySelector(".mh-compare").style.display = currentOverlay ? "grid" : "none";
+    if (item.kind === "area") {
+      registerLayer(item,L.polygon(item.geometry,{
+        color:color,
+        weight:2,
+        opacity:0.88,
+        dashArray:item.precision === "recon" ? "7 6" : null,
+        fillColor:color,
+        fillOpacity:0.14
+      }));
+      return;
+    }
+    let iconKind = "battle";
+    let glyph = "✦";
+    if (item.category === "command") { iconKind = "command"; glyph = "▣"; }
+    if (item.category === "memory") { iconKind = "memory"; glyph = "✚"; }
+    if (item.kind === "camp") { iconKind = "camp"; glyph = "▦"; }
+    if (item.side === "soviet") { iconKind = "soviet"; glyph = "★"; }
+    if (item.kind === "place") { iconKind = "place"; glyph = "•"; }
+    registerLayer(item,L.marker(item.geometry,{icon:markerIcon(iconKind,glyph),zIndexOffset:item.category === "memory" ? 500 : 100}));
   }
 
-  function renderPeriodCopy(period, extra = "") {
-    const tags = period.tags.map(tag => `<span class="mh-tag">${tag}</span>`).join("");
-    root.querySelector("#mh-period-copy").innerHTML = `
-      <span class="mh-eyebrow">${period.year}</span>
-      <h2>${period.title}</h2>
-      <div class="mh-period-meta">${tags}</div>
-      <p>${extra || period.summary}</p>
-      <a class="mh-source-link" href="${period.source}" target="_blank" rel="noopener">${period.sourceLabel} ↗</a>`;
+  function clearDynamic() {
+    Object.keys(groups).forEach(function(key){
+      groups[key].clearLayers();
+      groupCounts[key] = 0;
+    });
   }
 
-  function addWW1Places() {
-    [
-      {name:"Mühlen / Mielno", coord:[53.5103,20.2011], desc:"Wieś leżała bezpośrednio na linii walk 26–28 sierpnia 1914."},
-      {name:"Höllental — główny szturm", coord:[53.516,20.216], desc:"28 sierpnia Landwehra i IR 147 zdobywały rosyjskie pozycje na wschodnim stoku jaru."},
-      {name:"Waplitz / Waplewo", coord:[53.4989,20.3222], desc:"O świcie 28 sierpnia 41. Dywizja weszła we mgle pod silny ogień i poniosła ciężkie straty."},
-      {name:"Dröbnitz / Drwęck", coord:[53.5526,20.1793], desc:"Tędy nacierała niemiecka 3. Dywizja Rezerwowa w stronę Hohenstein."},
-      {name:"Tannenberg / Stębark", coord:[53.4954,20.1335], desc:"Wieś dała bitwie nazwę symboliczną, ale nie była centrum walk 1914 roku."}
-    ].forEach(item => addMarker(item, "event", "•"));
-    [
-      {name:"Frygnowo — AOK 8", coord:[53.5051,20.0813], desc:"28 sierpnia około 13:00 Hindenburg wydał tu rozkaz pościgu. Stanowisko dowodzenia, nie stały obóz."},
-      {name:"Nadrowo — Samsonow", coord:[53.535,20.35], desc:"Przybliżone stanowisko dowodzenia rosyjskiego XV Korpusu 28 sierpnia."},
-      {name:"Kurki — biwaki XIII Korpusu", coord:[53.5366,20.4768], desc:"Wieczorem 25 sierpnia rozpoznanie meldowało tu rosyjskie biwaki marszowe."}
-    ].forEach(item => addMarker(item, "stop", "▣"));
-    [
-      {name:"Cmentarz Mielno — zachodni", coord:[53.5155561,20.2054719], desc:"Cmentarz poległych w walkach przy Mühlen."},
-      {name:"Cmentarz Mielno — Höllental", coord:[53.51570,20.21276], desc:"Volksbund podaje 209 żołnierzy niemieckich i 78 rosyjskich."}
-    ].forEach(item => addMarker(item, "grave", "✚"));
+  function addMemory1914() {
+    addFeature(feature("memory","point","Cmentarz Mielno — Höllental","Na cmentarzu spoczywa 209 żołnierzy niemieckich i 78 rosyjskich. Współrzędne z Volksbund.",[53.51413,20.21380],"neutral","exact",SOURCES.mielnoGraves,{label:true}));
+    addFeature(feature("memory","point","Cmentarz Mielno — zachodni","Drugi cmentarz przy drodze w kierunku Olsztynka obejmuje m.in. mogiłę 24 żołnierzy LIR 5; punkt według współczesnej mapy terenowej.",[53.5155561,20.2054719],"neutral","exact",SOURCES.mielnoGraves));
+    addFeature(feature("memory","point","Cmentarz Waplewo","Volksbund podaje 433 żołnierzy niemieckich i 203 rosyjskich; współrzędne 53°29′54.40″ N, 20°19′17.55″ E.",[53.498444,20.321542],"neutral","exact",SOURCES.waplewoGraves,{label:true}));
   }
 
   function renderWW1() {
-    periodLayer.clearLayers();
-    const state = WW1[currentWW1];
-    state.lines.forEach(line => addLine(line, false));
-    state.moves.forEach(move => addLine(move, true));
-    addWW1Places();
-    renderPeriodCopy(PERIODS[1], state.summary);
-    root.querySelector("#mh-map-badge").textContent = `Sztabówka 1909 · ${state.label}`;
+    clearDynamic();
+    const stage = WW1_STAGES[currentStage];
+    stage.features.forEach(addFeature);
+    addMemory1914();
+    root.querySelector("#mwa-stage-title").textContent = stage.title;
+    root.querySelector("#mwa-stage-focus").textContent = stage.focus;
+    root.querySelector("#mwa-stage-counter").textContent = String(currentStage + 1) + " / " + String(WW1_STAGES.length);
+    root.querySelector("#mwa-stage-range").value = String(currentStage);
+    root.querySelector("#mwa-stage-copy").innerHTML = '<div class="mwa-stage-summary"><span class="mwa-eyebrow">Aktualny etap</span><strong>' + escapeHtml(stage.title) + '</strong><p>' + escapeHtml(stage.summary) + '</p></div>';
+    map.fitBounds(stage.fit,{padding:[18,18]});
+    updateVisibleCount();
   }
 
   function render1807() {
-    addMarker({name:"Hohenstein / Olsztynek", coord:[53.58342,20.28162], desc:"30 grudnia 1806 wkroczyły tu francuskie regimenty; przez miasto maszerowały oddziały Neya, Davouta, Bernadotte’a i Murata."}, "event", "N");
-    L.polygon([[53.578,20.255],[53.603,20.258],[53.606,20.286],[53.584,20.294]], {color:"#785c24", weight:3, dashArray:"8 7", fillColor:"#d7952d", fillOpacity:0.16}).addTo(periodLayer)
-      .bindPopup("<strong>Rejon francuskich obozów</strong><br>Źródło opisuje około 12 tys. żołnierzy między Olsztynkiem a Wilkowem; granica jest orientacyjna.")
-      .on("click", () => setSelected("Rejon francuskich obozów", "Około 12 tys. żołnierzy obozowało na niewielkim obszarze między Olsztynkiem a Wilkowem. Zasięg na mapie jest orientacyjny."));
-    addMarker({name:"Wilkowo", coord:[53.600951,20.270986], desc:"Północny punkt odniesienia dla opisu rejonu francuskich obozów."}, "stop", "▣");
+    clearDynamic();
+    addFeature(feature("battles","point","Hohenstein / Olsztynek","30 grudnia 1806 do miasta wkroczyły oddziały francuskie; przez Hohenstein przechodziły korpusy Neya, Davouta, Bernadotte’a i Murata.",PLACES.olsztynek,"neutral","place",SOURCES.olsztynek1807,{label:true}));
+    addFeature(feature("command","area","Rejon francuskich obozów","Źródło opisuje około 12 tysięcy żołnierzy między Olsztynkiem a Wilkowem. Obrys jest świadomie orientacyjny.",[[53.579,20.257],[53.604,20.257],[53.607,20.286],[53.584,20.297]],"neutral","regional",SOURCES.olsztynek1807));
+    addFeature(feature("command","point","Wilkowo","Północny punkt odniesienia obszaru obozów.",PLACES.wilkowo,"neutral","place",SOURCES.olsztynek1807,{label:true}));
+    addFeature(feature("moves","move","Przemarsz armii francuskiej","Schemat przejścia od południowego zachodu przez Olsztynek ku wschodnim drogom.",[[53.54,20.19],PLACES.olsztynek,[53.59,20.35]],"neutral","regional",SOURCES.olsztynek1807));
+    root.querySelector("#mwa-stage-copy").innerHTML = "";
+    updateVisibleCount();
   }
 
-  function render1939() {
-    addMarker({name:"Stalag I-B Hohenstein", coord:[53.576578,20.252487], desc:"Obóz jeniecki działający w latach 1939–1945 między Królikowem a Sudwą. Na terenie znajdowało się ponad 100 baraków."}, "camp", "▦");
-    addMarker({name:"Cmentarz ofiar w Sudwie", coord:[53.5891984,20.2419141], desc:"Miejsce masowych mogił więźniów Stalagu I-B; według Portalu Olsztynka zmarło lub zostało zamęczonych około 55 tys. jeńców."}, "grave", "✚");
-    addMarker({name:"Olsztynek / Hohenstein", coord:[53.58342,20.28162], desc:"Miasto i węzeł komunikacyjny leżący około 2 km od obozu."}, "event", "•");
+  function renderStalag() {
+    clearDynamic();
+    addFeature(feature("battles","camp","Stalag I-B Hohenstein","Centralny punkt dawnego kompleksu obozowego; współrzędne obiektu 53°34′43″ N, 20°14′43″ E.",PLACES.stalag,"neutral","exact",SOURCES.stalag,{label:true}));
+    addFeature(feature("battles","area","Orientacyjny obszar Stalagu I-B","Obóz rozciągał się między Królikowem a Sudwą i obejmował ponad 100 baraków. Ten obrys nie zastępuje planu geodezyjnego.",[[53.5715,20.235],[53.5828,20.235],[53.5852,20.257],[53.573,20.262]],"neutral","regional",SOURCES.stalag));
+    addFeature(feature("command","point","Królikowo / Königsgut","Południowy punkt odniesienia terenu obozu.",PLACES.krolikowo,"neutral","place",SOURCES.stalag,{label:true}));
+    addFeature(feature("command","point","Sudwa","Północny punkt odniesienia między obozem a cmentarzem ofiar.",PLACES.sudwa,"neutral","place",SOURCES.stalag));
+    addFeature(feature("memory","point","Cmentarz ofiar Stalagu w Sudwie","Miejsce masowych mogił więźniów Stalagu I-B.",PLACES.sudwaCemetery,"neutral","exact",SOURCES.stalag,{label:true}));
+    addFeature(feature("battles","point","Olsztynek / Hohenstein","Miasto i węzeł komunikacyjny około 2 km od obozu.",PLACES.olsztynek,"neutral","place",SOURCES.stalag));
+    root.querySelector("#mwa-stage-copy").innerHTML = "";
+    updateVisibleCount();
   }
 
   function render1945() {
-    addMarker({name:"Olsztynek — 22 I 1945", coord:[53.58342,20.28162], desc:"Armia Czerwona wkroczyła do miasta 22 stycznia 1945 roku. Encyklopedia Warmii i Mazur podaje zniszczenie około 70% zabudowy."}, "soviet", "★");
-    addMarker({name:"Stalag I-B — koniec funkcjonowania", coord:[53.576578,20.252487], desc:"Obóz działał do stycznia 1945 roku; zachowały się upamiętnienia i cmentarz w Sudwie."}, "camp", "▦");
-    addLine({side:"soviet", name:"Kierunek operacji wschodniopruskiej", desc:"Schemat regionalnego natarcia w stronę Olsztynka. Nie przedstawia dokładnej osi konkretnego pułku ani lokalnej linii okopów.", coords:[[53.47,20.40],[53.52,20.345],[53.58342,20.28162],[53.64,20.25]]}, true);
+    clearDynamic();
+    addFeature(feature("battles","point","Olsztynek — 22 I 1945","Niewielkie siły radzieckie zajęły wyludnione miasto bez większego oporu.",PLACES.olsztynek,"soviet","place",SOURCES.january1945,{label:true}));
+    addFeature(feature("moves","move","Kierunek wejścia Armii Czerwonej","Schemat regionalnego wejścia od południa; źródło lokalne nie podaje osi konkretnego pułku.",[[53.49,20.34],[53.54,20.31],PLACES.olsztynek],"soviet","regional",SOURCES.january1945));
+    addFeature(feature("moves","move","Ewakuacja ludności na północny zachód","Źródło opisuje ucieczkę w stronę Elbląga i Zalewu Wiślanego; strzałka pokazuje tylko ogólny kierunek.",[PLACES.olsztynek,[53.61,20.22],[53.65,20.14]],"neutral","regional",SOURCES.january1945));
+    addFeature(feature("fronts","line","Prowizoryczne zapory na drogach wylotowych","Potwierdzone w opisie, ale bez podanych miejsc; linia symbolizuje obronę wejść do miasta, nie położenie fizycznych zapór.",[[53.575,20.268],[53.591,20.268],[53.595,20.298]],"de","regional",SOURCES.january1945));
+    addFeature(feature("battles","camp","Stalag I-B — koniec funkcjonowania","Obóz działał do stycznia 1945 roku.",PLACES.stalag,"neutral","exact",SOURCES.stalag));
+    addFeature(feature("memory","point","Cmentarz ofiar Stalagu w Sudwie","Miejsce pamięci ofiar obozu.",PLACES.sudwaCemetery,"neutral","exact",SOURCES.stalag));
+    root.querySelector("#mwa-stage-copy").innerHTML = "";
+    updateVisibleCount();
   }
 
   function renderToday() {
-    [
-      {name:"Cmentarz Mielno — zachodni", coord:[53.5155561,20.2054719], desc:"Zachowany cmentarz z I wojny światowej, około 0,97 km od Mielna 158."},
-      {name:"Cmentarz Mielno — Höllental", coord:[53.51570,20.21276], desc:"Zachowany cmentarz w rejonie głównego szturmu, około 1,01 km od Mielna 158."}
-    ].forEach(item => addMarker(item, "grave", "✚"));
-    addMarker({name:"Upamiętnienie Stalagu I-B", coord:[53.576578,20.252487], desc:"Miejsce dawnego obozu pomiędzy Królikowem a Sudwą."}, "camp", "▦");
-    addMarker({name:"Muzeum Stalagu I-B", coord:[53.5833,20.2840], desc:"Multimedialne muzeum w centrum Olsztynka dokumentuje historię obozu i miasta."}, "event", "M");
+    clearDynamic();
+    addMemory1914();
+    addFeature(feature("battles","camp","Teren Stalagu I-B","Miejsce dawnego obozu między Królikowem a Sudwą.",PLACES.stalag,"neutral","exact",SOURCES.stalag,{label:true}));
+    addFeature(feature("memory","point","Cmentarz ofiar Stalagu w Sudwie","Zachowany cmentarz wojenny i miejsce pamięci.",PLACES.sudwaCemetery,"neutral","exact",SOURCES.stalag,{label:true}));
+    addFeature(feature("battles","point","Olsztynek — muzeum Stalagu I-B","Muzealna ekspozycja w centrum Olsztynka dokumentuje historię obozu.",[53.5833,20.2840],"neutral","place",SOURCES.stalag));
+    addFeature(feature("battles","point","Mielno 158","Punkt odniesienia użytkownika wobec miejsc walk i cmentarzy.",HOME,"neutral","exact",SOURCES.osm));
+    root.querySelector("#mwa-stage-copy").innerHTML = "";
+    updateVisibleCount();
   }
 
-  function updatePeriod(index, fit = true) {
+  function renderPeriodCopy(period) {
+    const tags = period.tags.map(function(tag){ return '<span class="mwa-tag">' + escapeHtml(tag) + '</span>'; }).join("");
+    root.querySelector("#mwa-period-copy").innerHTML =
+      '<span class="mwa-eyebrow">' + escapeHtml(period.year) + '</span>' +
+      '<h2>' + escapeHtml(period.title) + '</h2>' +
+      '<div class="mwa-tags">' + tags + '</div>' +
+      '<p>' + escapeHtml(period.summary) + '</p>' +
+      '<a class="mwa-source" href="' + escapeHtml(period.source.url) + '" target="_blank" rel="noopener">' + escapeHtml(period.source.label) + ' ↗</a>';
+  }
+
+  function setRaster(id) {
+    if (currentRaster && map.hasLayer(currentRaster)) map.removeLayer(currentRaster);
+    currentRaster = id === "none" ? null : rasterLayers[id];
+    if (currentRaster) {
+      currentRaster.setOpacity(Number(root.querySelector("#mwa-opacity").value) / 100);
+      currentRaster.addTo(map);
+      currentRaster.bringToBack();
+    }
+    root.querySelector("#mwa-raster").value = id;
+    root.querySelector("#mwa-opacity").disabled = !currentRaster;
+    root.querySelector("#mwa-map-badge").textContent = rasterLabels[id];
+  }
+
+  function updateVisibleCount() {
+    let total = 0;
+    Object.keys(groups).forEach(function(key){
+      if (map.hasLayer(groups[key])) total += groupCounts[key];
+    });
+    root.querySelector("#mwa-visible-count").textContent = String(total);
+  }
+
+  function updatePeriod(index, fit) {
     currentPeriod = Number(index);
     const period = PERIODS[currentPeriod];
-    root.querySelector("#mh-period").value = String(currentPeriod);
-    root.querySelector("#mh-period-label").textContent = `${period.year} · ${period.title}`;
-    root.querySelector("#mh-map-badge").textContent = period.badge;
-    root.querySelectorAll(".mh-milestones button").forEach(btn => btn.classList.toggle("is-active", Number(btn.dataset.period) === currentPeriod));
-    root.querySelector("#mh-ww1-controls").hidden = currentPeriod !== 1;
-    periodLayer.clearLayers();
+    root.querySelector("#mwa-period-range").value = String(currentPeriod);
+    root.querySelector("#mwa-period-title").textContent = period.year + " · " + period.title;
+    root.querySelectorAll(".mwa-period-buttons button").forEach(function(button){
+      button.classList.toggle("is-active",Number(button.dataset.period) === currentPeriod);
+    });
+    root.querySelector("#mwa-ww1-timeline").hidden = currentPeriod !== 1;
     renderPeriodCopy(period);
-
-    if (currentPeriod === 0) {
-      showOverlay(null);
-      render1807();
-      if (fit) map.fitBounds(OLSZTYNEK_BOUNDS, {padding:[20,20]});
-    } else if (currentPeriod === 1) {
-      showOverlay(historic1909);
-      renderWW1();
-      if (fit) map.fitBounds(REGION_BOUNDS, {padding:[18,18]});
-    } else if (currentPeriod === 2) {
-      showOverlay(historic1938);
-      render1939();
-      if (fit) map.fitBounds(OLSZTYNEK_BOUNDS, {padding:[20,20]});
-    } else if (currentPeriod === 3) {
-      showOverlay(historic1938);
-      render1945();
-      if (fit) map.fitBounds(REGION_BOUNDS, {padding:[18,18]});
-    } else {
-      showOverlay(null);
-      renderToday();
-      if (fit) map.fitBounds(CLOSE_BOUNDS, {padding:[18,18]});
-    }
+    setRaster(period.raster);
+    if (currentPeriod === 0) render1807();
+    if (currentPeriod === 1) renderWW1();
+    if (currentPeriod === 2) renderStalag();
+    if (currentPeriod === 3) render1945();
+    if (currentPeriod === 4) renderToday();
+    if (fit && currentPeriod !== 1) map.fitBounds(period.fit,{padding:[18,18]});
   }
 
-  root.querySelector("#mh-period").addEventListener("input", event => updatePeriod(event.target.value));
-  root.querySelectorAll(".mh-milestones button").forEach(btn => btn.addEventListener("click", () => updatePeriod(btn.dataset.period)));
-  root.querySelector("#mh-opacity").addEventListener("input", event => {
-    root.querySelector("#mh-opacity-value").textContent = `${event.target.value}%`;
-    if (currentOverlay) currentOverlay.setOpacity(Number(event.target.value) / 100);
-  });
-  root.querySelectorAll("#mh-ww1-controls button").forEach(btn => btn.addEventListener("click", () => {
-    currentWW1 = btn.dataset.state;
-    root.querySelectorAll("#mh-ww1-controls button").forEach(b => b.classList.toggle("is-active", b === btn));
-    renderWW1();
-  }));
-  root.querySelector("#mh-view-home").addEventListener("click", () => map.setView(HOME, 15));
-  root.querySelector("#mh-view-region").addEventListener("click", () => map.fitBounds(REGION_BOUNDS, {padding:[18,18]}));
+  L.marker(HOME,{icon:markerIcon("home","★"),zIndexOffset:1200})
+    .addTo(map)
+    .bindPopup("<strong>Mielno 158</strong><br>Punkt odniesienia 53.507008, 20.208230.")
+    .on("click",function(){
+      root.querySelector("#mwa-selected").innerHTML = '<span class="mwa-eyebrow">Punkt odniesienia</span><h2>Mielno 158</h2><p>Około kilometra na południe od obu cmentarzy wojennych i pola walk w rejonie dawnego Höllental.</p><div class="mwa-detail-meta"><span class="mwa-tag">dokładny punkt</span></div>';
+    });
 
-  updatePeriod(1, true);
-  setTimeout(() => map.invalidateSize(), 80);
+  root.querySelector("#mwa-period-range").addEventListener("input",function(event){ updatePeriod(event.target.value,true); });
+  root.querySelectorAll(".mwa-period-buttons button").forEach(function(button){
+    button.addEventListener("click",function(){ updatePeriod(button.dataset.period,true); });
+  });
+  root.querySelector("#mwa-stage-range").addEventListener("input",function(event){
+    currentStage = Number(event.target.value);
+    renderWW1();
+  });
+  root.querySelector("#mwa-prev-stage").addEventListener("click",function(){
+    currentStage = Math.max(0,currentStage - 1);
+    renderWW1();
+  });
+  root.querySelector("#mwa-next-stage").addEventListener("click",function(){
+    currentStage = Math.min(WW1_STAGES.length - 1,currentStage + 1);
+    renderWW1();
+  });
+  root.querySelector("#mwa-raster").addEventListener("change",function(event){ setRaster(event.target.value); });
+  root.querySelector("#mwa-opacity").addEventListener("input",function(event){
+    root.querySelector("#mwa-opacity-value").textContent = event.target.value + "%";
+    if (currentRaster) currentRaster.setOpacity(Number(event.target.value) / 100);
+  });
+  root.querySelectorAll(".mwa-layer-checks input").forEach(function(input){
+    input.addEventListener("change",function(){
+      const group = groups[input.dataset.layer];
+      if (input.checked) group.addTo(map); else map.removeLayer(group);
+      updateVisibleCount();
+    });
+  });
+  root.querySelector("#mwa-home").addEventListener("click",function(){ map.setView(HOME,15); });
+  root.querySelector("#mwa-region").addEventListener("click",function(){ map.fitBounds(REGION_BOUNDS,{padding:[18,18]}); });
+
+  updatePeriod(1,true);
+  setTimeout(function(){ map.invalidateSize(); },80);
 })();
 </script>
 

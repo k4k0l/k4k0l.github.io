@@ -1,0 +1,70 @@
+{
+  "version": 2,
+  "coordinate_reference_system": "EPSG:4326",
+  "sheet": {
+    "number": "2487",
+    "name": "Hohenstein",
+    "bounds": {
+      "north": 53.6,
+      "south": 53.5,
+      "west": 20.1666666667,
+      "east": 20.3333333333
+    },
+    "note": "Długości na najstarszym arkuszu zapisano względem Ferro; po przeliczeniu odpowiadają 20°10′–20°20′ E względem Greenwich."
+  },
+  "overlays": [
+    {
+      "id": "1901",
+      "file": "messtischblatt-1901-rectified.jpg",
+      "source_url": "http://maps.mapywig.org/m/German_maps/series/025K_TK25/2487_(1091)_Hohenstein_In_Ostpr_UW.jpg",
+      "source_dimensions_px": [13547, 13632],
+      "edition": "1901",
+      "survey": "1879",
+      "rectification": "four-corner projective transform to the inner geographic neatline",
+      "source_control_pixels": {
+        "north_west": [1552, 1495],
+        "north_east": [11956, 1546],
+        "south_west": [1552, 11844],
+        "south_east": [11956, 11896]
+      },
+      "output_dimensions_px": [1400, 1400]
+    },
+    {
+      "id": "1933",
+      "file": "messtischblatt-1933-rectified.jpg",
+      "source_url": "http://maps.mapywig.org/m/German_maps/series/025K_TK25/2487_Hohenstein_1933.jpg",
+      "source_dimensions_px": [6359, 6955],
+      "edition": "1933",
+      "rectification": "crop to the inner geographic neatline and resample",
+      "source_control_pixels": {
+        "north_west": [248, 778],
+        "north_east": [5398, 778],
+        "south_west": [248, 5973],
+        "south_east": [5398, 5973]
+      },
+      "output_dimensions_px": [1400, 1400]
+    },
+    {
+      "id": "1938",
+      "file": "messtischblatt-1938-rectified.jpg",
+      "source_url": "https://images.iiif.arthistoricum.net/iiif/2/proxy%2F67%2FDE-2396_71052604_df_dk_0010001_2487.jpg/full/full/0/default.jpg",
+      "object_url": "https://www.deutschefotothek.de/documents/obj/71052604",
+      "source_dimensions_px": [1600, 1546],
+      "edition": "1938",
+      "revision": "stan aktualizacji do 1937",
+      "rectification": "crop to the inner geographic neatline and resample",
+      "source_control_pixels": {
+        "north_west": [145, 166],
+        "north_east": [1318, 166],
+        "south_west": [145, 1335],
+        "south_east": [1318, 1335]
+      },
+      "output_dimensions_px": [1400, 1400]
+    }
+  ],
+  "limitations": [
+    "Rektyfikacja usuwa błąd wynikający z rozciągnięcia kołnierza skanu i koryguje obrót oraz perspektywę.",
+    "Historyczny arkusz i współczesna mapa nie muszą pokrywać się co do pojedynczej drogi z powodu przebudowy sieci drogowej, zmian brzegów jezior, jakości druku i dokładności pomiarów epoki.",
+    "Linie działań wojskowych są oddzielną rekonstrukcją na podstawie opisów operacyjnych; nie są geometrią z samego arkusza sztabowego."
+  ]
+}
